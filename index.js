@@ -4,6 +4,7 @@ class People{
     this.name = name
   }
   sayName(){
+    console.log('test')
     console.log(this.name,'type:',this.type)
   }
 }
