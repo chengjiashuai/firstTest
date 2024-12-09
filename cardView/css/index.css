@@ -1,0 +1,388 @@
+html, body{
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+#custom_tooltip{
+    /*display: block;*/
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 14px;
+    text-align: center;
+    z-index: 99999;
+    display: none;
+    white-space: nowrap;
+}
+
+#boardView{
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+    font-size: 14px;
+    font-weight: 400;
+    background: #F5F6FA;
+}
+
+#boardView .boardView-item{
+    height: 100%;
+    width: 281px;
+    min-width: 281px;
+}
+
+.boardView-item .boardView-item-label{
+    padding-bottom: 16px;
+    font-weight: 500;
+    font-size: 14px;
+    color: #212121;
+    line-height: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.boardView-item .boardView-item-label .boardView-item-label-right{
+    color: #535E6F;
+    cursor: pointer;
+}
+
+.boardView-item .addTask{
+    display: none;
+    height: 40px;
+    background: #fff;
+    border-radius: 4px;
+    margin-top: 20px;
+    align-items: center;
+    justify-content: center;
+    color: #535E6F;
+    font-size: 24px;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+/**/
+.boardView-item[data-status="0"] .addTask{
+    display: flex;
+}
+
+.boardView-item-taskList{
+    max-height: calc(100% - 94px);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.boardView-item-taskList .task{
+    box-sizing: border-box;
+    background: #fff;
+    border-radius: 4px;
+    padding: 16px;
+    position: relative;
+    cursor: pointer;
+    box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.06);
+}
+
+.boardView-item-taskList .task .task-checkbox{
+    display: none;
+    position: absolute;
+    left: 16px;
+    top: 16px;
+    width: 12px;
+    height: 12px;
+    cursor: pointer;
+    margin-top: 4px;
+}
+
+.boardView-item-taskList .task .task-checkbox input[type=checkbox]{
+    margin: 0;
+    cursor: pointer;
+}
+
+.boardView-item-taskList .task .task-priority{
+    content: '';
+    display: block;
+    width: 4px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: transparent;
+    border-radius: 4px 0 0 4px;
+    transition: width 0.3s;
+}
+
+.boardView-item-taskList .task:hover .task-priority{
+    width: 8px;
+    cursor: pointer;
+}
+
+.boardView-item-taskList .task .task-priority[data-priority="紧急"]{
+    background: #FF5F14;
+}
+
+.boardView-item-taskList .task .task-priority[data-priority="非常紧急"]{
+    background: #C70118;
+}
+
+.boardView-item-taskList .task:hover .task-priority[data-priority="普通"]{
+    background: #0050C7;
+}
+
+.boardView-item-taskList .task:hover .task-priority[data-priority="较低"]{
+    background: #848A92;
+}
+
+.boardView-item-taskList .task-info{
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.boardView-item-taskList .task-info .task-info-title{
+    font-weight: 400;
+    font-size: 14px;
+    color: #212121;
+    line-height: 20px;
+    /*超出两行显示省略好*/
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    margin-bottom: 16px;
+
+}
+
+.boardView-item-taskList .task-info .task-info-people{
+    min-width: 24px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: blue;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.boardView-item-taskList .task-tips{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    position: relative;
+    padding-right: 30px;
+}
+
+.boardView-item-taskList .task-tips .task-operation{
+    display: none;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 16px;
+    height: 16px;
+    background: #FFFFFF;
+    border-radius: 4px;
+    border: 1px solid #E1E5F4;
+    color: #535E6F;
+    font-size: 10px;
+    text-align: center;
+    line-height: 16px;
+}
+
+.boardView-item-taskList .task:hover .task-operation{
+    display: block;
+}
+
+.boardView-item-taskList .task-tips .task-status{
+    background: #f6f6f6;
+    border-radius: 4px;
+    height: 24px;
+    padding: 0 4px;
+    color: #626060;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 24px;
+}
+
+.boardView-item-taskList .task-tips .task-status[data-status="进行中"]{
+    background: #ecf6fd;
+    color: #4daef1;
+}
+
+.boardView-item-taskList .task-tips .task-jd{
+    height: 24px;
+    font-weight: 400;
+    font-size: 12px;
+    color: #535E6F;
+    line-height: 24px;
+}
+
+.boardView-item-taskList .task-tips .task-jd span{
+    font-weight: bold;
+    font-size: 14px;
+    color: #0050C7;
+    line-height: 24px;
+}
+
+.boardView-item-taskList .task-tips .task-time{
+    background: #0088e8;
+    border-radius: 4px;
+    height: 24px;
+    line-height: 24px;
+    padding: 0 4px;
+    color: #fff;
+    font-weight: 400;
+    font-size: 12px;
+}
+
+.boardView-item-taskList .task-tips .task-children{
+    background: #E1E5F4;
+    border-radius: 4px;
+    height: 24px;
+    line-height: 24px;
+    padding: 0 8px;
+    color: #626060;
+    font-weight: 400;
+    font-size: 12px;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.boardView-item-taskList .task-tips .task-children::before{
+    content: '';
+    display: block;
+    width: 16px;
+    height: 16px;
+    background: url(../image/subtask.png) no-repeat center;
+    background-size: 100% 100%;
+}
+
+/*.boardView-item-taskList .task-tips .task-children:hover{*/
+/*    color: #1890ff*/
+/*}*/
+
+.task-children-modal{
+    display: none;
+    position: absolute;
+    width: 500px;
+    max-height: 300px;
+    overflow: auto;
+    background: #fff;
+    box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.06);
+    z-index: 100;
+    padding: 16px;
+}
+
+.task-children-modal-header{
+    margin-bottom: 10px;
+}
+
+.task-children-modal-list-item{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.task-operation-panel{
+    white-space: nowrap;
+    width: max-content;
+    display: none;
+    position: absolute;
+    overflow: auto;
+    background: #fff;
+    box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.06);
+    z-index: 100;
+    padding: 4px 0;
+}
+
+.task-operation-panel .task-operation-panel-item{
+    padding: 0 20px;
+    height: 30px;
+    width: 100%;
+    box-sizing: border-box;
+    line-height: 30px;
+    cursor: pointer;
+}
+
+.task-operation-panel .task-operation-panel-item:hover, .task-operation-panel-item-active{
+    background: #f6f6f6;
+}
+
+.subMenu{
+    display: none;
+    position: absolute;
+    width: 140px;
+    max-height: 300px;
+    overflow: auto;
+    background: #fff;
+    box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.06);
+    z-index: 110;
+    padding: 16px;
+}
+
+/*设置截止日期看板*/
+.setDeadlinePanel{
+    width: 350px;
+    height: 445px;
+    max-height: 445px ;
+    padding: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.setDeadlinePanel iframe{
+    width: 100%;
+    height: 400px;
+    border: none;
+}
+
+.setDeadlinePanel .setDeadlinePanel-bottom{
+    width: 100%;
+    height: 40px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
+    box-sizing: border-box;
+    border-top: 1px solid #eee;
+    padding: 0 16px;
+}
+
+.setDeadlinePanel .setDeadlinePanel-bottom div{
+    height: 28px;
+    width: 60px;
+    line-height: 28px;
+    text-align: center;
+    border: 1px solid #b9b4b4;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+#boardView-mask{
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    z-index: 99;
+}
+
+::-webkit-scrollbar { width: 4px; border-radius: 2px; }
+::-webkit-scrollbar-thumb { background-color: #c1c1c1; }
+::-webkit-scrollbar-track { background-color: #F5F6FA; }
