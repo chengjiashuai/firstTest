@@ -1,258 +1,11 @@
-const data = [
-  {
-  title: '未开始',
-  id: 1,
-  status: '0',
-  children: [
-    {
-    title: '工作报告页面本周日日历的工作详情展示工作报告页面本周日日历的工作详情展示',
-    desc: '任务描述1',
-    startTime: '12月12日',
-    endTime: '12月13日',
-    people: '武振乾',
-    status: '未开始',
-    priority: '紧急',
-    children: [{
-      title: '任务1',
-      status: '进行中',
-      endTime: '',
-      people: '宋娅娟'
-    },
-      {
-        title: '任务2',
-        status: '进行中',
-        endTime: '',
-        people: '宋娅娟'
-      },
-      {
-        title: '任务3',
-        status: '进行中',
-        endTime: '',
-        people: '宋娅娟'
-      },
-      {
-        title: '任务4',
-        status: '进行中',
-        endTime: '',
-        people: '宋娅娟'
-      },
-      {
-        title: '任务5',
-        status: '进行中',
-        endTime: '',
-        people: '宋娅娟'
-      },
-    ],
-  },
-    {
-      title: '任务1',
-      desc: '任务描述1',
-      startTime: '12月12日',
-      endTime: '12月13日',
-      people: '宋娅娟',
-      status: '未进行',
-      isPublish: false,
-      priority: '非常紧急'
-    },
-    {
-      title: '任务1',
-      desc: '任务描述1',
-      startTime: '12月12日',
-      endTime: '12月13日',
-      people: '宋娅娟',
-      status: '未进行',
-      isPublish: false,
-      priority: '非常紧急'
-    },
-    {
-      title: '任务1',
-      desc: '任务描述1',
-      startTime: '12月12日',
-      endTime: '12月13日',
-      people: '宋娅娟',
-      status: '未进行',
-      isPublish: false,
-      priority: '非常紧急'
-    },
-    {
-      title: '任务1',
-      desc: '任务描述1',
-      startTime: '12月12日',
-      endTime: '12月13日',
-      people: '宋娅娟',
-      status: '未进行',
-      isPublish: false,
-      priority: '非常紧急'
-    },
-    {
-      title: '任务1',
-      desc: '任务描述1',
-      startTime: '12月12日',
-      endTime: '12月13日',
-      people: '宋娅娟',
-      status: '未进行',
-      isPublish: false,
-      priority: '非常紧急'
-    },
-    {
-      title: '任务1',
-      desc: '任务描述1',
-      startTime: '12月12日',
-      endTime: '12月13日',
-      people: '宋娅娟',
-      status: '未进行',
-      isPublish: false,
-      priority: '非常紧急'
-    },
-    {
-      title: '任务1',
-      desc: '任务描述1',
-      startTime: '12月12日',
-      endTime: '12月13日',
-      people: '宋娅娟',
-      status: '未进行',
-      isPublish: false,
-      priority: '非常紧急'
-    },
-    {
-      title: '工作报告页面本周日日历的工作详情展示工作报告页面本周日日历的工作详情展示',
-      desc: '任务描述1',
-      startTime: '12月12日',
-      endTime: '12月13日',
-      people: '武振乾',
-      status: '未开始',
-      priority: '紧急',
-      children: [{
-        title: '任务1',
-        status: '进行中',
-        endTime: '',
-        people: '宋娅娟'
-      },
-        {
-          title: '任务2',
-          status: '进行中',
-          endTime: '',
-          people: '宋娅娟'
-        },
-        {
-          title: '任务3',
-          status: '进行中',
-          endTime: '',
-          people: '宋娅娟'
-        },
-        {
-          title: '任务4',
-          status: '进行中',
-          endTime: '',
-          people: '宋娅娟'
-        },
-        {
-          title: '任务5',
-          status: '进行中',
-          endTime: '',
-          people: '宋娅娟'
-        },
-      ],
-    },
-  ]
-},
-  {
-    title: '进行中',
-    status: '1',
-    id: 0,
-    children: [{
-      title: '任务1',
-      desc: '任务描述1',
-      startTime: '12月12日',
-      endTime: '12月13日',
-      people: '宋娅娟',
-      status: '进行中',
-      priority: '非常紧急',
-      'jd': '80%'
-    }, ]
-  },
-  {
-    title: '已完成',
-    status: '2',
-    id: 2,
-    children: [{
-      title: '任务1',
-      desc: '任务描述1',
-      startTime: '12月12日',
-      endTime: '12月13日',
-      people: '孙闯',
-      status: '已完成',
-      priority: '普通'
-    }, ]
-  },
-  {
-    title: '已暂停',
-    status: '3',
-    id: 3,
-    children: [{
-      title: '任务1',
-      desc: '任务描述1',
-      startTime: '12月12日',
-      endTime: '12月13日',
-      people: '武振乾',
-      status: '已暂停',
-      priority: '较低'
-    }, {
-      title: '任务1',
-      desc: '任务描述1',
-      startTime: '12月12日',
-      endTime: '12月13日',
-      people: '宋娅娟',
-      status: '已暂停',
-      priority: '较低',
-      children: [{
-        title: '任务1',
-        status: '进行中',
-        endTime: '',
-        people: '宋娅娟'
-      },
-        {
-          title: '任务2',
-          status: '进行中',
-          endTime: '',
-          people: '宋娅娟'
-        },
-        {
-          title: '任务3',
-          status: '进行中',
-          endTime: '',
-          people: '宋娅娟'
-        },
-        {
-          title: '任务4',
-          status: '进行中',
-          endTime: '',
-          people: '宋娅娟'
-        },
-        {
-          title: '任务5',
-          status: '进行中',
-          endTime: '',
-          people: '宋娅娟'
-        },
-      ]
-    }, ]
-  },
-  {
-    title: '已终止',
-    status: '4',
-    id: 4,
-    children: [{
-      title: '任务1',
-      desc: '任务描述1',
-      startTime: '12月12日',
-      endTime: '12月13日',
-      people: '程家帅',
-      status: '已终止',
-      priority: '较低'
-    }, ]
-  },
-];
+let currentTask = null;
+let selectEndTime = null;
+let layout = 'taskStatus'
+let apiMap = {
+  'taskStatus': '读取数据',
+  'taskType': '读取任务类型分组列表',
+  'resource': '读取任务指派人分组列表'
+}
 
 /**
  * 刷新视图数据（提供给父页面调用）
@@ -260,25 +13,63 @@ const data = [
 // 刷新视图数据
 function refreshViewData(params){
   console.log(params,'refreshViewData')
+  if(params.view === 'table') return;
+  layout = params.layout
+  render('#cmp21f46c')
+}
+
+/**
+ * 更新数据
+ */
+function updateData(params){
+  if(!currentTask) return;
+  const newData = {
+    ...currentTask,
+    ...params
+  }
+  const data = {
+    task_code: newData['任务编码'],
+    assigner_usercode: newData['指派人编码'],
+    assigner_username: newData['指派人姓名'],
+    task_state: newData['任务状态'],
+    task_priority: newData['任务优先级'],
+    plan_end_time: newData['计划完成日期'],
+
+  }
+  for (let key in data) {
+    DomByMarking(key).textbox('setValue', data[key])
+  }
+  // return;
+  $('#cmp177770button').click();
+
+  render('#cmp21f46c')
 }
 
 /**
  * 入口方法
  * @param {String} id 容器id
- * @param {Object} data 渲染的数据
  */
-function render(id, data){
+function render(id){
+  var data = cosmo.data({
+    name: apiMap[layout]
+  });
+  console.log(data,'data');
   $(id).html(`<div id="boardView" class=""><div id="boardView-mask"></div></div>`);
   const root = $('#boardView');
   data.forEach(item => {
-    const panel = `<div class="boardView-item" data-status="${item.status}">
+    const children = JSON.parse(item['任务列表'] || "[]");
+    let panel = `<div class="boardView-item" data-status="${item['分组名称']}">
               <div class="boardView-item-label">
-                <div class="boardView-item-label-left">${item.title} ${item.children.length > 0 ? `${item.children.length}` : ''}</div>
-<!--                <div class="boardView-item-label-right">···</div>-->
+                <div class="boardView-item-label-left">${item['分组名称']}<span>${children.length > 0 ? `${children.length}` : ''}</span></div>
               </div>
-              <div class="boardView-item-taskList">${taskList(item.children)}</div>
-              <div class="addTask" data-action="add-task" style="${item.children.length > 0 ? '' : 'margin-top: 0' }">+</div>
-          </div>`;
+              <div class="boardView-item-taskList">${taskList(children)}</div>
+          `;
+
+    if((item['分组名称'] == '未开始' && layout == 'taskStatus') || layout != 'taskStatus'){
+      panel += `<div class="addTask" data-action="add-task" style="${children.length > 0 ? '' : 'margin-top: 0' }">+</div>`;
+    }
+
+    panel += `</div>`;
     root.append(panel);
   });
 
@@ -294,40 +85,42 @@ function render(id, data){
 function taskList(data){
   let html = '';
   data.forEach((item, index) => {
-    html += `<div class="task" data-id="${item.id}">
-    <div class="task-priority" data-priority="${item.priority}" data-tooltip="${item.priority}"></div>
+    html += `<div class="task" data-id="${item['任务编码']}" data-info='${JSON.stringify(item)}'>
+    <div class="task-priority" data-priority="${item['任务优先级']}" data-tooltip="${item['任务优先级']}"></div>
     
     <div class="task-info">
-        <div class="task-info-title" title="${item.title}">${item.title}</div>`
+        <div class="task-info-title" title="${item['任务名称']}">${item['任务名称']}</div>`
 
-    if(item.people){
-      html +=  `<div class="task-info-people" data-tooltip="${item.people}">${item.people ? item.people.slice(0, 1) : ''}</div>`
+    if(item['指派人姓名']){
+      html +=  `<div class="task-info-people" data-tooltip="${item['指派人姓名']}">${item['指派人姓名'] ? item['指派人姓名'].slice(0, 1) : ''}</div>`
     }
 
     html += `</div><div class="task-tips">`
 
     html += `<div class="task-operation" data-action="card-operation">···</div>`
 
-    if(item.isPublish === false){
+    if(item['任务是否发布'] !== 1){
       html += `<div class="task-status task-publish">未发布</div>`
     }
 
-    if(item.status){
-      html += `<div class="task-status" data-status="${item.status}">${item.status}</div>`
+    if(item['任务状态'] && layout != 'taskStatus'){
+      html += `<div class="task-status" data-status="${item['任务状态']}">${item['任务状态']}</div>`
     }
 
-    if(item.startTime && item.endTime){
-      html += `<div class="task-time">${item.startTime} - ${item.endTime}</div>`
+    if(item['任务进度']){
+      html += `<div class="task-jd" data-jd="${item['任务进度']}">已完成：<span>${item['任务进度']}%</span></div>`
     }
 
-    if(item.jd){
-      html += `<div class="task-jd" data-jd="${item.jd}">已完成：<span>${item.jd}</span></div>`
-    }
-
-    if(item.children){
+    if(item['子任务数']){
       html += `<div class="task-children" data-tooltip="查看子任务" data-action="showChildren" data-index="${index}">
-                    ${item.children && item.children.length > 0 ? `${0}/${item.children.length}` : ''}
+                    ${item['子任务数']> 0 ? `${item['已完成的子任务数']}/${item['子任务数']}` : ''}
                </div>`
+    }
+
+    if(item['计划开始日期'] && item['计划完成日期']){
+      const startTime = item['计划开始日期'].slice(5)
+      const endTime = item['计划完成日期'].slice(5)
+      html += `<div class="task-time">${startTime} - ${endTime}</div>`
     }
 
     html +=  `</div></div>`;
@@ -339,21 +132,29 @@ function taskList(data){
  * 创建子任务弹窗
  * @param data
  */
-function createChildrenModal(data){
+function createChildrenModal(){
+  DomByMarking('task_code').textbox('setValue', currentTask['任务编码'])
+  var data = cosmo.data({
+    name: '查询子任务数据源'
+  })
+  console.log(data,'查询子任务数据源');
   if(!data || data.length === 0) return ''
   let html = ` <div class="task-children-modal" id="taskChildrenModal">
       <div class="task-children-modal-header">
-          子任务 <span>0 / 4</span>
+          子任务 <span>${currentTask['已完成的子任务数']} / ${currentTask['子任务数']}</span>
       </div>
       <div class="task-children-modal-list">
   `
   data.forEach(item => {
     html += `<div class="task-children-modal-list-item">
-            <div>进行中</div>
-            <div>任务名称，超出两行显示省略号</div>
-            <div>昨天截止</div>
-            <div>人员头像</div>
-        </div>`
+            <div>${item.task_state}</div>
+            <div>${item.task_name}</div>
+            `
+    if(item.plan_start_time && item.plan_end_time){
+      html += `<div>${item.plan_start_time} - ${item.plan_end_time}</div>`
+    }
+
+    html += `<div class="task-info-people">${item.assigner_username ? item.assigner_username.slice(0, 1) : ''}</div></div>`
   })
 
   html += `</div></div>`
@@ -370,8 +171,10 @@ function createChildrenModal(data){
 function createOperationPanel(){
   let html = `<div class="task-operation-panel" id="taskOperationPanel">`
 
-  // 确认工时
-  html += `<div class="task-operation-panel-item" data-action="confirm">确认工时</div>`
+  if(currentTask['任务是否发布'] == 1){
+    // 设置任务状态
+    html += `<div class="task-operation-panel-item" data-action="setStatus">设置任务状态</div>`
+  }
 
   // 设置执行人
   html += `<div class="task-operation-panel-item" data-action="setExecutor">设置执行人</div>`
@@ -382,8 +185,10 @@ function createOperationPanel(){
   // 设置优先级
   html += `<div class="task-operation-panel-item" data-action="setPriority"">设置优先级</div>`
 
-  // 设置任务状态
-  html += `<div class="task-operation-panel-item" data-action="setStatus">设置任务状态</div>`
+  if(currentTask['任务是否发布'] == 1){
+    // 确认工时
+    html += `<div class="task-operation-panel-item" data-action="confirm">确认工时</div>`
+  }
 
   html += `</div>`
   // 如果窗口已存在，则移除
@@ -399,10 +204,12 @@ function createOperationPanel(){
  * 创建设置执行人面板
  */
 function createSetExecutorPanel(me){
-  let people = ['武振乾', '王伟', '王伟', '王伟']
+  var peopleList = cosmo.data({
+    name: '查询项目成员列表'
+  })
   let html = `<div class="setExecutorPanel subMenu" id="setExecutorPanel">`
-  people.forEach(item => {
-    html += `<div class="setExecutorPanel-item">${item}</div>`
+  peopleList.forEach(item => {
+    html += `<div class="setExecutorPanel-item" data-info='${JSON.stringify(item)}'><div class="task-info-people">${item.e_username ? item.e_username.slice(0, 1) : ''}</div>${item.e_username}</div>`
   })
 
   html += '</div>'
@@ -412,6 +219,15 @@ function createSetExecutorPanel(me){
   }
   $('#boardView').append(html)
   setModalPosition('#setExecutorPanel', me, 'right')
+
+  $('.setExecutorPanel-item').off('click').on('click', function (){
+    var info = $(this).attr('data-info');
+    info = JSON.parse(info);
+    updateData({
+      '指派人编码': info['e_usercode'],
+      '指派人姓名': info['e_username']
+    })
+  })
 }
 
 /**
@@ -419,14 +235,15 @@ function createSetExecutorPanel(me){
  */
 function handleSetDeadline(date){
   console.log(date);
+  selectEndTime = date;
 }
 
 /**
  * 创建设置截止时间面板
  */
 function createSetDeadlinePanel(me){
-  let time = '2019-07-01';
-  let startTime = '2024-12-04';
+  let time = currentTask['计划完成日期'];
+  let startTime = currentTask['计划开始日期'];
   let iframeUrl = 'http://erptest.cs.cosmosource.com:27778/fwp/brower.html?objpath=%2Fproject%2Ftenant%2FERP%2Fimsme%2Fprojectplan%2Fhomepage%2FboardViewSub%2Fcalendar.fwp'
   iframeUrl += '&ParamPair=current==' + time + '@@startTime==' + startTime
   let html = `<div class="setDeadlinePanel subMenu" id="setDeadlinePanel">
@@ -451,10 +268,63 @@ function createSetDeadlinePanel(me){
 
   // 确定
   $('#setDeadlinePanel [data-action=setDeadlinePanelConfirm]').off('click').on('click', function (){
-    debugger
-    $('#aaa #cmpce4f75calendar').calendar('moveTo', new Date(2012, 0, 1));
+    updateData({
+      '计划完成日期': selectEndTime
+    })
+    $('#setDeadlinePanel').hide();
+    $('.task-dialog').hide();
+    $('#boardView-mask').hide();
   })
 
+}
+
+/**
+ * 创建设置优先级面板
+ */
+function createSetPriorityPanel(me){
+  let people = ['非常紧急', '紧急', '普通', '低']
+  let html = `<div class="setPriorityPane subMenu" id="setPriorityPane">`
+  people.forEach(item => {
+    html += `<div class="setPriorityPane-item">${item}</div>`
+  })
+
+  html += '</div>'
+  // 如果窗口已存在，则移除
+  if($('#setPriorityPane').length > 0){
+    $('#setPriorityPane').remove()
+  }
+  $('#boardView').append(html)
+  setModalPosition('#setPriorityPane', me, 'right')
+
+  $('.setPriorityPane-item').off('click').on('click',function (){
+    updateData({
+      '任务优先级': $(this).text()
+    })
+  })
+}
+
+/**
+ * 创建设置任务状态面板
+ */
+function createSetStatusPanel(me){
+  let people = ['未开始', '进行中', '已完成', '已暂停' , '已终止']
+  let html = `<div class="setStatusPane subMenu" id="setStatusPane">`
+  people.forEach(item => {
+    html += `<div class="setStatusPane-item" data-text="${item}">${item}</div>`
+  })
+
+  html += '</div>'
+  // 如果窗口已存在，则移除
+  if ($('#setStatusPane').length > 0) {
+    $('#setStatusPane').remove()
+  }
+  $('#boardView').append(html)
+  setModalPosition('#setStatusPane', me, 'right')
+  $('.setStatusPane-item').off('click').on('click',function (){
+    updateData({
+      '任务状态': $(this).text()
+    })
+  })
 }
 
 /**
@@ -462,24 +332,16 @@ function createSetDeadlinePanel(me){
  */
 function eventBind(){
   $('.boardView-item-taskList .task').off('click').on('click', function (){
+    currentTask = JSON.parse($(this).attr('data-info'))
     console.log('点击卡片');
   })
 
   // 显示子任务看板
   $('[data-action=showChildren]').off('click').on('click', function (event){
     event.stopPropagation();
-    const index = $(this).attr('data-index');
-    createChildrenModal([
-      { title: '任务1', status: '进行中', endTime: '', people: '宋娅娟'},
-      { title: '任务2', status: '进行中', endTime: '', people: '宋娅娟'},
-      { title: '任务3', status: '进行中', endTime: '', people: '宋娅娟'},
-      { title: '任务4', status: '进行中', endTime: '', people: '宋娅娟'},
-      { title: '任务5', status: '进行中', endTime: '', people: '宋娅娟'},
-    ])
-
-    let me = this
-    // 将taskChildrenModal展示在当前点击元素的下方，如果下方位置不够，则将taskChildrenModal位置向上移动到可以显示为止即可
-    setModalPosition('#taskChildrenModal', me)
+    currentTask = JSON.parse($(this).parents('.task').attr('data-info'))
+    createChildrenModal()
+    setModalPosition('#taskChildrenModal', this)
   })
 
   // 添加任务
@@ -490,10 +352,10 @@ function eventBind(){
   // 点击卡片操作按钮
   $('[data-action=card-operation]').off('click').on('click', function (e){
     e.stopPropagation();
-    let me = this
-    $(me).css('display', 'block');
+    currentTask = JSON.parse($(this).parents('.task').attr('data-info'))
+    $(this).css('display', 'block');
     createOperationPanel();
-    setModalPosition('#taskOperationPanel', me, 'right')
+    setModalPosition('#taskOperationPanel', this, 'right')
   })
 
   /**
@@ -508,58 +370,48 @@ function eventBind(){
 }
 
 /**
+ * 设置二级菜单点击选中样式
+ * @param me
+ */
+function handleSelectStyle(me){
+  // 先隐藏之前的二级菜单
+  $('.subMenu').hide();
+  // 取消同级的选中样式
+  $('.task-operation-panel-item').removeClass('task-operation-panel-item-active')
+  // 添加选中样式
+  $(me).addClass('task-operation-panel-item-active')
+}
+
+/**
  * 绑定操作面板事件
  */
 function bindOperationPanelEvent(){
   $('.task-operation-panel-item[data-action=confirm]').off('click').on('click', function (){
-    // 先隐藏之前的二级菜单
-    $('.subMenu').hide();
-    // 取消同级的选中样式
-    $('.task-operation-panel-item').removeClass('task-operation-panel-item-active')
-    // 添加选中样式
-    $(this).addClass('task-operation-panel-item-active')
+    handleSelectStyle();
     console.log('确认工时')
   })
 
   $('.task-operation-panel-item[data-action=setExecutor]').off('click').on('click', function (){
     console.log('设置执行人')
-    // 先隐藏之前的二级菜单
-    $('.subMenu').hide();
-    // 取消同级的选中样式
-    $('.task-operation-panel-item').removeClass('task-operation-panel-item-active')
-    // 添加选中样式
-    $(this).addClass('task-operation-panel-item-active')
+    handleSelectStyle();
     createSetExecutorPanel(this)
   })
 
   $('.task-operation-panel-item[data-action=setDeadline]').off('click').on('click', function (){
-    // 先隐藏之前的二级菜单
-    $('.subMenu').hide();
-    // 取消同级的选中样式
-    $('.task-operation-panel-item').removeClass('task-operation-panel-item-active')
-    // 添加选中样式
-    $(this).addClass('task-operation-panel-item-active')
+    handleSelectStyle();
     createSetDeadlinePanel(this)
     console.log('设置截止时间')
   })
 
   $('.task-operation-panel-item[data-action=setPriority]').off('click').on('click', function (){
-    // 先隐藏之前的二级菜单
-    $('.subMenu').hide();
-    // 取消同级的选中样式
-    $('.task-operation-panel-item').removeClass('task-operation-panel-item-active')
-    // 添加选中样式
-    $(this).addClass('task-operation-panel-item-active')
+    handleSelectStyle();
+    createSetPriorityPanel(this);
     console.log('设置优先级')
   })
 
   $('.task-operation-panel-item[data-action=setStatus]').off('click').on('click', function (){
-    // 先隐藏之前的二级菜单
-    $('.subMenu').hide();
-    // 取消同级的选中样式
-    $('.task-operation-panel-item').removeClass('task-operation-panel-item-active')
-    // 添加选中样式
-    $(this).addClass('task-operation-panel-item-active')
+    handleSelectStyle();
+    createSetStatusPanel(this);
     console.log('设置任务状态')
   })
 }
@@ -587,7 +439,6 @@ function setModalPosition(modal, trigger, position){
   // 判断模态框是否超出容器下边界
   const spaceBelow = boardRect.bottom - triggerRect.bottom;
   if (spaceBelow < modalHeight) {
-    debugger
     // 如果下方空间不足，向上调整
     // modalTop = triggerRect.top - boardRect.top - modalHeight;
     modalTop = modalTop - (modalHeight - spaceBelow)
@@ -688,5 +539,3 @@ $(document).on('mouseenter', '[data-tooltip]', function(event) {
 $(document).on('mouseleave', '[data-tooltip]', function() {
   $('#custom_tooltip').css('display', 'none');
 });
-
-render('#app', data);

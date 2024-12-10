@@ -1,9 +1,3 @@
-html, body{
-    height: 100%;
-    padding: 0;
-    margin: 0;
-}
-
 #custom_tooltip{
     /*display: block;*/
     position: absolute;
@@ -48,13 +42,18 @@ html, body{
     align-items: center;
 }
 
+.boardView-item .boardView-item-label span{
+    margin-left: 10px;
+    font-size: 12px;
+}
+
 .boardView-item .boardView-item-label .boardView-item-label-right{
     color: #535E6F;
     cursor: pointer;
 }
 
 .boardView-item .addTask{
-    display: none;
+    display: flex;
     height: 40px;
     background: #fff;
     border-radius: 4px;
@@ -67,10 +66,16 @@ html, body{
     cursor: pointer;
 }
 
-/**/
-.boardView-item[data-status="0"] .addTask{
-    display: flex;
+.boardView-item .addTask:hover{
+    background: #0050C7;
+    box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.02);
+    color: #fff;
 }
+
+
+/*.boardView-item[data-status="未开始"] .addTask{*/
+/*    display: flex;*/
+/*}*/
 
 .boardView-item-taskList{
     max-height: calc(100% - 94px);
@@ -124,19 +129,19 @@ html, body{
     cursor: pointer;
 }
 
-.boardView-item-taskList .task .task-priority[data-priority="紧急"]{
-    background: #FF5F14;
-}
-
 .boardView-item-taskList .task .task-priority[data-priority="非常紧急"]{
     background: #C70118;
+}
+
+.boardView-item-taskList .task .task-priority[data-priority="紧急"]{
+    background: #FF5F14;
 }
 
 .boardView-item-taskList .task:hover .task-priority[data-priority="普通"]{
     background: #0050C7;
 }
 
-.boardView-item-taskList .task:hover .task-priority[data-priority="较低"]{
+.boardView-item-taskList .task:hover .task-priority[data-priority="低"]{
     background: #848A92;
 }
 
@@ -162,7 +167,7 @@ html, body{
 
 }
 
-.boardView-item-taskList .task-info .task-info-people{
+.task-info-people{
     min-width: 24px;
     width: 24px;
     height: 24px;
@@ -205,19 +210,42 @@ html, body{
 }
 
 .boardView-item-taskList .task-tips .task-status{
-    background: #f6f6f6;
+    background: #E1E5F4;
     border-radius: 4px;
     height: 24px;
     padding: 0 4px;
-    color: #626060;
+    color: #535E6F;
     font-weight: 400;
     font-size: 12px;
     line-height: 24px;
 }
 
 .boardView-item-taskList .task-tips .task-status[data-status="进行中"]{
-    background: #ecf6fd;
-    color: #4daef1;
+    background: rgba(4, 182, 237, 0.1);
+    color: #04B6ED
+}
+
+.boardView-item-taskList .task-tips .task-status[data-status="已完成"]{
+    background: rgba(17, 183, 104, 0.1);
+    color: #11B768;
+}
+
+.boardView-item-taskList .task-tips .task-status[data-status=已暂停]{
+    background: rgba(255, 95, 20, 0.1);
+    color: #FF5F14;
+}
+
+.boardView-item-taskList .task-tips .task-status[data-status=已终止]{
+    background: rgba(255, 64, 121, 0.1);
+    color: #FF4079;
+}
+
+.boardView-item-taskList .task-tips .task-publish{
+    background: #DBE7F9;
+    border-radius: 4px;
+    font-weight: 400;
+    font-size: 12px;
+    color: #0050C7;
 }
 
 .boardView-item-taskList .task-tips .task-jd{
@@ -236,7 +264,7 @@ html, body{
 }
 
 .boardView-item-taskList .task-tips .task-time{
-    background: #0088e8;
+    background: #0050C7;
     border-radius: 4px;
     height: 24px;
     line-height: 24px;
@@ -278,7 +306,7 @@ html, body{
 .task-children-modal{
     display: none;
     position: absolute;
-    width: 500px;
+    width: 400px;
     max-height: 300px;
     overflow: auto;
     background: #fff;
@@ -293,8 +321,13 @@ html, body{
 
 .task-children-modal-list-item{
     display: flex;
-    justify-content: space-between;
     margin-bottom: 10px;
+    gap: 20px;
+    align-items: center;
+}
+
+.task-children-modal-list-item div:nth-child(2){
+    flex: 1;
 }
 
 .task-operation-panel{
@@ -303,23 +336,61 @@ html, body{
     display: none;
     position: absolute;
     overflow: auto;
-    background: #fff;
-    box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.06);
     z-index: 100;
-    padding: 4px 0;
+    padding: 8px 0;
+    background: #FFFFFF;
+    box-shadow: 0px 0px 10px 0px #E1E5F4;
+    border-radius: 4px;
 }
 
 .task-operation-panel .task-operation-panel-item{
-    padding: 0 20px;
-    height: 30px;
+    padding: 0 16px;
+    height: 32px;
     width: 100%;
     box-sizing: border-box;
-    line-height: 30px;
+    line-height: 32px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 400;
+    font-size: 14px;
+    color: #535E6F;
 }
 
-.task-operation-panel .task-operation-panel-item:hover, .task-operation-panel-item-active{
-    background: #f6f6f6;
+.task-operation-panel .task-operation-panel-item::before{
+    content: '';
+    display: block;
+    width: 16px;
+    height: 16px;
+    background-size: 100% 100% !important;
+}
+
+.task-operation-panel .task-operation-panel-item[data-action=setStatus]::before{
+    background: url(../image/setStatus.png) no-repeat center;
+}
+
+.task-operation-panel .task-operation-panel-item[data-action=setExecutor]::before{
+    background: url(../image/setExecutor.png) no-repeat center;
+}
+
+
+.task-operation-panel .task-operation-panel-item[data-action=setDeadline]::before{
+    background: url(../image/setDeadline.png) no-repeat center;
+}
+
+
+.task-operation-panel .task-operation-panel-item[data-action=setPriority]::before{
+    background: url(../image/setPriority.png) no-repeat center;
+}
+
+
+.task-operation-panel .task-operation-panel-item[data-action=confirm]::before{
+    background: url(../image/confirmHour.png) no-repeat center;
+}
+
+.task-operation-panel .task-operation-panel-item:hover, .task-operation-panel-item-active, .setExecutorPanel-item:hover, .setPriorityPane-item:hover, .setStatusPane-item:hover{
+    background: #EFF1F8;
 }
 
 .subMenu{
@@ -328,10 +399,12 @@ html, body{
     width: 140px;
     max-height: 300px;
     overflow: auto;
-    background: #fff;
-    box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.06);
+    background: #FFFFFF;
+    box-shadow: 0px 0px 10px 0px #E1E5F4;
+    border-radius: 4px;
     z-index: 110;
     padding: 16px;
+    color: #535E6F;
 }
 
 /*设置截止日期看板*/
@@ -370,6 +443,59 @@ html, body{
     border: 1px solid #b9b4b4;
     box-sizing: border-box;
     cursor: pointer;
+}
+
+.setExecutorPanel, .setPriorityPane, .setStatusPane{
+    width: auto;
+    padding: 6px;
+}
+
+.setExecutorPanel-item, .setPriorityPane-item, .setStatusPane-item{
+    line-height: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 16px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.setStatusPane-item{
+    border-radius: 4px;
+    margin-bottom: 4px;
+}
+
+.setStatusPane-item:last-child{
+    margin-bottom: 0;
+}
+
+.setStatusPane-item[data-text=未开始]{
+    background: #E1E5F4;
+    color: #535E6F;
+}
+
+.setStatusPane-item[data-text=进行中]{
+    background: rgba(4, 182, 237, 0.1);
+    color: #04B6ED
+}
+
+.setStatusPane-item[data-text=已完成]{
+    background: rgba(17, 183, 104, 0.1);
+    color: #11B768;
+}
+
+.setStatusPane-item[data-text=已暂停]{
+    background: rgba(255, 95, 20, 0.1);
+    color: #FF5F14;
+}
+
+.setStatusPane-item[data-text=已终止]{
+    background: rgba(255, 64, 121, 0.1);
+    color: #FF4079;
+}
+
+.setExecutorPanel{
+    max-height: 200px;
 }
 
 #boardView-mask{
