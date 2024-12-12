@@ -15,6 +15,9 @@ function refreshViewData(params){
   console.log(params,'refreshViewData')
   if(params.view === 'table') return;
   layout = params.layout
+  setParamValue("plan_start_time", params.startTime);
+  setParamValue("plan_end_time", params.endTime);
+  setParamValue('orderByField', params.sort);
   render('#cmp21f46c')
 }
 
@@ -73,6 +76,7 @@ function render(id){
     root.append(panel);
   });
 
+  addNiceScroll($("#boardView"))
   // 事件绑定
   eventBind();
 }
@@ -85,7 +89,7 @@ function render(id){
 function taskList(data){
   let html = '';
   data.forEach((item, index) => {
-    html += `<div class="task" data-id="${item['任务编码']}" data-info='${JSON.stringify(item)}'>
+    html += `<div class="task" data-id="${item['任务编码']}" data-info='${JSON.stringify(item)}' data-publish="${item['任务是否发布'] ? 1 : 0}">
     <div class="task-priority" data-priority="${item['任务优先级']}" data-tooltip="${item['任务优先级']}"></div>
     
     <div class="task-info">
@@ -99,16 +103,25 @@ function taskList(data){
 
     html += `<div class="task-operation" data-action="card-operation">···</div>`
 
-    if(item['任务是否发布'] !== 1){
-      html += `<div class="task-status task-publish">未发布</div>`
-    }
-
+    html += `<div class="task-line1">`
     if(item['任务状态'] && layout != 'taskStatus'){
       html += `<div class="task-status" data-status="${item['任务状态']}">${item['任务状态']}</div>`
     }
 
-    if(item['任务进度']){
-      html += `<div class="task-jd" data-jd="${item['任务进度']}">已完成：<span>${item['任务进度']}%</span></div>`
+    if(item['计划工时数']){
+      let realWorkTime = item['实际工时数'] || 0
+      html += `<div class="task-line1-time">工时情况：
+            <span class="num">${realWorkTime}</span> / <span>${item['计划工时数']}</span><span class="unit"> 小时</span>
+        </div>`
+    }
+
+    html += '</div>'
+
+    html += `<div class="task-line2">`
+    if(item['计划开始日期'] && item['计划完成日期']){
+      const startTime = item['计划开始日期'].slice(5)
+      const endTime = item['计划完成日期'].slice(5)
+      html += `<div class="task-time">${startTime} - ${endTime}</div>`
     }
 
     if(item['子任务数']){
@@ -117,11 +130,10 @@ function taskList(data){
                </div>`
     }
 
-    if(item['计划开始日期'] && item['计划完成日期']){
-      const startTime = item['计划开始日期'].slice(5)
-      const endTime = item['计划完成日期'].slice(5)
-      html += `<div class="task-time">${startTime} - ${endTime}</div>`
+    if(item['任务进度']){
+      html += `<div class="task-jd" data-jd="${item['任务进度']}" data-tooltip="已完成：${item['任务进度']}%"><span>${item['任务进度']}%</span></div>`
     }
+    html += '</div>'
 
     html +=  `</div></div>`;
   });
@@ -146,7 +158,7 @@ function createChildrenModal(){
       <div class="task-children-modal-list">
   `
   data.forEach(item => {
-    html += `<div class="task-children-modal-list-item">
+    html += `<div class="task-children-modal-list-item" data-taskCode="${item.task_code}">
             <div>${item.task_state}</div>
             <div>${item.task_name}</div>
             `
@@ -163,6 +175,12 @@ function createChildrenModal(){
     $('#taskChildrenModal').remove()
   }
   $('#boardView').append(html)
+
+  $('.task-children-modal-list-item').off('click').on('click', function (){
+    var taskCode = $(this).attr('data-taskCode')
+    DomByMarking('task_code').textbox('setValue', taskCode)
+    $('#cmp59d88ebutton').click();
+  })
 }
 
 /**
@@ -171,9 +189,13 @@ function createChildrenModal(){
 function createOperationPanel(){
   let html = `<div class="task-operation-panel" id="taskOperationPanel">`
 
-  if(currentTask['任务是否发布'] == 1){
+  if(currentTask['任务是否发布'] == 1 && currentTask['任务状态'] != '已终止'){
     // 设置任务状态
     html += `<div class="task-operation-panel-item" data-action="setStatus">设置任务状态</div>`
+  }
+
+  if(currentTask['任务是否发布'] != 1){
+    html += `<div class="task-operation-panel-item" data-action="publish">发布任务</div>`
   }
 
   // 设置执行人
@@ -185,7 +207,7 @@ function createOperationPanel(){
   // 设置优先级
   html += `<div class="task-operation-panel-item" data-action="setPriority"">设置优先级</div>`
 
-  if(currentTask['任务是否发布'] == 1){
+  if(currentTask['任务是否发布'] == 1 && currentTask['任务是否确认'] == 0){
     // 确认工时
     html += `<div class="task-operation-panel-item" data-action="confirm">确认工时</div>`
   }
@@ -285,7 +307,7 @@ function createSetPriorityPanel(me){
   let people = ['非常紧急', '紧急', '普通', '低']
   let html = `<div class="setPriorityPane subMenu" id="setPriorityPane">`
   people.forEach(item => {
-    html += `<div class="setPriorityPane-item">${item}</div>`
+    html += `<div class="setPriorityPane-item" data-name="${item}">${item}</div>`
   })
 
   html += '</div>'
@@ -333,6 +355,12 @@ function createSetStatusPanel(me){
 function eventBind(){
   $('.boardView-item-taskList .task').off('click').on('click', function (){
     currentTask = JSON.parse($(this).attr('data-info'))
+    DomByMarking('task_code').textbox('setValue', currentTask['任务编码'])
+    if(currentTask['任务状态'] === '已终止'){
+      $('#cmp5d17cebutton').click();
+    }else{
+      $('#cmp59d88ebutton').click();
+    }
     console.log('点击卡片');
   })
 
@@ -346,6 +374,7 @@ function eventBind(){
 
   // 添加任务
   $('[data-action=add-task]').off('click').on('click', function (){
+    $('#cmp0631f5button').click();
     console.log('添加任务');
   })
 
@@ -353,6 +382,9 @@ function eventBind(){
   $('[data-action=card-operation]').off('click').on('click', function (e){
     e.stopPropagation();
     currentTask = JSON.parse($(this).parents('.task').attr('data-info'))
+    if(currentTask['任务状态'] == '已终止'){
+      return;
+    }
     $(this).css('display', 'block');
     createOperationPanel();
     setModalPosition('#taskOperationPanel', this, 'right')
@@ -383,11 +415,53 @@ function handleSelectStyle(me){
 }
 
 /**
+ * 任务必填项校验
+ */
+function checkTask(){
+  if(!currentTask['任务名称']){
+    // 提示信息
+    brower.eshow('未设置任务名称', null, 'error')
+    return false
+  }
+  if(!currentTask['指派人姓名']){
+    brower.eshow('未选择指派人', null, 'error')
+    return false
+  }
+
+  if(!currentTask['计划开始日期']){
+    brower.eshow('未选择计划开始日期', null, 'error')
+    return false
+  }
+  if(!currentTask['计划完成日期']){
+    brower.eshow('未选择计划完成日期', null, 'error')
+    return false
+  }
+  return true
+}
+
+/**
  * 绑定操作面板事件
  */
 function bindOperationPanelEvent(){
+  $('.task-operation-panel-item[data-action=publish]').off('click').on('click', function (){
+    handleSelectStyle();
+    if(!checkTask()) return
+
+    DomByMarking('task_code').textbox('setValue', currentTask['任务编码'])
+    $('#cmp678966button').click()
+
+    console.log('发布任务')
+  })
+
   $('.task-operation-panel-item[data-action=confirm]').off('click').on('click', function (){
     handleSelectStyle();
+    DomByMarking('task_code').textbox('setValue', currentTask['任务编码'])
+    if(currentTask['任务状态']== '已完成'){
+      // 确认工时
+      $('#cmpb82397button').click();
+    }
+    // 设置工时确认状态
+    $('#cmp3f7050button').click();
     console.log('确认工时')
   })
 
