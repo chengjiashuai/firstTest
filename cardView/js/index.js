@@ -107,7 +107,12 @@ function taskList(data){
 
     html += `</div><div class="task-tips">`
 
-    html += `<div class="task-operation" data-action="card-operation">···</div>`
+    if(item['任务状态'] == '已终止' || (layout == 'myTask' && item['任务状态'] == '已完成')){
+
+    }else{
+      html += `<div class="task-operation" data-action="card-operation">···</div>`
+    }
+
 
     html += `<div class="task-line1">`
     if(item['任务状态'] && layout != 'taskStatus'){
@@ -369,7 +374,10 @@ function createSetPriorityPanel(me){
  * 创建设置任务状态面板
  */
 function createSetStatusPanel(me){
-  let people = ['未开始', '进行中', '已完成', '已暂停' , '已终止']
+  let people = ['未开始', '进行中', '已完成']
+  if(layout != 'myTask'){
+    people = [...people,  '已暂停' , '已终止']
+  }
   let html = `<div class="setStatusPane subMenu" id="setStatusPane">`
   people.forEach(item => {
     var className = ''
@@ -387,6 +395,11 @@ function createSetStatusPanel(me){
   $('#boardView').append(html)
   setModalPosition('#setStatusPane', me, 'right')
   $('.setStatusPane-item').off('click').on('click',function (){
+    var status = $(this).text();
+    if(status === '已完成'){
+      // 更新任务进度为100%
+      $('#cmp0e1608button').click();
+    }
     updateData({
       '任务状态': $(this).text()
     })
@@ -426,9 +439,6 @@ function eventBind(){
   $('[data-action=card-operation]').off('click').on('click', function (e){
     e.stopPropagation();
     currentTask = JSON.parse($(this).parents('.task').attr('data-info'))
-    if(currentTask['任务状态'] == '已终止'){
-      return;
-    }
     $(this).css('display', 'block');
     createOperationPanel();
     setModalPosition('#taskOperationPanel', this, 'right')
@@ -490,7 +500,11 @@ function bindOperationPanelEvent(){
   // 我的任务-汇报进度
   $('.task-operation-panel-item[data-action=setProgress]').off('click').on('click', function (){
     handleSelectStyle(this);
-
+    DomByMarking('assigner_usercode').textbox('setValue', currentTask['指派人编码'])
+    setParamValue('task_name', currentTask['任务名称'])
+    setParamValue('task_prograss', currentTask['任务进度'])
+    DomByMarking('task_code').textbox('setValue', currentTask['任务编码'])
+    $('#cmpe1ea41button').click();
     console.log('汇报进度')
   })
 
