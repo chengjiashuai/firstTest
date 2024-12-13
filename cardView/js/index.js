@@ -1,10 +1,15 @@
 let currentTask = null;
 let selectEndTime = null;
 let layout = 'taskStatus'
+// 我的任务数据切换
+if(getParamValue("my_task") == 'true'){
+  layout = 'myTask';
+}
 let apiMap = {
   'taskStatus': '读取数据',
   'taskType': '读取任务类型分组列表',
-  'resource': '读取任务指派人分组列表'
+  'resource': '读取任务指派人分组列表',
+  'myTask': '读取我的任务列表'
 }
 
 /**
@@ -18,6 +23,7 @@ function refreshViewData(params){
   setParamValue("plan_start_time", params.startTime);
   setParamValue("plan_end_time", params.endTime);
   setParamValue('orderByField', params.sort);
+  setParamValue('search_value', params.searchValue);
   render('#cmp21f46c')
 }
 
@@ -68,7 +74,7 @@ function render(id){
               <div class="boardView-item-taskList">${taskList(children)}</div>
           `;
 
-    if((item['分组名称'] == '未开始' && layout == 'taskStatus') || layout != 'taskStatus'){
+    if((item['分组名称'] == '未开始' && layout == 'taskStatus') || (layout != 'taskStatus' && layout != 'myTask')){
       panel += `<div class="addTask" data-action="add-task" style="${children.length > 0 ? '' : 'margin-top: 0' }">+</div>`;
     }
 
@@ -118,10 +124,24 @@ function taskList(data){
     html += '</div>'
 
     html += `<div class="task-line2">`
-    if(item['计划开始日期'] && item['计划完成日期']){
-      const startTime = item['计划开始日期'].slice(5)
+    if(item['计划完成日期'] && item['计划完成日期'] != 'null'){
+      let warnClass = ''
       const endTime = item['计划完成日期'].slice(5)
-      html += `<div class="task-time">${startTime} - ${endTime}</div>`
+
+      let now = new Date();
+      now.setHours(0, 0, 0, 0); // 设置当前时间为00:00:00
+      let nowTime = now.getTime(); // 获取时间戳
+
+      if(nowTime > new Date(item['计划完成日期'] + ' 00:00:00')){
+        warnClass = 'overdue'
+      }
+
+      if(item['计划开始日期']){
+        const startTime = item['计划开始日期'].slice(5)
+        html += `<div class="task-time ${warnClass}">${startTime} - ${endTime}</div>`
+      }else{
+        html += `<div class="task-time ${warnClass}">${endTime}</div>`
+      }
     }
 
     if(item['子任务数']){
@@ -130,9 +150,8 @@ function taskList(data){
                </div>`
     }
 
-    if(item['任务进度']){
-      html += `<div class="task-jd" data-jd="${item['任务进度']}" data-tooltip="已完成：${item['任务进度']}%"><span>${item['任务进度']}%</span></div>`
-    }
+    html += `<div class="task-jd" data-jd="${item['任务进度']}" data-tooltip="已完成：${item['任务进度']}%"><span>${item['任务进度']}%</span></div>`
+
     html += '</div>'
 
     html +=  `</div></div>`;
@@ -159,14 +178,19 @@ function createChildrenModal(){
   `
   data.forEach(item => {
     html += `<div class="task-children-modal-list-item" data-taskCode="${item.task_code}">
-            <div>${item.task_state}</div>
-            <div>${item.task_name}</div>
+            <div class="task-info-people">${item.assigner_username ? item.assigner_username.slice(0, 1) : ''}</div>
+          
+            <div class="task-children-modal-list-item-name">${item.task_name}</div>
             `
-    if(item.plan_start_time && item.plan_end_time){
-      html += `<div>${item.plan_start_time} - ${item.plan_end_time}</div>`
+    if(item.plan_end_time){
+      if(item.plan_start_time){
+        html += `<div class="task-children-modal-list-item-time">${item.plan_start_time} - ${item.plan_end_time}</div>`
+      }else{
+        html += `<div class="task-children-modal-list-item-time">${item.plan_end_time}</div>`
+      }
     }
 
-    html += `<div class="task-info-people">${item.assigner_username ? item.assigner_username.slice(0, 1) : ''}</div></div>`
+    html += ` <div class="task-children-modal-list-item-state" data-state="${item.task_state}">${item.task_state}</div></div>`
   })
 
   html += `</div></div>`
@@ -189,28 +213,36 @@ function createChildrenModal(){
 function createOperationPanel(){
   let html = `<div class="task-operation-panel" id="taskOperationPanel">`
 
+  if(layout == 'myTask'){
+    // 设置任务状态
+    html += `<div class="task-operation-panel-item" data-action="setProgress">任务进度</div>`
+  }
+
   if(currentTask['任务是否发布'] == 1 && currentTask['任务状态'] != '已终止'){
     // 设置任务状态
     html += `<div class="task-operation-panel-item" data-action="setStatus">设置任务状态</div>`
   }
 
-  if(currentTask['任务是否发布'] != 1){
-    html += `<div class="task-operation-panel-item" data-action="publish">发布任务</div>`
+  if(layout != 'myTask'){
+    if(currentTask['任务是否发布'] != 1){
+      html += `<div class="task-operation-panel-item" data-action="publish">发布任务</div>`
+    }
+
+    // 设置执行人
+    html += `<div class="task-operation-panel-item" data-action="setExecutor">设置执行人</div>`
+
+    // 设置截止时间
+    html += `<div class="task-operation-panel-item" data-action="setDeadline">设置截止时间</div>`
+
+    // 设置优先级
+    html += `<div class="task-operation-panel-item" data-action="setPriority"">设置优先级</div>`
+
+    if(currentTask['任务是否发布'] == 1 && currentTask['任务是否确认'] == 0){
+      // 确认工时
+      html += `<div class="task-operation-panel-item" data-action="confirm">确认工时</div>`
+    }
   }
 
-  // 设置执行人
-  html += `<div class="task-operation-panel-item" data-action="setExecutor">设置执行人</div>`
-
-  // 设置截止时间
-  html += `<div class="task-operation-panel-item" data-action="setDeadline">设置截止时间</div>`
-
-  // 设置优先级
-  html += `<div class="task-operation-panel-item" data-action="setPriority"">设置优先级</div>`
-
-  if(currentTask['任务是否发布'] == 1 && currentTask['任务是否确认'] == 0){
-    // 确认工时
-    html += `<div class="task-operation-panel-item" data-action="confirm">确认工时</div>`
-  }
 
   html += `</div>`
   // 如果窗口已存在，则移除
@@ -231,7 +263,11 @@ function createSetExecutorPanel(me){
   })
   let html = `<div class="setExecutorPanel subMenu" id="setExecutorPanel">`
   peopleList.forEach(item => {
-    html += `<div class="setExecutorPanel-item" data-info='${JSON.stringify(item)}'><div class="task-info-people">${item.e_username ? item.e_username.slice(0, 1) : ''}</div>${item.e_username}</div>`
+    var className = ''
+    if(item.e_username == currentTask['指派人姓名']){
+      className = 'subMenu-item-active'
+    }
+    html += `<div class="setExecutorPanel-item ${className}" data-info='${JSON.stringify(item)}'><div class="task-info-people">${item.e_username ? item.e_username.slice(0, 1) : ''}</div>${item.e_username}</div>`
   })
 
   html += '</div>'
@@ -307,7 +343,11 @@ function createSetPriorityPanel(me){
   let people = ['非常紧急', '紧急', '普通', '低']
   let html = `<div class="setPriorityPane subMenu" id="setPriorityPane">`
   people.forEach(item => {
-    html += `<div class="setPriorityPane-item" data-name="${item}">${item}</div>`
+    var className = ''
+    if(item == currentTask['任务优先级']){
+      className = 'subMenu-item-active'
+    }
+    html += `<div class="setPriorityPane-item ${className}" data-name="${item}">${item}</div>`
   })
 
   html += '</div>'
@@ -332,7 +372,11 @@ function createSetStatusPanel(me){
   let people = ['未开始', '进行中', '已完成', '已暂停' , '已终止']
   let html = `<div class="setStatusPane subMenu" id="setStatusPane">`
   people.forEach(item => {
-    html += `<div class="setStatusPane-item" data-text="${item}">${item}</div>`
+    var className = ''
+    if(item == currentTask['任务状态']){
+      className = 'subMenu-item-active'
+    }
+    html += `<div class="setStatusPane-item ${className}" data-text="${item}">${item}</div>`
   })
 
   html += '</div>'
@@ -356,7 +400,7 @@ function eventBind(){
   $('.boardView-item-taskList .task').off('click').on('click', function (){
     currentTask = JSON.parse($(this).attr('data-info'))
     DomByMarking('task_code').textbox('setValue', currentTask['任务编码'])
-    if(currentTask['任务状态'] === '已终止'){
+    if(currentTask['任务状态'] === '已终止' || layout == 'myTask'){
       $('#cmp5d17cebutton').click();
     }else{
       $('#cmp59d88ebutton').click();
@@ -443,8 +487,16 @@ function checkTask(){
  * 绑定操作面板事件
  */
 function bindOperationPanelEvent(){
+  // 我的任务-汇报进度
+  $('.task-operation-panel-item[data-action=setProgress]').off('click').on('click', function (){
+    handleSelectStyle(this);
+
+    console.log('汇报进度')
+  })
+
+  // 发布任务
   $('.task-operation-panel-item[data-action=publish]').off('click').on('click', function (){
-    handleSelectStyle();
+    handleSelectStyle(this);
     if(!checkTask()) return
 
     DomByMarking('task_code').textbox('setValue', currentTask['任务编码'])
@@ -453,8 +505,9 @@ function bindOperationPanelEvent(){
     console.log('发布任务')
   })
 
+  // 工时确认
   $('.task-operation-panel-item[data-action=confirm]').off('click').on('click', function (){
-    handleSelectStyle();
+    handleSelectStyle(this);
     DomByMarking('task_code').textbox('setValue', currentTask['任务编码'])
     if(currentTask['任务状态']== '已完成'){
       // 确认工时
@@ -467,24 +520,24 @@ function bindOperationPanelEvent(){
 
   $('.task-operation-panel-item[data-action=setExecutor]').off('click').on('click', function (){
     console.log('设置执行人')
-    handleSelectStyle();
+    handleSelectStyle(this);
     createSetExecutorPanel(this)
   })
 
   $('.task-operation-panel-item[data-action=setDeadline]').off('click').on('click', function (){
-    handleSelectStyle();
+    handleSelectStyle(this);
     createSetDeadlinePanel(this)
     console.log('设置截止时间')
   })
 
   $('.task-operation-panel-item[data-action=setPriority]').off('click').on('click', function (){
-    handleSelectStyle();
+    handleSelectStyle(this);
     createSetPriorityPanel(this);
     console.log('设置优先级')
   })
 
   $('.task-operation-panel-item[data-action=setStatus]').off('click').on('click', function (){
-    handleSelectStyle();
+    handleSelectStyle(this);
     createSetStatusPanel(this);
     console.log('设置任务状态')
   })
