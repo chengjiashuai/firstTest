@@ -1,0 +1,493 @@
+body,
+ul,
+li,
+dl,
+dt,
+dd,
+p,
+ol,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+form,
+img,
+table,
+fieldset,
+legend {
+  margin: 0;
+  padding: 0;
+}
+
+ul,
+li,
+ol {
+  list-style: none;
+}
+
+img,
+fieldset {
+  border: 0;
+}
+
+img {
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  color: #333;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 100;
+}
+body{
+  overflow: hidden;
+}
+input:-webkit-autofill { box-shadow: 0 0 0px 1000px white inset !important;}
+
+.navTitle{
+  display: flex;
+  padding: 24px 0 24px 56px;
+  border-bottom: 1px solid rgba(204, 204, 204, 0.2);
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.navTitle img{
+  width: 125px;
+  height: 44px;
+}
+
+.rightTitle{
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  padding-left:24px;
+  margin-left: 24px;
+}
+.loginTitle{
+  font-weight: 500;
+  font-size: 24px;
+  color: #FFFFFF;
+  line-height: 33px;
+}
+.subheading{
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 16px;
+  color: rgba(255, 255, 255, 0.5)
+}
+
+/* 登陆 */
+.loginWrap{
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background: url('../img/indexBg.png') no-repeat;
+  background-size: 100% 100%;
+  top: 0;
+}
+/* 左半部分 */
+.loginLeft{
+  min-height: 100vh;
+  flex: 1;
+  -ms-flex: 1;
+}
+/* 右半部分 */
+.loginRight{
+  display: flex;
+  width: 400px;
+  height: 523px;
+  padding: 38px 60px 68px 60px;
+  position: absolute;
+  top:11%;
+  right: 20%;
+  background: url('../img/border.png') no-repeat center;
+  background-size: 100% 100%;
+}
+/* logo */
+.imgLogo{
+  padding-top: 20px;
+}
+.nameWrap{
+  -webkit-box-flex:1;
+  -webkit-flex:1;
+  -ms-flex:1;
+  flex:1;
+}
+/* 清空input 按钮*/
+.layui-input-block{
+  position: relative;
+}
+.layui-input-block>img{
+  position: absolute;
+  right: 10px;
+  top:38%;
+  transform: translateY(-80%);
+  cursor: pointer;
+  display: none;
+}
+
+/* sign in 的字体 */
+.signName{
+  display: flex;
+  display: -moz-box;  /* Firefox */
+  display: -ms-flexbox;    /* IE10 */
+  display: -webkit-box;    /* Safari */
+  display: -webkit-flex;    /* Chrome, WebKit */
+  padding-top: 55px;
+  font-size: 32px;
+  justify-content: center;
+  color: #fff;
+}
+.sign{
+  display: block;
+  height: 9.3%;
+  font-family: PingFangSC-Semibold;
+  font-size: 36px;
+  letter-spacing: 2.36px;
+
+}
+/* form表单 */
+
+#loginForm{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+form{
+  margin: 38px 0 0 ;
+}
+.formSty{
+  font-weight: 400;
+  font-size: 14px;
+  color: #FFFFFF;
+  line-height: 20px;
+  letter-spacing: 1.2px;
+  display: block;
+  margin-bottom: 8px;
+}
+/* 输入框 */
+.formInput{
+  /* 去除聚焦的样式 */
+  outline-color: invert ;
+  outline-style: none ;
+  /*width: 93%;*/
+  /*height: 58px;*/
+  /*border: 1px solid #BABABA;*/
+  border-radius: 4px;
+  padding-left: 23px;
+  font-family: PingFangSC-Medium;
+  font-size: 14px;
+  color: #80868B;
+  letter-spacing: 1.05px;
+  box-shadow: none;
+  /* 苹果去除input框 */
+  appearance:button;
+  -moz-appearance:button; /* Firefox */
+  -webkit-appearance:button; /* Safari 和 Chrome */
+
+  width: 280px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  border: none;
+  box-sizing: border-box;
+}
+
+.formSty{
+  display: flex;
+  align-items: center;
+}
+
+.user .name::before{
+  content: '';
+  display: block;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  background: url("../img/user.png") no-repeat center;
+  background-size: 100% 100%;
+}
+
+.pass .word::before{
+  content: '';
+  display: block;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  background: url("../img/password.png") no-repeat center;
+  background-size: 100% 100%;
+}
+
+.verification .verificationLabel::before{
+  content: '';
+  display: block;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  background: url("../img/verification_code.png") no-repeat center;
+  background-size: 100% 100%;
+}
+
+
+/* 去掉ie的清除按钮 */
+::-ms-clear,::-ms-reveal{display:none;}
+
+/* 报错提示信息 */
+.prompt{
+  padding-top: 6px;
+  display: block;
+  height: 24px;
+  font-family: PingFangSC-Medium;
+  font-size: 12px;
+  color: #D0021B;
+  letter-spacing: 0.9px;
+}
+
+/* 验证码输入框 */
+.formCode{
+  outline-color: invert ;
+  outline-style: none ;
+  flex:1;
+  -ms-flex: 1;
+  height: 58px;
+  border: 1px solid #BABABA;
+  border-radius: 4px;
+  margin-top: 5px;
+  padding-left: 23px;
+  font-family: PingFangSC-Medium;
+  font-size: 14px;
+  color: #80868B;
+  letter-spacing: 1.05px;
+  appearance: button;
+  -moz-appearance:button; /* Firefox */
+  -webkit-appearance:button; /* Safari 和 Chrome */
+  width: 54%;
+}
+.codeWrap{
+  width: 100%;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  gap: 16px
+}
+.codeWrap input{
+  float: left;
+}
+
+#verify{
+  width: 144px;
+  margin-top: 0px;
+}
+
+#code_img{
+  width: 120px;
+  height: 40px;
+  border-radius: 4px;
+}
+/* 验证码 */
+.cap{
+  position: absolute;
+  border: 1px solid #eee;
+  width: 123px;
+  height: 58px;
+  border-radius: 4px;
+  margin-left: 8px;
+  cursor: pointer;
+  right: 0;
+  text-outline: 0.19rem;
+  margin-top: 6px;
+}
+/* 登录按钮 */
+.bottom_btn{
+  width: 100%;
+  text-align: center;
+}
+.btn{
+  width: 280px;
+  height: 40px;
+  background: #02A3D9;
+  border-radius: 4px;
+  border: 0;
+  font-family: PingFangSC-Medium;
+  font-size: 16px;
+  color: #FFFFFF;
+  letter-spacing: 1.2px;
+  cursor: pointer;
+  position:relative;
+}
+.disabledBtn{
+  opacity:0.6
+}
+
+
+#loginImg{
+  display:inline-block;
+  margin-right:10px;
+  position: absolute;
+  left: 25px;
+  top: 20px;
+}
+
+/* 底部 */
+.company-name{
+  width: 100%;
+  height: 90px;
+  background: rgba(0, 0, 0, 0.2);
+  min-height: 90px;
+  font-family: PingFangSC-Medium;
+  font-size: 12px;
+  color: #B2B2B2;
+  letter-spacing: 0.9px;
+  text-align: center;
+  position: absolute;
+  bottom: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media screen and (max-width: 480px) {
+  .loginWrap{
+    display: block;
+    box-sizing: border-box;
+  }
+  .loginLeft{
+    width: 100%;
+    height:4.7rem;
+    min-height: 4.7rem;
+    background: url('../img/bg.png') no-repeat right center;
+  }
+  .loginRight{
+    margin: 0 12%;
+    padding: 0;
+    min-height: 0;
+    top: 4.7rem;
+    width: 76%;
+  }
+  .imgLogo>img{
+    display: none;
+  }
+  .imgLogo{
+    margin-left: 0;
+    margin-top: 0;
+    width: 5.4rem;
+    min-height: 2.2rem;
+    background: url('/rss/project/icon/cosmo_black_85_34.png') no-repeat center;
+  }
+  .signName{
+    margin-bottom: 1rem;
+    align-items: flex-end;
+  }
+  .sign{
+    color:#1D3346;
+    font-size: 32px;
+    letter-spacing: 0rem;
+    font-weight: bold;
+  }
+  .circrl{
+    background: url('../img/clicre.png') no-repeat center;
+    margin: 0 0 0.2rem  0.3rem;
+  }
+  form{
+    margin:0;
+  }
+  label{
+    display: none;
+  }
+  .formInput{
+    width: 100%;
+    padding:0;
+    border:0;
+    border-bottom: 1px solid #D0D0D0;
+    line-height: 2.2rem;
+    height: 2.2rem;
+    font-size: 16px;
+    outline:none;
+    border-radius:0;
+  }
+  .codeWrap{
+    justify-content: space-between;
+    height: 2.3rem;
+  }
+  .formCode{
+    width: 11.25rem;
+    padding:0;
+    border:0;
+    border-bottom: 1px solid #D0D0D0;
+    line-height: 2.2rem;
+    height: 2.2rem;
+    font-size: 16px;
+    outline:none;
+    border-radius:0;
+  }
+  .btn{
+    width: 100%;
+    height: 2.8rem;
+    margin-left: 0;
+    font-size: 16px;
+    background: url('../img/Mask.png') no-repeat center;
+    border-radius: 4px;
+    margin-top:1.2rem;
+  }
+  .company-name{
+    width: 100%;
+    min-height: 45px;
+    padding-top: 40px;
+  }
+  .prompt{
+    color:#EE0606;
+  }
+  .cap{
+    widows: 6rem;
+    height: 2.2rem;
+    top: 0.2rem;
+  }
+}
+
+
+@media screen and (max-height: 784px) {
+  .signName{
+    display: flex;
+    padding-top: 55px;
+  }
+  form{
+    margin-top: 30px;
+  }
+}
+
+@media screen and (max-height: 620px) {
+  body,html{
+    overflow-y: hidden;
+  }
+  .loginWrap{
+    min-height: 100vh;
+    position: static }
+}
+
+.updatePwd{
+  width: 100%;
+  height: 100vh;
+}
+
+.enterFlex{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  color: #fff;
+  decoration: underline;
+  justify-content: end;
+  margin: 10px 56px;
+  cursor: pointer;
+  text-decoration: underline;
+}

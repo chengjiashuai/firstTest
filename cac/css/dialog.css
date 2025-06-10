@@ -1,0 +1,96 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+.tip-dialog{
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0,0,0,0.5);
+    position: fixed;
+    display: none;
+    left: 0;
+    top: 0;
+}
+.dialog-con{
+    width: 525px;
+    height: 568px;
+    background: url(../img/dialog-bg.png) no-repeat 100% 100%;
+    position: absolute;
+    left: calc(50% - 262px);
+    top: calc(13vh);
+}
+.dialog-text{
+    width: 366px;
+    min-height: 50px;
+    overflow: hidden;
+    margin: 0 auto;
+    margin-top: 380px;
+    color: #536384;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 30px;
+}
+.dialog-btns{
+    /* display: flex; */
+    width: 517px;
+    height: 70px;
+    position: absolute;
+    left: 3px;
+    bottom: 3px;
+    line-height: 70px;
+    font-size: 16px;
+    text-align: center;
+    border-top: 1px solid #EBEEF5;
+}
+.dialog-btns>div{
+    /* flex: 1; */
+    float: left;
+    width: 50%;
+    cursor: pointer;
+}
+.close-dialog{
+    width: 42px;
+    height: 42px;
+    background: url(../img/close-dialog.png) no-repeat 100% 100%;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+@-webkit-keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate3d(0, -10%, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate3d(0, -10%, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+.fadeIn {
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;
+}
+.acbtn{
+  background: url(../img/clickBag.png) no-repeat !important;
+  background-size:cover ;
+    color: #fff !important;
+}

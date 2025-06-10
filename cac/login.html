@@ -1,0 +1,435 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="icon" href="" type="image/x-icon">
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/crypto-js.js"></script>
+    <script src="js/sm2.js"></script>
+    <script>
+      $.ajax({
+        url: "/cac/ver",
+        type: "get",//get
+        data: {},
+        async: false,
+        cache: true,
+        complete: function () {
+        },
+        traditional: false,
+        dataType: "json",
+        success:function (data) {
+          // data=data.replace(/\n/g,"").replace(/\r/g,"").replace(/\s/g,"")
+          //存取前端的版本号
+          window.leadingVersion = data.productVersionNumber;
+        }
+      })
+      // js css文件加时间戳
+      var _c = new Date().getTime();
+      document.write('<link rel="stylesheet" href="css/login.css?c='+_c+'"/>')
+      document.write('<link rel="stylesheet" href="css/dialog.css?c='+_c+'"/>')
+      document.write('<link rel="stylesheet" href="css/errorTipDialog.css?c='+_c+'"/>')
+      document.write('<script src="js/badbrowser.js?version='+ window.leadingVersion +'?c='+_c+'"><\/script>')
+      document.write('<script src="js/login.min.js?version='+ window.leadingVersion +'?c='+_c+'"><\/script>')
+      document.write('<script src="change/js/updateInfo.js?version='+window.leadingVersion+'?c='+_c+'"  type="text/javascript"><\/script>')
+    </script>
+    <script>
+      document.querySelector('link[rel="icon"]').href = navSetting ? navSetting.icon:"";
+    </script>
+</head>
+<body>
+  <div id="wrap" class="loginWrap">
+    <div class="navTitle">
+      <img src="img/logo.png" alt="宇动源">
+      <div class="rightTitle">
+        <div class="loginTitle">低代码集成开发环境</div>
+        <div class="subheading">Low-Code integrated development environment</div>
+      </div>
+    </div>
+    <div class="loginLeft"></div>
+    <div class="loginRight">
+      <div class="nameWrap">
+        <div class="signName">
+          <span class="sign">欢迎登录</span>
+        </div>
+        <form id="loginForm" action="login" method="post">
+          <div class="user">
+            <label class="name formSty">用户名</label>
+            <div class="layui-input-block">
+              <input type="text" id="userName" name="username" placeholder="请输入您的账号"
+              autocomplete="off" class="formInput" onfocus="focusName()">
+              <img id="nameImg" src="img/shanchu-2.png" onclick="clearName()"/>
+              <span id="spanUser" class="prompt"></span>
+            </div>
+            </div>
+            <div class="pass">
+              <label class="word formSty">密码</label>
+              <div class="layui-input-block">
+                <input type="password" id="p_w" name="password" placeholder="请输入您的密码" autocomplete="off"
+                class="formInput" onfocus="focusPass()">
+                <img id="passImg" src="img/shanchu-2.png" onclick="clearPass()"/>
+                <span id="spanPass" class="prompt"></span>
+              </div>
+            </div>
+          <div class="verification" id="validateCode">
+            <label class="verificationLabel formSty">验证码</label>
+            <div class="codeWrap">
+              <input type="text" class="formInput" id="verify" name="validateCode" placeholder="请输入验证码" autocomplete="off"
+                     class="formCode" onfocus="focusCode()">
+              <img id="code_img" class="">
+            </div>
+          </div>
+            <span id="spanCode" class="prompt"></span>
+            <input type="hidden" name="_csrf" id="csrf" value="">
+            <input type="hidden" name="checkPwdFlag" value="true">
+        </form>
+        <div class="bottom_btn">
+          <button class="btn" onclick="signIn()">
+            <img src="img/loading.png" id="loginImg" style="display:none"/>
+            <span> 登 录</span>
+          </button>
+        </div>
+        <div class="enterFlex">
+          <span class="enter1" onclick="enterTheWorkRoom()">进入工作室</span>
+          <span class="enter2" onclick="enterTheWorkRoom()">进入后台</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip-dialog">
+      <!-- // 关闭按钮 -->
+      <div class="close-dialog"></div>
+      <div class="dialog-con">
+        <!-- // 提示语 -->
+        <div class="dialog-text">
+          HI，您当前的浏览器版本过低，可能存在安全风险，建议立即升级浏览器。
+        </div>
+
+        <!-- // 两个按钮 -->
+        <div class="dialog-btns">
+          <div id="dialogBtn1">下载火狐</div>
+          <div class="acbtn" id="dialogBtn2">下载chrome</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="errorTip-dialog">
+      <div class="errorTipWrap">
+        <div class="title"><span>提示</span></div>
+        <div class="tip"><img src="img/tip.png" /><span id="errorTip"></span><br/><span id="updatePwdTip"></span></div>
+        <div class="selCheck"><input type="checkbox"/><span>今日不再提醒</span></div>
+        <div class="errorBtn"><button onclick="onOk()">确 定</button></div>
+      </div>
+    </div>
+    <div class="company-name">
+      <span id="companyTop"></span>&nbsp;
+      <span id="companyBot"></span>
+    </div>
+    </div>
+<!--   嵌入修改密码页-->
+  <iframe class="updatePwd" id="myiframe" frameborder="0" src=""></iframe>
+</body>
+
+
+<script>
+  //父页面传值给子页面
+  function toChildValue() {
+    var obj={
+    }
+    // 账号
+    obj.userName = document.getElementById("userName").value;
+    // 密码
+    obj.p_w = document.getElementById("p_w").value;
+    // 用户过期
+    var alertContent = getQueryString("alertContent")
+    if(alertContent){
+      obj.alertContent = alertContent
+    }
+    // 强密码开关
+    var pwdRuleStrengthenEnabled = getQueryString("pwdRuleStrengthenEnabled")
+    if(pwdRuleStrengthenEnabled){
+      obj.pwdRuleStrengthenEnabled = pwdRuleStrengthenEnabled
+    }
+    // 下次登录是否修改密码
+    var changeLoginPwdFlag = getQueryString("changeLoginPwdFlag")
+    if(changeLoginPwdFlag){
+      obj.changeLoginPwdFlag = changeLoginPwdFlag
+    }
+    // 修改周期
+    var pwdChangeInterval = getQueryString("pwdChangeInterval")
+    if(pwdChangeInterval){
+      obj.pwdChangeInterval = pwdChangeInterval
+    }
+    var userId = getQueryString("userId")
+    if(userId){
+      obj.userId = userId
+    }
+    return obj;
+  }
+  // 子页面给父页面传值
+  function getChildValue(val) {
+    var isClearPwd = val
+    if(isClearPwd){
+      $('.loginWrap').css('display','block')
+      document.getElementById("p_w").value = ''
+    }
+  }
+  getChildValue()
+    /** 浏览器兼容*/
+  window.onload = function(){
+    document.onkeydown = function (e) {
+      // 兼容FF和IE和Opera
+      var theEvent = window.event || e;
+      var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+      if (code === 13) {
+        signIn();
+      }
+    }
+
+    /** 判断当前浏览器版本（主函数） */
+    function __main__(){
+      try{
+        if ((typeof(browser) == "undefined")) {
+          browser = new badbrowser({
+            path: null,
+            template: null,
+            supported: {
+              // IE
+              msie: '11',
+              msedge: '11',
+              // 火狐
+              firefox: '33',
+              // 谷歌
+              chrome: '55',
+              // 欧鹏
+              opera: '28',
+              // 苹果
+              safari: '8'
+            }
+          })
+        }
+        if(!browser.check()){
+          getBrowserVersionLowDialog()
+          // showDialog()
+        } else {
+          // 监听页面的高度
+          var result = window.matchMedia('(max-height:680px)');
+          result.addListener(mediaMatches)
+          // 自适应的方法
+          mediaMatches(result);
+        }
+      } catch(e) {
+        getBrowserVersionLowDialog()
+      }
+    }
+
+    __main__();
+    // 表单中添加参数
+    $("#csrf").val(getCookie("XSRF-TOKEN"));
+  }
+    /** 打开弹窗*/
+    function showDialog(){
+        $('.dialog-con').addClass('fadeIn')
+        $('.tip-dialog').show()
+        $('.close-dialog').click(function(){
+          $('.tip-dialog').hide()
+        })
+
+        $('#dialogBtn1').hover(function(){
+            $('#dialogBtn2').removeClass('acbtn')
+            $(this).addClass('acbtn')
+        }, function(){
+            $('.dialog-btns div').removeClass('acbtn')
+            $('#dialogBtn2').addClass('acbtn')
+        })
+
+        $('#dialogBtn2').hover(function(){
+            $('#dialogBtn1').removeClass('acbtn')
+            $(this).addClass('acbtn')
+        }, function(){
+            $('.dialog-btns div').removeClass('acbtn')
+            $('#dialogBtn2').addClass('acbtn')
+        })
+    }
+
+    /** 发起请求 */
+    function getBrowserVersionLowDialog(){
+        $.ajax({
+            url: 'dialog/browserVersionLow',
+            methods: 'GET',
+            success: function(data){
+                renderContent(data)
+            }
+        })
+    }
+
+    /** 渲染弹窗里的 内容 */
+    function renderContent(data){
+        var actions = data["actions"];
+        $("#dialogBtn1").html(actions[0]["action-name"]);
+        $("#dialogBtn1").click(function(){
+            window.open(actions[0]["action-url"]);
+        })
+
+        $("#dialogBtn2").html(actions[1]["action-name"]);
+        $("#dialogBtn2").click(function(){
+            window.open(actions[1]["action-url"]);
+        })
+
+        $(".dialog-text").html(data['content']);
+        showDialog()
+    }
+
+    /** 验证码是否启用 */
+    var isValidateCodeEnable = true;
+
+    /** 是否需要验证码 */
+    request({
+        url: "oauth/getCodeSwitch",
+        success: function (result) {
+            if (!result || result === "false") {
+                document.getElementById("validateCode").style.display = "none";
+                isValidateCodeEnable = false;
+                // 点击图片刷新
+                document.getElementById('code_img').removeAttribute("onclick");
+            } else {
+                document.getElementById("validateCode").style.display = "block";
+                isValidateCodeEnable = true;
+                refreshImgCode();
+                // 点击图片刷新
+                document.getElementById('code_img').onclick = function () {
+                    refreshImgCode();
+                }
+            }
+        }
+    });
+
+    function refreshImgCode() {
+        request({
+            url: "oauth/code/image?width=" + $("#code_img").width() + "&height=" + $("#code_img").height(),
+            success: function (base64Img) {
+                if (base64Img) {
+                    $("#code_img").attr("src", "data:image/png;base64," + base64Img);
+                }
+            }
+        });
+    }
+
+    function getQueryString(name) {
+      var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+      var r = window.location.search.substr(1).match(reg);
+      if (r != null) {
+          return unescape(decodeURI(r[2]));
+      }
+      return null;
+    }
+
+    function getCookie(cookieName){
+        var cookieValue="";
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].split("=");
+                if (cookie[0].trim() == cookieName.trim()) {
+                    cookieValue = cookie[1].trim();
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function request(param) {
+        param.type = 'post';
+        param.headers = {
+          "X-XSRF-TOKEN": getCookie("XSRF-TOKEN")
+        };
+        $.ajax(param)
+    }
+
+    /** 提示信息过期的确定点击方法*/
+    function onOk(){
+      var val = $("input[type='checkbox']").is(':checked')
+      var isCheckBox = getQueryString("isCheckBox")
+      var index=window.location.search.indexOf("redirect_uri=");
+      var url = window.location.search.substr(index+13,window.location.search.length);
+      var type = getQueryString("type")
+      if (isCheckBox && isCheckBox == 1) {
+        if(val){
+          $.ajax({
+            async:false,
+            url:"dialog/expireRemind?type="+ type +"&account=" + localStorage.getItem("userName"),
+            type:"patch",
+            dataType:"text",
+            success: function(result){
+              if(index != -1){
+                window.location.href = url;
+              }
+            },
+            error: function () {
+              $("#spanCode").text("请求异常，请联系管理员");
+              return ;
+            }
+          });
+        }else{
+          if(index != -1){
+            window.location.href = url;
+          }
+        }
+      }else{
+        if(type == 2 && index != -1){
+          window.location.href = url;
+        }
+      }
+      $(".errorTip-dialog").hide();
+    }
+
+    /** 账户的聚焦事件 */
+    function focusName(){
+        document.getElementById("nameImg").style.display='block'
+        document.getElementById("passImg").style.display='none'
+    }
+    /** 密码的聚焦事件 */
+    function focusPass(){
+        document.getElementById("nameImg").style.display='none'
+        document.getElementById("passImg").style.display='block'
+    }
+    /** 验证码的聚焦事件 */
+    function focusCode(){
+        document.getElementById("nameImg").style.display='none'
+        document.getElementById("passImg").style.display='none'
+    }
+
+    /**  清空input的点击事件 */
+    /** 账户 */
+    function clearName(){
+      document.getElementById("userName").value=""
+    }
+    /** 密码 */
+    function clearPass(){
+      document.getElementById("p_w").value=""
+    }
+
+    /** 页面自适应（监听页面的高度）*/
+    function mediaMatches(result){
+        if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+        } else {
+            if (result.matches) {
+                document.getElementById('wrap').style.minHeight = "100vh";
+                document.getElementById('wrap').style.position= "static";
+                document.body.style.overflowY="auto"
+            } else {
+                document.getElementById('wrap').style.height = "100%";
+                document.getElementById('wrap').style.position= "absolute";
+                document.body.style.overflowY="hidden"
+            }
+        }
+    }
+
+    function enterTheWorkRoom(){
+      alert("功能开发中！")
+    }
+</script>
+</html>
