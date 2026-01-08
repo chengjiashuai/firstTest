@@ -11,6 +11,15 @@ let apiMap = {
   'resource': '读取任务指派人分组列表',
   'myTask': '读取我的任务列表'
 }
+// 项目成员只可查看
+var isOnlyView = getParamValue('isOnlyView') == 1
+
+/**
+ * 打开填报任务工时弹窗
+ */
+function fillTaskWorkTime(){
+  $('#cmpe1ea41button').click();
+}
 
 /**
  * 刷新视图数据（提供给父页面调用）
@@ -43,15 +52,13 @@ function updateData(params){
     task_state: newData['任务状态'],
     task_priority: newData['任务优先级'],
     plan_end_time: newData['计划完成日期'],
-
+    task_process: newData['任务进度'],
   }
   for (let key in data) {
     DomByMarking(key).textbox('setValue', data[key])
   }
   // return;
   $('#cmp177770button').click();
-
-  render('#cmp21f46c')
 }
 
 /**
@@ -66,15 +73,16 @@ function render(id){
   $(id).html(`<div id="boardView" class=""><div id="boardView-mask"></div></div>`);
   const root = $('#boardView');
   data.forEach(item => {
+    let showAddBtn = (item['分组名称'] == '未开始' && layout == 'taskStatus') || (layout != 'taskStatus' && layout != 'myTask')
     const children = JSON.parse(item['任务列表'] || "[]");
-    let panel = `<div class="boardView-item" data-status="${item['分组名称']}">
+    let panel = `<div class="boardView-item ${showAddBtn && !isOnlyView ? '' : 'hideAddBtn'}" data-status="${item['分组名称']}">
               <div class="boardView-item-label">
-                <div class="boardView-item-label-left">${item['分组名称']}<span>${children.length > 0 ? `${children.length}` : ''}</span></div>
+                <div class="boardView-item-label-left">${item['分组名称']}<span>${children ? `${children.length}` : ''}</span></div>
               </div>
               <div class="boardView-item-taskList">${taskList(children)}</div>
           `;
 
-    if((item['分组名称'] == '未开始' && layout == 'taskStatus') || (layout != 'taskStatus' && layout != 'myTask')){
+    if(showAddBtn && !isOnlyView){
       panel += `<div class="addTask" data-action="add-task" style="${children.length > 0 ? '' : 'margin-top: 0' }">+</div>`;
     }
 
@@ -88,11 +96,32 @@ function render(id){
 }
 
 /**
+ * 排序
+ */
+function handleSort(data){
+  const sortField = getParamValue('orderByField');
+  const fieldMap = {
+    // 对调下面的key，value
+    'create_time': '创建时间',
+    'plan_end_time': '计划完成日期',
+    'plan_start_time': '计划开始日期',
+    'actual_end_time': '实际完成时间',
+  }
+  const fileName = fieldMap[sortField];
+  data.sort((a, b) => {
+    if (!a[fileName]) return 1; // a 的时间为空，放后面
+    if (!b[fileName]) return -1;  // b 的时间为空，放前面
+    return new Date(b[fileName]) - new Date(a[fileName]); // 倒序比较时间
+  });
+}
+
+/**
  * 渲染任务卡片
  * @param data
  * @return {string}
  */
 function taskList(data){
+  handleSort(data)
   let html = '';
   data.forEach((item, index) => {
     html += `<div class="task" data-id="${item['任务编码']}" data-info='${JSON.stringify(item)}' data-publish="${item['任务是否发布'] ? 1 : 0}">
@@ -107,7 +136,7 @@ function taskList(data){
 
     html += `</div><div class="task-tips">`
 
-    if(item['任务状态'] == '已终止' || (layout == 'myTask' && item['任务状态'] == '已完成')){
+    if(item['任务状态'] == '已终止' || (layout == 'myTask' && item['任务状态'] == '已完成') || isOnlyView){
 
     }else{
       html += `<div class="task-operation" data-action="card-operation">···</div>`
@@ -120,9 +149,14 @@ function taskList(data){
     }
 
     if(item['计划工时数']){
-      let realWorkTime = item['实际工时数'] || 0
+      let realWorkTime = item['实际工时数'] || 0;
+      let warnClass = ''
+      if(realWorkTime > item['计划工时数']){
+        warnClass = 'warn'
+      }
+
       html += `<div class="task-line1-time">工时情况：
-            <span class="num">${realWorkTime}</span> / <span>${item['计划工时数']}</span><span class="unit"> 小时</span>
+            <span class="num ${warnClass}">${realWorkTime}</span> / <span>${item['计划工时数']}</span><span class="unit"> 小时</span>
         </div>`
     }
 
@@ -139,6 +173,11 @@ function taskList(data){
 
       if(nowTime > new Date(item['计划完成日期'] + ' 00:00:00')){
         warnClass = 'overdue'
+      }
+
+      var status = ['已终止', '已完成', '已暂停']
+      if(status.includes(item['任务状态'])){
+        warnClass = 'default'
       }
 
       if(item['计划开始日期']){
@@ -183,7 +222,7 @@ function createChildrenModal(){
   `
   data.forEach(item => {
     html += `<div class="task-children-modal-list-item" data-taskCode="${item.task_code}">
-            <div class="task-info-people">${item.assigner_username ? item.assigner_username.slice(0, 1) : ''}</div>
+            <div class="task-info-people" data-tooltip="${item.assigner_username}">${item.assigner_username ? item.assigner_username.slice(0, 1) : ''}</div>
           
             <div class="task-children-modal-list-item-name">${item.task_name}</div>
             `
@@ -208,7 +247,11 @@ function createChildrenModal(){
   $('.task-children-modal-list-item').off('click').on('click', function (){
     var taskCode = $(this).attr('data-taskCode')
     DomByMarking('task_code').textbox('setValue', taskCode)
-    $('#cmp59d88ebutton').click();
+    if(isOnlyView){
+      $('#cmp5d17cebutton').click();
+    }else{
+      $('#cmp59d88ebutton').click();
+    }
   })
 }
 
@@ -221,6 +264,7 @@ function createOperationPanel(){
   if(layout == 'myTask'){
     // 设置任务状态
     html += `<div class="task-operation-panel-item" data-action="setProgress">任务进度</div>`
+    html += `<div class="task-operation-panel-item" data-action="setWorkHour">任务工时</div>`
   }
 
   if(currentTask['任务是否发布'] == 1 && currentTask['任务状态'] != '已终止'){
@@ -242,10 +286,21 @@ function createOperationPanel(){
     // 设置优先级
     html += `<div class="task-operation-panel-item" data-action="setPriority"">设置优先级</div>`
 
-    if(currentTask['任务是否发布'] == 1 && currentTask['任务是否确认'] == 0){
-      // 确认工时
-      html += `<div class="task-operation-panel-item" data-action="confirm">确认工时</div>`
+    // 添加子任务
+    html += `<div class="task-operation-panel-item" data-action="addSubTask"">添加子任务</div>`
+
+    // 添加子任务
+    html += `<div class="task-operation-panel-item" data-action="copyTask"">复制任务</div>`
+
+    // 删除任务
+    if(currentTask['任务是否发布'] != 1){
+      html += `<div class="task-operation-panel-item" data-action="deleteTask"">删除任务</div>`
     }
+
+    // if(currentTask['任务是否发布'] == 1 && currentTask['任务是否确认'] == 0){
+    //   // 确认工时
+    //   html += `<div class="task-operation-panel-item" data-action="confirm">确认工时</div>`
+    // }
   }
 
 
@@ -308,7 +363,7 @@ function createSetDeadlinePanel(me){
   let time = currentTask['计划完成日期'];
   let startTime = currentTask['计划开始日期'];
   let iframeUrl = 'http://erptest.cs.cosmosource.com:27778/fwp/brower.html?objpath=%2Fproject%2Ftenant%2FERP%2Fimsme%2Fprojectplan%2Fhomepage%2FboardViewSub%2Fcalendar.fwp'
-  iframeUrl += '&ParamPair=current==' + time + '@@startTime==' + startTime
+  iframeUrl += '&ParamPair=appCode=' + window.check.appCode + 'current==' + time + '@@startTime==' + startTime
   let html = `<div class="setDeadlinePanel subMenu" id="setDeadlinePanel">
     <iframe id="calendar" src="${iframeUrl}"></iframe>
     <div class="setDeadlinePanel-bottom">
@@ -396,13 +451,50 @@ function createSetStatusPanel(me){
   setModalPosition('#setStatusPane', me, 'right')
   $('.setStatusPane-item').off('click').on('click',function (){
     var status = $(this).text();
-    if(status === '已完成'){
-      // 更新任务进度为100%
-      $('#cmp0e1608button').click();
-    }
     updateData({
       '任务状态': $(this).text()
     })
+    if(status === '已完成'){
+      // 更新任务进度为100%
+      $('#cmp0e1608button').click();
+      render('#cmp21f46c')
+    }
+  })
+}
+
+/**
+ * 创建设置任务进度面板
+ * @param me
+ */
+function createSetProgressPanel(me){
+  let html = `<div class="setProgressPanel subMenu" id="setProgressPanel">`
+  var progressList = [1,2,3,4,5,6,7,8,9,10]
+  progressList.forEach(item => {
+    var className = ''
+    item = item * 10
+    if(item == currentTask['任务进度']){
+      className = 'subMenu-item-active'
+    }
+    html += `<div class="setProgressPanel-item ${className}" data-text="${item}">${item}%</div>`
+  })
+
+  html += '</div>'
+  // 如果窗口已存在，则移除
+  if ($('#setProgressPanel').length > 0) {
+    $('#setProgressPanel').remove()
+  }
+  $('#boardView').append(html)
+  setModalPosition('#setProgressPanel', me, 'right')
+  $('.setProgressPanel-item').off('click').on('click',function (){
+    var Progress = $(this).attr('data-text')
+    updateData({
+      '任务进度': Progress
+    })
+    if(Progress === '100'){
+      // 更新任务状态为已完成
+      $('#cmp717ea8button').click();
+      render('#cmp21f46c')
+    }
   })
 }
 
@@ -413,7 +505,7 @@ function eventBind(){
   $('.boardView-item-taskList .task').off('click').on('click', function (){
     currentTask = JSON.parse($(this).attr('data-info'))
     DomByMarking('task_code').textbox('setValue', currentTask['任务编码'])
-    if(currentTask['任务状态'] === '已终止' || layout == 'myTask'){
+    if(currentTask['任务状态'] === '已终止' || layout == 'myTask' || isOnlyView){
       $('#cmp5d17cebutton').click();
     }else{
       $('#cmp59d88ebutton').click();
@@ -426,6 +518,7 @@ function eventBind(){
     event.stopPropagation();
     currentTask = JSON.parse($(this).parents('.task').attr('data-info'))
     createChildrenModal()
+
     setModalPosition('#taskChildrenModal', this)
   })
 
@@ -497,15 +590,48 @@ function checkTask(){
  * 绑定操作面板事件
  */
 function bindOperationPanelEvent(){
-  // 我的任务-汇报进度
+  // 删除任务
+  $('.task-operation-panel-item[data-action=deleteTask]').off('click').on('click', function (){
+    // handleSelectStyle(this);
+    DomByMarking('task_code').textbox('setValue', currentTask['任务编码'])
+    // $('#cmpa17082button').click();
+    DomByMarking('delete_task').click();
+    console.log('删除任务')
+  })
+
+  // 复制任务
+  $('.task-operation-panel-item[data-action=copyTask]').off('click').on('click', function (){
+    handleSelectStyle(this);
+    DomByMarking('task_code').textbox('setValue', currentTask['任务编码'])
+    // $('#cmpa17082button').click();
+    DomByMarking('copy_task').click();
+    console.log('复制任务')
+  })
+
+  // 添加子任务
+  $('.task-operation-panel-item[data-action=addSubTask]').off('click').on('click', function (){
+    // handleSelectStyle(this);
+    // DomByMarking('task_code').textbox('setValue', currentTask['任务编码'])
+    DomByMarking('parent_task_code').textbox('setValue', currentTask['任务编码'])
+    DomByMarking('addSubTask').click();
+    console.log('添加子任务')
+  })
+  // 我的任务-任务进度
   $('.task-operation-panel-item[data-action=setProgress]').off('click').on('click', function (){
+    handleSelectStyle(this);
+    console.log('任务进度')
+    createSetProgressPanel(this)
+  })
+
+  // 我的任务-任务工时
+  $('.task-operation-panel-item[data-action=setWorkHour]').off('click').on('click', function (){
     handleSelectStyle(this);
     DomByMarking('assigner_usercode').textbox('setValue', currentTask['指派人编码'])
     setParamValue('task_name', currentTask['任务名称'])
     setParamValue('task_prograss', currentTask['任务进度'])
     DomByMarking('task_code').textbox('setValue', currentTask['任务编码'])
     $('#cmpe1ea41button').click();
-    console.log('汇报进度')
+    console.log('任务工时')
   })
 
   // 发布任务
@@ -565,6 +691,7 @@ function bindOperationPanelEvent(){
 function setModalPosition(modal, trigger, position){
   const $modal = $(modal);
   const $trigger = $(trigger);
+  // 这个就是你弹窗的容器
   const $boardView = $('#boardView');
 
   // 获取触发元素和容器的位置与尺寸
