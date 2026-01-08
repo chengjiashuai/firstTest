@@ -1,44 +1,41 @@
-name: Feishu Commit Test
+name: Dev Build Notify
 
 on:
   push:
     branches:
-      - dev
+      - main
+      - master
 
 jobs:
   notify:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Notify Feishu
+      - name: Send Feishu notification (last 10 commits)
+        env:
+          FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
+          COMMITS_JSON: ${{ toJson(github.event.commits) }}
+          REPO: ${{ github.repository }}
+          ACTOR: ${{ github.actor }}
         run: |
-          COMMITS_LIST=$(git log --pretty="format:%h %s (%an)" -10)
-          COMMITS_COUNT=$(echo "$COMMITS_LIST" | wc -l | tr -d ' ')
-          ESCAPED_COMMITS=$(printf "%s\n" "$COMMITS_LIST" | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
+          # 取最多 10 条 commit，拼接成字符串
+          ESCAPED_COMMITS=$(echo "$COMMITS_JSON" | jq -r '
+            .[:10]
+            | map("- " + .message + " (" + .author.name + ")")
+            | join("\n")
+          ')
 
-          curl -X POST "${{ secrets.FEISHU_WEBHOOK }}" \
+          # 兜底，防止 commits 为空
+          if [ -z "$ESCAPED_COMMITS" ]; then
+            ESCAPED_COMMITS="（本次推送无 commit 信息）"
+          fi
+
+          # 发送飞书消息
+          curl -s -X POST "$FEISHU_WEBHOOK" \
             -H "Content-Type: application/json" \
-            -d @- <<EOF
-          {
-            "msg_type": "interactive",
-            "card": {
-              "header": {
-                "title": { "tag": "plain_text", "content": "🚀 Commit 测试" },
-                "template": "green"
-              },
-              "elements": [
-                {
-                  "tag": "div",
-                  "text": {
-                    "tag": "lark_md",
-                    "content": "**最近提交（$COMMITS_COUNT 条）**\n```\n$ESCAPED_COMMITS\n```"
-                  }
-                }
-              ]
-            }
-          }
-          EOF
+            -d "{
+              \"msg_type\": \"text\",
+              \"content\": {
+                \"text\": \"🚀 GitHub Actions 构建通知\n\n📦 仓库：$REPO\n👤 提交人：$ACTOR\n\n📝 最近提交（最多 10 条）：\n$ESCAPED_COMMITS\"
+              }
+            }"
