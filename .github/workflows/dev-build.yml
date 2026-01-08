@@ -72,7 +72,8 @@ jobs:
           # 转义 commit 信息
           # ESCAPED_COMMITS="$COMMITS_LIST"
           # 美化提交记录，每条前加 "- "
-          ESCAPED_COMMITS=$(echo "$COMMITS_LIST" | sed 's/^/- /')
+          # ESCAPED_COMMITS=$(echo "$COMMITS_LIST" | sed 's/^/- /')
+          ESCAPED_COMMITS=$(echo "$COMMITS_LIST" | sed 's/^/- /' | awk '{printf "%s\\n",$0}')
 
           AUTHOR="${{ github.actor }}"
           REPO="${{ github.repository }}"
@@ -103,8 +104,7 @@ jobs:
                   "tag": "div",
                   "text": {
                     "tag": "lark_md",
-                    "content": "**提交记录**:
-          $ESCAPED_COMMITS"
+                    "content": "**提交记录**:\\n$ESCAPED_COMMITS"
                   }
                 }
               ]
