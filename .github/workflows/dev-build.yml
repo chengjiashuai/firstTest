@@ -58,12 +58,11 @@ jobs:
           BEFORE_SHA="${{ github.event.before }}"
           AFTER_SHA="${{ github.event.after }}"
           BRANCH="${GITHUB_REF##*/}"
-
-          # commit 列表，最多 10 条
+          
           if [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ] || [ "$BEFORE_SHA" = "$AFTER_SHA" ]; then
-          COMMITS_LIST=$(git log -1 --pretty="format:%s" "$AFTER_SHA")
+          COMMITS_LIST=$(git log -1 --pretty="format:%s" "$AFTER_SHA" | grep -v '^Merge branch')
           else
-          COMMITS_LIST=$(git log --pretty="format:%s" "$BEFORE_SHA".."$AFTER_SHA")
+          COMMITS_LIST=$(git log --pretty="format:%s" "$BEFORE_SHA".."$AFTER_SHA" | grep -v '^Merge branch')
           fi
 
           # commit 数量
@@ -104,7 +103,7 @@ jobs:
                   "tag": "div",
                   "text": {
                     "tag": "lark_md",
-                    "content": "**提交记录**:\\n$ESCAPED_COMMITS"
+                    "content": "**Commit Message**:\\n$ESCAPED_COMMITS"
                   }
                 }
               ]
