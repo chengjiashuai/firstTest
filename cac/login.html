@@ -54,18 +54,31 @@
         <div class="signName">
           <span class="sign">欢迎登录</span>
         </div>
+        <div class="loginTab">
+          <div class="active" data-tab="workRoom" onclick="tabChange('workRoom')">进入工作室</div>
+          <div data-tab="backStage" onclick="tabChange('backStage')">进入后台</div>
+        </div>
         <form id="loginForm" action="login" method="post">
-          <div class="user">
-            <label class="name formSty">用户名</label>
-            <div class="layui-input-block">
-              <input type="text" id="userName" name="username" placeholder="请输入您的账号"
-              autocomplete="off" class="formInput" onfocus="focusName()">
-              <img id="nameImg" src="img/shanchu-2.png" onclick="clearName()"/>
-              <span id="spanUser" class="prompt"></span>
+            <div class="user workRoom">
+              <div class="layui-input-block">
+                <span class="input-icon workRoom"></span>
+                <input type="text" id="workRoom" name="workRoom" placeholder="请输入工作室名称"
+                       autocomplete="off" class="formInput" onfocus="focusName()">
+                <img id="workRoomImg" src="img/shanchu-2.png" onclick="clearName()"/>
+                <span id="spanWorkRoom" class="prompt"></span>
+              </div>
             </div>
+            <div class="user">
+              <div class="layui-input-block">
+                <span class="input-icon name"></span>
+                <input type="text" id="userName" name="username" placeholder="请输入您的账号"
+                autocomplete="off" class="formInput" onfocus="focusName()">
+                <img id="nameImg" src="img/shanchu-2.png" onclick="clearName()"/>
+                <span id="spanUser" class="prompt"></span>
+              </div>
             </div>
             <div class="pass">
-              <label class="word formSty">密码</label>
+              <span class="input-icon word"></span>
               <div class="layui-input-block">
                 <input type="password" id="p_w" name="password" placeholder="请输入您的密码" autocomplete="off"
                 class="formInput" onfocus="focusPass()">
@@ -74,7 +87,7 @@
               </div>
             </div>
           <div class="verification" id="validateCode">
-            <label class="verificationLabel formSty">验证码</label>
+            <span class="input-icon verificationLabel"></span>
             <div class="codeWrap">
               <input type="text" class="formInput" id="verify" name="validateCode" placeholder="请输入验证码" autocomplete="off"
                      class="formCode" onfocus="focusCode()">
@@ -90,10 +103,6 @@
             <img src="img/loading.png" id="loginImg" style="display:none"/>
             <span> 登 录</span>
           </button>
-        </div>
-        <div class="enterFlex">
-          <span class="enter1" onclick="enterTheWorkRoom()">进入工作室</span>
-          <span class="enter2" onclick="enterTheWorkRoom()">进入后台</span>
         </div>
       </div>
     </div>
@@ -428,8 +437,14 @@
         }
     }
 
-    function enterTheWorkRoom(){
-      alert("功能开发中！")
+    function tabChange(tab){
+      $('.loginTab div').removeClass('active')
+      $('.loginTab div[data-tab='+ tab +']').addClass('active')
+      if(tab === 'workRoom'){
+        $('#loginForm .workRoom').show()
+      }else{
+        $('#loginForm .workRoom').hide()
+      }
     }
 </script>
 </html>
