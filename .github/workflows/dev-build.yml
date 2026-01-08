@@ -1,27 +1,67 @@
-name: Feishu Smoke Test
+- name: Notify Feishu (Dev Build)
+  if: always()
+  run: |
+    if [ "${{ job.status }}" = "success" ]; then
+      STATUS="✅ Succeeded"
+      TEMPLATE="green"
+    else
+      STATUS="❌ Failed"
+      TEMPLATE="red"
+    fi
 
-on: push
+    BEFORE_SHA="${{ github.event.before }}"
+    AFTER_SHA="${{ github.event.after }}"
 
-jobs:
-  notify:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Print webhook exists
-        run: |
-          if [ -z "${{ secrets.FEISHU_WEBHOOK }}" ]; then
-            echo "❌ FEISHU_WEBHOOK is EMPTY"
-            exit 1
-          else
-            echo "✅ FEISHU_WEBHOOK is SET"
-          fi
+    if [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ]; then
+      COMMITS_LIST=$(git log -1 --pretty="format:%h %s (%an)")
+    else
+      COMMITS_LIST=$(git log --pretty="format:%h %s (%an)" "$BEFORE_SHA..$AFTER_SHA" | head -n 10)
+    fi
 
-      - name: Send Feishu Message
-        run: |
-          curl -v -X POST "${{ secrets.FEISHU_WEBHOOK }}" \
-            -H "Content-Type: application/json" \
-            -d '{
-              "msg_type": "text",
-              "content": {
-                "text": "🚀 GitHub Actions → 飞书 链路测试成功"
-              }
-            }'
+    COMMITS_COUNT=$(echo "$COMMITS_LIST" | grep -c '^')
+
+    JSON=$(jq -n \
+      --arg repo "${{ github.repository }}" \
+      --arg branch "${{ github.ref_name }}" \
+      --arg status "$STATUS" \
+      --arg time "${{ github.event.head_commit.timestamp }}" \
+      --arg author "${{ github.actor }}" \
+      --arg commits "$COMMITS_LIST" \
+      --arg count "$COMMITS_COUNT" \
+    '{
+      msg_type: "interactive",
+      card: {
+        config: { wide_screen_mode: true },
+        header: {
+          title: { tag: "plain_text", content: "🚀 前端Dev更新" },
+          template: "'$TEMPLATE'"
+        },
+        elements: [
+          {
+            tag: "div",
+            text: {
+              tag: "lark_md",
+              content:
+                "**Repository**: \($repo)\n" +
+                "**Branch**: \($branch)\n" +
+                "**Status**: \($status)\n" +
+                "**Time**: \($time)\n" +
+                "**Author**: \($author)\n" +
+                "**Commits**: 共 \($count) 条提交"
+            }
+          },
+          { tag: "hr" },
+          {
+            tag: "div",
+            text: {
+              tag: "lark_md",
+              content: "**提交记录**:\n```\n\($commits)\n```"
+            }
+          }
+        ]
+      }
+    }')
+
+    curl -X POST "${{ secrets.CI_DONE_FEISHU_WEBHOOK }}" \
+      -H "Content-Type: application/json" \
+      -d "$JSON"
