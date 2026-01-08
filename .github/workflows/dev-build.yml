@@ -72,21 +72,21 @@ jobs:
           # 发送飞书消息
           curl -s -X POST "$FEISHU_WEBHOOK" \
             -H "Content-Type: application/json" \
-            -d @- <<'EOF'
+            -d @- <<EOF
           {
             "msg_type": "interactive",
             "card": {
               "config": { "wide_screen_mode": true },
               "header": {
                 "title": { "tag": "plain_text", "content": "🚀 前端Dev更新" },
-                "template": "'"$TEMPLATE"'"
+                "template": "$TEMPLATE"
               },
               "elements": [
                 {
                   "tag": "div",
                   "text": {
                     "tag": "lark_md",
-                    "content": "**Repository**: $REPO\n**Branch**: $BRANCH\n**Status**: $STATUS\n**Time**: $TIME_ISO\n**Author**: $AUTHOR\n**Commits**: 共 $COMMITS_COUNT 条提交"
+                    "content": "**Repository**: $REPO\\n**Branch**: $BRANCH\\n**Status**: $STATUS\\n**Time**: $TIME_ISO\\n**Author**: $AUTHOR\\n**Commits**: 共 $COMMITS_COUNT 条提交"
                   }
                 },
                 { "tag": "hr" },
@@ -94,7 +94,7 @@ jobs:
                   "tag": "div",
                   "text": {
                     "tag": "lark_md",
-                    "content": "**提交记录**:\\n```\n'"$ESCAPED_COMMITS"'\n```"
+                    "content": "**提交记录**:\\n```\n$ESCAPED_COMMITS\n```"
                   }
                 }
               ]
