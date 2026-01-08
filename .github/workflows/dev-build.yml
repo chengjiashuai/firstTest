@@ -103,7 +103,8 @@ jobs:
                   "tag": "div",
                   "text": {
                     "tag": "lark_md",
-                    "content": "**提交记录**:$ESCAPED_COMMITS"
+                    "content": "**提交记录**:
+          $ESCAPED_COMMITS"
                   }
                 }
               ]
