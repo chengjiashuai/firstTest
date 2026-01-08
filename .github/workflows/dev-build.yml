@@ -37,39 +37,41 @@ jobs:
           FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
         run: |
           set -e
-
+          
+          # ============================
           # 状态
-          if [ "${{ job.status }}" = "success" ]; then
+          # 判断上一条命令返回码
+          # ============================
+          if [ $? -eq 0 ]; then
             STATUS="✅ Succeeded"
             TEMPLATE="green"
           else
             STATUS="❌ Failed"
             TEMPLATE="red"
           fi
-
-          # 获取 SHA
-          BEFORE_SHA="${{ github.event.before }}"
-          AFTER_SHA="${{ github.event.after }}"
-
-          # commit 列表，最多 10 条
-          if [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ] || [ "$BEFORE_SHA" = "$AFTER_SHA" ]; then
-            COMMITS_LIST=$(git log -1 --pretty="format:%h %s (%an)" $AFTER_SHA || echo "")
-          else
-            COMMITS_LIST=$(git log --pretty="format:%h %s (%an)" $BEFORE_SHA..$AFTER_SHA --max-count=10 || echo "")
-          fi
-
-          # 提交数量
+          
+          # ============================
+          # 获取 commit 列表
+          # ============================
+          git fetch --all
+          git checkout dev || true
+          
+          # 获取最近 10 条 commit
+          COMMITS_LIST=$(git log -n 10 --pretty="format:%h %s (%an)" || echo "")
           COMMITS_COUNT=$(echo "$COMMITS_LIST" | grep -c '^')
-
-          # 转义 commit 信息
           ESCAPED_COMMITS=$(echo "$COMMITS_LIST" | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
-
+          
+          # ============================
+          # 其他变量保持原来脚本
+          # ============================
           BRANCH="${{ github.ref_name }}"
           AUTHOR="${{ github.actor }}"
           REPO="${{ github.repository }}"
           TIME_ISO='${{ github.event.head_commit.timestamp }}'
-
+          
+          # ============================
           # 发送飞书消息
+          # ============================
           curl -s -X POST "$FEISHU_WEBHOOK" \
             -H "Content-Type: application/json" \
             -d @- <<EOF
