@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sticky布局固定表格列</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .table-container {
+            position: relative;
+            overflow: auto; /* 添加滚动条 */
+            max-width: 100%; /* 表格容器最大宽度 */
+            height: 400px; /* 表格容器高度 */
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            min-width: 800px; /* 防止表格太窄 */
+        }
+
+        th, td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+            background-color: #fff;
+        }
+
+        thead th {
+            position: sticky;
+            top: 0;
+            background-color: #f4f4f4; /* 固定表头的背景色 */
+            z-index: 3; /* 确保表头在其他内容之上 */
+        }
+
+        /* 固定左侧前三列 */
+        tbody td:nth-child(1),
+        thead th:nth-child(1) {
+            position: sticky;
+            left: 0;
+            background-color: #f9f9f9; /* 固定列的背景色 */
+            z-index: 2;
+        }
+
+        tbody td:nth-child(2),
+        thead th:nth-child(2) {
+            position: sticky;
+            left: 120px; /* 根据第一列的宽度调整 */
+            background-color: #f9f9f9;
+            z-index: 2;
+        }
+
+        tbody td:nth-child(3),
+        thead th:nth-child(3) {
+            position: sticky;
+            left: 240px; /* 根据前两列的宽度调整 */
+            background-color: #f9f9f9;
+            z-index: 2;
+        }
+
+        /* 固定右侧最后一列 */
+        tbody td:last-child,
+        thead th:last-child {
+            position: sticky;
+            right: 0;
+            background-color: #f9f9f9; /* 固定列的背景色 */
+            z-index: 2;
+        }
+
+        /* 防止固定列的内容遮挡表头 */
+        tbody td:nth-child(1),
+        tbody td:nth-child(2),
+        tbody td:nth-child(3),
+        tbody td:last-child {
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+<div class="table-container">
+    <table>
+        <thead>
+        <tr>
+            <th>固定列1</th>
+            <th>固定列2</th>
+            <th>固定列3</th>
+            <th>标题4</th>
+            <th>标题5</th>
+            <th>标题6</th>
+            <th>标题7</th>
+            <th>固定列8</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>固定内容1-1</td>
+            <td>固定内容1-2</td>
+            <td>固定内容1-3</td>
+            <td>内容1-4</td>
+            <td>内容1-5</td>
+            <td>内容1-6</td>
+            <td>内容1-7</td>
+            <td>固定内容1-8</td>
+        </tr>
+        <tr>
+            <td>固定内容2-1</td>
+            <td>固定内容2-2</td>
+            <td>固定内容2-3</td>
+            <td>内容2-4</td>
+            <td>内容2-5</td>
+            <td>内容2-6</td>
+            <td>内容2-7</td>
+            <td>固定内容2-8</td>
+        </tr>
+        <tr>
+            <td>固定内容3-1</td>
+            <td>固定内容3-2</td>
+            <td>固定内容3-3</td>
+            <td>内容3-4</td>
+            <td>内容3-5</td>
+            <td>内容3-6</td>
+            <td>内容3-7</td>
+            <td>固定内容3-8</td>
+        </tr>
+        <!-- 更多行 -->
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
