@@ -1,7 +1,8 @@
 class People{
   type = 'ssss'
+  name = 'ssssssss'
   constructor(name) {
-    this.name = name
+    // this.name = name
   }
   sayName(){
     console.log('test')
@@ -10,8 +11,9 @@ class People{
 }
 
 class Man extends People{
+  all = 'all'
   constructor(name, age) {
-    super(name);
+    super();
     this.age = age
   }
   saySex(){
@@ -23,6 +25,9 @@ class Man extends People{
 }
 
 let xiaoming = new Man('xiaoming', 23)
-xiaoming.sayName()
-xiaoming.saySex()
-xiaoming.sayAge()
+xiaoming.type = 'kkkk'
+xiaoming.all = 'sss'
+xiaoming.name = 'sdfsdfs'
+console.log(xiaoming,'xiaoming');
+let lili = new Man('lili', 24)
+console.log(lili,'ssss');
