@@ -57,6 +57,7 @@ jobs:
           # 获取 SHA
           BEFORE_SHA="${{ github.event.before }}"
           AFTER_SHA="${{ github.event.after }}"
+          BRANCH="${GITHUB_REF##*/}"
 
           # commit 列表，最多 10 条
           if [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ] || [ "$BEFORE_SHA" = "$AFTER_SHA" ]; then
@@ -71,12 +72,9 @@ jobs:
           # 转义 commit 信息
           ESCAPED_COMMITS="$COMMITS_LIST"
 
-          # 信息
-          BRANCH="${{ github.ref_name }}"
           AUTHOR="${{ github.actor }}"
           REPO="${{ github.repository }}"
           TIME_ISO='${{ github.event.head_commit.timestamp }}'
-          RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
           # 发送飞书消息
           curl -s -X POST "$FEISHU_WEBHOOK" \
@@ -95,7 +93,7 @@ jobs:
                   "tag": "div",
                   "text": {
                     "tag": "lark_md",
-                    "content": "**Repository**: $REPO\n**Branch**: $BRANCH\n**Status**: $STATUS\n**Time**: $TIME_ISO\n**Author**: $AUTHOR\n**Commits**: 共 $COMMITS_COUNT 条提交"
+                    "content": "**Repository**: $REPO\\n**Branch**: $BRANCH\\n**Status**: $STATUS\\n**Time**: $TIME_ISO\\n**Author**: $AUTHOR\\n**Commits**: 共 $COMMITS_COUNT 条提交"
                   }
                 },
                 { "tag": "hr" },
@@ -103,9 +101,9 @@ jobs:
                   "tag": "div",
                   "text": {
                     "tag": "lark_md",
-                    "content": "**提交记录**:\n$ESCAPED_COMMITS"
+                    "content": "**提交记录**:$ESCAPED_COMMITS"
                   }
-                },
+                }
               ]
             }
           }
