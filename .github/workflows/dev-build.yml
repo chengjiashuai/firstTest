@@ -1,70 +1,27 @@
-name: Test Feishu Notification
+name: Feishu Smoke Test
 
-on:
-  push:
-    branches:
-      - main
-      - dev
+on: push
 
 jobs:
-  feishu-test:
+  notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # 保证可以获取完整 commit 历史
-
-      - name: Send Feishu Notification
+      - name: Print webhook exists
         run: |
-          # 模拟获取最新 5 个 commit
-          BEFORE_SHA="${{ github.event.before }}"
-          AFTER_SHA="${{ github.event.after }}"
-
-          if [ "$BEFORE_SHA" == "0000000000000000000000000000000000000000" ]; then
-            COMMITS_LIST=$(git log -1 --pretty="format:%h %s (%an)")
+          if [ -z "${{ secrets.FEISHU_WEBHOOK }}" ]; then
+            echo "❌ FEISHU_WEBHOOK is EMPTY"
+            exit 1
           else
-            COMMITS_LIST=$(git log $BEFORE_SHA..$AFTER_SHA --pretty="format:%h %s (%an)" | head -n 5)
+            echo "✅ FEISHU_WEBHOOK is SET"
           fi
 
-          ESCAPED_COMMITS=$(printf "%s\n" "$COMMITS_LIST" | sed 's/"/\\"/g')
-          COMMITS_COUNT=$(echo "$COMMITS_LIST" | grep -c '^')
-
-          REPO="${{ github.repository }}"
-          BRANCH="${{ github.ref_name }}"
-          AUTHOR="${{ github.actor }}"
-          TIME_ISO=$(date -Iseconds)
-          STATUS="✅ Succeeded"
-
-          # 发送飞书消息
-          curl -X POST "${{ secrets.FEISHU_WEBHOOK }}" \
+      - name: Send Feishu Message
+        run: |
+          curl -v -X POST "${{ secrets.FEISHU_WEBHOOK }}" \
             -H "Content-Type: application/json" \
-            -d @- <<EOF
-  {
-    "msg_type": "interactive",
-    "card": {
-      "config": { "wide_screen_mode": true },
-      "header": {
-        "title": { "tag": "plain_text", "content": "🚀 测试飞书通知" },
-        "template": "green"
-      },
-      "elements": [
-        {
-          "tag": "div",
-          "text": {
-            "tag": "lark_md",
-            "content": "**Repository**: $REPO\n**Branch**: $BRANCH\n**Status**: $STATUS\n**Time**: $TIME_ISO\n**Author**: $AUTHOR\n**Commits**: 共 $COMMITS_COUNT 条提交"
-          }
-        },
-        { "tag": "hr" },
-        {
-          "tag": "div",
-          "text": {
-            "tag": "lark_md",
-            "content": "**提交记录**:\n```\n$ESCAPED_COMMITS\n```"
-          }
-        }
-      ]
-    }
-  }
-  EOF
+            -d '{
+              "msg_type": "text",
+              "content": {
+                "text": "🚀 GitHub Actions → 飞书 链路测试成功"
+              }
+            }'
