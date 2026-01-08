@@ -58,15 +58,18 @@ jobs:
           BEFORE_SHA="${{ github.event.before }}"
           AFTER_SHA="${{ github.event.after }}"
 
-          # commit 列表（本地测试直接获取全部 commit）
+          # commit 列表，最多 10 条
           if [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ] || [ "$BEFORE_SHA" = "$AFTER_SHA" ]; then
-            COMMITS_LIST=$(git log -1 --pretty="format:%h %s (%an)" "$AFTER_SHA")
+          COMMITS_LIST=$(git log -1 --pretty="format:%h %s (%an)" "$AFTER_SHA")
           else
-            COMMITS_LIST=$(git log --pretty="format:%h %s (%an)" "$BEFORE_SHA".."$AFTER_SHA")
+          COMMITS_LIST=$(git log --pretty="format:%h %s (%an)" "$BEFORE_SHA".."$AFTER_SHA")
           fi
 
+          # commit 数量
           COMMITS_COUNT=$(echo "$COMMITS_LIST" | grep -c '^')
-          PRETTY_COMMITS=$(echo "$COMMITS_LIST" | sed 's/^/- /')
+
+          # 转义 commit 信息
+          ESCAPED_COMMITS="$COMMITS_LIST"
 
           # 信息
           BRANCH="${{ github.ref_name }}"
@@ -100,7 +103,7 @@ jobs:
                   "tag": "div",
                   "text": {
                     "tag": "lark_md",
-                    "content": "**提交记录**:\n$PRETTY_COMMITS"
+                    "content": "**提交记录**:\n$ESCAPED_COMMITS"
                   }
                 },
               ]
