@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        .step-container {
+            display: flex;
+            font-family: sans-serif;
+            font-size: 14px;
+        }
+
+        .step {
+            position: relative;
+            padding: 10px 20px;
+            color: white;
+            background-color: #4CAF50; /* 已完成为绿色 */
+            margin-left: -1px; /* 重叠形成贴合箭头 */
+            z-index: 1;
+            clip-path: polygon(
+                    0% 0%,
+                    94% 0%,
+                    100% 50%,
+                    94% 100%,
+                    0% 100%,
+                    6% 50%
+            );
+            border-right: 2px solid white; /* 白色分割线 */
+            white-space: nowrap;
+        }
+
+        .step:first-child {
+            margin-left: 0;
+        }
+
+        .step.current {
+            background-color: #1e64b7; /* 当前步骤为蓝色 */
+        }
+
+        .step.upcoming {
+            background-color: #e0e6f0; /* 未完成为灰色 */
+            color: #666;
+        }
+
+        .step:last-child {
+            clip-path: polygon(
+                    0% 0%,
+                    94% 0%,
+                    100% 50%,
+                    94% 100%,
+                    0% 100%,
+                    6% 50%
+            );
+            border-right: none;
+        }
+        body {
+            margin: 20px;
+            background: #f9f9f9;
+        }
+
+        .step-container {
+            display: flex;
+            font-family: sans-serif;
+            font-size: 14px;
+        }
+
+        .step {
+            position: relative;
+            padding: 10px 20px;
+            color: white;
+            background-color: #4CAF50; /* 已完成为绿色 */
+            margin-left: -1px; /* 重叠形成贴合箭头 */
+            z-index: 1;
+            clip-path: polygon(
+                    0% 0%,
+                    94% 0%,
+                    100% 50%,
+                    94% 100%,
+                    0% 100%,
+                    6% 50%
+            );
+            border-right: 2px solid white; /* 白色分割线 */
+            white-space: nowrap;
+        }
+
+        .step:first-child {
+            margin-left: 0;
+        }
+
+        .step.current {
+            background-color: #1e64b7; /* 当前步骤为蓝色 */
+        }
+
+        .step.upcoming {
+            background-color: #e0e6f0; /* 未完成为灰色 */
+            color: #666;
+        }
+
+        .step:last-child {
+            clip-path: polygon(
+                    0% 0%,
+                    94% 0%,
+                    100% 50%,
+                    94% 100%,
+                    0% 100%,
+                    6% 50%
+            );
+            border-right: none;
+        }
+    </style>
+</head>
+<body>
+<div class="step-container">
+    <div class="step">采购方式确定</div>
+    <div class="step">采购文件确定</div>
+    <div class="step">供应商报名</div>
+    <div class="step">参评文件提交</div>
+    <div class="step current">评审确定</div>
+    <div class="step upcoming">合同签订</div>
+</div>
+</body>
+</html>
