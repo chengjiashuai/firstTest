@@ -1,0 +1,114 @@
+name: Dev Build for Frontend
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Frontend Code
+        uses: actions/checkout@v4
+        with:
+          repository: timberxai/PlanRightNow-front
+          token: ${{ secrets.FRONT_PAT_TOKEN }}
+          ref: dev
+          submodules: 'recursive'
+
+      #   - name: Upload dist via SCP
+      #     if: success()
+      #     uses: appleboy/scp-action@v0.1.7
+      #     with:
+      #       host: ${{ secrets.DEV_HOST }}
+      #       username: ${{ secrets.DEV_USERNAME }}
+      #       key: "${{ secrets.DEV_SSH_KEY }}"
+      #       port: ${{ secrets.DEV_PORT }}
+      #       source: 'src/app.tsx'
+      #       target: '/srv/nginx/prn/front-dev'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.17.0'
+          cache: 'pnpm'
+
+      - name: Install Dependencies and Build
+        run: |
+          pnpm install
+          pnpm run build:dev
+
+      #   - name: Archive build artifacts
+      #     run: |
+      #       tar -czvf frontend-dist.tar.gz -C dist .
+
+      - name: Upload dist via SCP
+        if: success()
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DEV_HOST }}
+          username: ${{ secrets.DEV_USERNAME }}
+          key: '${{ secrets.DEV_SSH_KEY }}'
+          port: ${{ secrets.DEV_PORT }}
+          source: 'dist'
+          target: '/srv/nginx/prn/front-dev'
+          overwrite: true
+          strip_components: 1
+
+      - name: Notify Feishu (Dev Build)
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            STATUS="✅ Succeeded"
+            TEMPLATE="green"
+          else
+            STATUS="❌ Failed"
+            TEMPLATE="red"
+          fi
+
+          MESSAGE='${{ github.event.head_commit.message }}'
+          MESSAGE_TITLE=$(echo "$MESSAGE" | head -n1)
+          MESSAGE_BODY=$(echo "$MESSAGE" | tail -n +2)
+          ESCAPED_MESSAGE_TITLE=$(echo "$MESSAGE_TITLE" | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
+          ESCAPED_MESSAGE_BODY=$(echo "$MESSAGE_BODY" | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
+          BRANCH="${{ github.ref_name }}"
+          AUTHOR="${{ github.actor }}"
+          REPO_URL="${{ github.server_url }}/${{ github.repository }}"
+          RUN_URL="$REPO_URL/actions/runs/${{ github.run_id }}"
+          TIME_ISO='${{ github.event.head_commit.timestamp }}'
+
+          curl -X POST "${{ secrets.CI_DONE_FEISHU_WEBHOOK }}" \
+            -H "Content-Type: application/json" \
+            -d @- <<EOF
+          {
+            "msg_type": "interactive",
+            "card": { 
+              "config": { "wide_screen_mode": true },
+              "header": {
+                "title": { "tag": "plain_text", "content": "🚀 前端Dev更新" },
+                "template": "$TEMPLATE"
+              },
+              "elements": [
+                {
+                  "tag": "div",
+                  "text": {
+                    "tag": "lark_md",
+                    "content": "**Repository**: ${{ github.repository }}\\n**Branch**: $BRANCH\\n**Status**: $STATUS\\n**Time**: $TIME_ISO\\n**Author**: $AUTHOR"
+                  }
+                },
+                { "tag": "hr" },
+                {
+                  "tag": "div",
+                  "text": { "tag": "lark_md", "content": "**Commit Message**: $ESCAPED_MESSAGE_TITLE" }
+                } 
+              ]
+            }
+          }
+          EOF
