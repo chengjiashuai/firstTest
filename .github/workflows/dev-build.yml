@@ -13,7 +13,7 @@ jobs:
       - name: Checkout Frontend Code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # 保证获取全量 commit
+          fetch-depth: 0  # 获取全量 commit
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -36,8 +36,10 @@ jobs:
         env:
           FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
         run: |
+          set -e
+
           # 状态
-          if [ "${{ job.status }}" == "success" ]; then
+          if [ "${{ job.status }}" = "success" ]; then
             STATUS="✅ Succeeded"
             TEMPLATE="green"
           else
@@ -45,15 +47,15 @@ jobs:
             TEMPLATE="red"
           fi
 
-          # SHA
+          # 获取 SHA
           BEFORE_SHA="${{ github.event.before }}"
           AFTER_SHA="${{ github.event.after }}"
 
-          # commit 列表，最多10条
-          if [ "$BEFORE_SHA" == "0000000000000000000000000000000000000000" ] || [ "$BEFORE_SHA" == "$AFTER_SHA" ]; then
-            COMMITS_LIST=$(git log -1 --pretty="format:%h %s (%an)" $AFTER_SHA)
+          # commit 列表，最多 10 条
+          if [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ] || [ "$BEFORE_SHA" = "$AFTER_SHA" ]; then
+            COMMITS_LIST=$(git log -1 --pretty="format:%h %s (%an)" $AFTER_SHA || echo "")
           else
-            COMMITS_LIST=$(git log --pretty="format:%h %s (%an)" $BEFORE_SHA..$AFTER_SHA --max-count=10)
+            COMMITS_LIST=$(git log --pretty="format:%h %s (%an)" $BEFORE_SHA..$AFTER_SHA --max-count=10 || echo "")
           fi
 
           # 提交数量
@@ -84,7 +86,7 @@ jobs:
           "tag": "div",
           "text": {
             "tag": "lark_md",
-            "content": "**Repository**: $REPO\n**Branch**: $BRANCH\n**Status**: $STATUS\n**Time**: $TIME_ISO\n**Author**: $AUTHOR\n**Commits**: 共 $COMMITS_COUNT 条提交"
+            "content": "**Repository**: $REPO\\n**Branch**: $BRANCH\\n**Status**: $STATUS\\n**Time**: $TIME_ISO\\n**Author**: $AUTHOR\\n**Commits**: 共 $COMMITS_COUNT 条提交"
           }
         },
         { "tag": "hr" },
@@ -92,7 +94,7 @@ jobs:
           "tag": "div",
           "text": {
             "tag": "lark_md",
-            "content": "**提交记录**:\n```\n$ESCAPED_COMMITS\n```"
+            "content": "**提交记录**:\\n```\n$ESCAPED_COMMITS\n```"
           }
         }
       ]
