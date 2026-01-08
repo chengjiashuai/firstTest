@@ -52,10 +52,6 @@ jobs:
           AFTER_SHA="${{ github.event.after }}"
           BRANCH="${GITHUB_REF##*/}"
 
-          # 确保完整仓库
-          git fetch --prune --unshallow || true
-          git checkout "$BRANCH" || true
-
           # commit 列表，最多 10 条
           if [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ] || [ "$BEFORE_SHA" = "$AFTER_SHA" ]; then
           COMMITS_LIST=$(git log -1 --pretty="format:%h %s (%an)" "$AFTER_SHA")
