@@ -63,7 +63,7 @@ jobs:
           COMMITS_COUNT=$(echo "$COMMITS_LIST" | grep -c '^')
 
           # 转义 commit 信息
-          ESCAPED_COMMITS="$COMMITS_LIST"
+          ESCAPED_COMMITS="写死一段话"
 
           AUTHOR="${{ github.actor }}"
           REPO="${{ github.repository }}"
