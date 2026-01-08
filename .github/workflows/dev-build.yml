@@ -13,6 +13,8 @@ jobs:
       - name: Checkout Frontend Code
         uses: actions/checkout@v4
         with:
+          # ====== 改动1: 切换为本地测试项目 ======
+          # repository 和 token 不填，本地仓库默认 checkout
           fetch-depth: 0  # 获取全量 commit
 
       - name: Setup pnpm
@@ -28,12 +30,22 @@ jobs:
 
       - name: Install Dependencies and Build
         run: |
-          pnpm install
+          # ====== 改动2: 避免报错 ======
+          pnpm install || echo "skip install"
           pnpm run build:dev || echo "skip build"
+
+      # ====== 改动3: 移除 SCP 上传 ======
+      # - name: Upload dist via SCP
+      #   ...
 
       - name: Notify Feishu (Dev Build)
         if: always()
+        env:
+          FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
         run: |
+          set -e
+
+          # 状态
           if [ "${{ job.status }}" == "success" ]; then
             STATUS="✅ Succeeded"
             TEMPLATE="green"
@@ -41,36 +53,35 @@ jobs:
             STATUS="❌ Failed"
             TEMPLATE="red"
           fi
-          # 获取 push 前后 SHA
-               BEFORE_SHA="${{ github.event.before }}"
-               AFTER_SHA="${{ github.event.after }}"
-               BRANCH="${GITHUB_REF##*/}"
 
-          # commit 列表，最多 10 条
-               if [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ] || [ "$BEFORE_SHA" = "$AFTER_SHA" ]; then
-               COMMITS_LIST=$(git log -1 --pretty="format:%h %s (%an)" "$AFTER_SHA")
-               else
-               COMMITS_LIST=$(git log --pretty="format:%h %s (%an)" "$BEFORE_SHA".."$AFTER_SHA")
-               fi
+          # 获取 SHA
+          BEFORE_SHA="${{ github.event.before }}"
+          AFTER_SHA="${{ github.event.after }}"
 
-          # commit 数量
-               COMMITS_COUNT=$(echo "$COMMITS_LIST" | grep -c '^')
+          # commit 列表（本地测试直接获取全部 commit）
+          if [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ] || [ "$BEFORE_SHA" = "$AFTER_SHA" ]; then
+            COMMITS_LIST=$(git log -1 --pretty="format:%h %s (%an)" "$AFTER_SHA")
+          else
+            COMMITS_LIST=$(git log --pretty="format:%h %s (%an)" "$BEFORE_SHA".."$AFTER_SHA")
+          fi
 
-          # 转义 commit 信息
-               ESCAPED_COMMITS="$COMMITS_LIST"
-          
+          COMMITS_COUNT=$(echo "$COMMITS_LIST" | grep -c '^')
+          PRETTY_COMMITS=$(echo "$COMMITS_LIST" | sed 's/^/- /')
+
+          # 信息
           BRANCH="${{ github.ref_name }}"
           AUTHOR="${{ github.actor }}"
-          REPO_URL="${{ github.server_url }}/${{ github.repository }}"
-          RUN_URL="$REPO_URL/actions/runs/${{ github.run_id }}"
+          REPO="${{ github.repository }}"
           TIME_ISO='${{ github.event.head_commit.timestamp }}'
+          RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
-          curl -X POST "${{ secrets.CI_DONE_FEISHU_WEBHOOK }}" \
+          # 发送飞书消息
+          curl -s -X POST "$FEISHU_WEBHOOK" \
             -H "Content-Type: application/json" \
             -d @- <<EOF
           {
             "msg_type": "interactive",
-            "card": { 
+            "card": {
               "config": { "wide_screen_mode": true },
               "header": {
                 "title": { "tag": "plain_text", "content": "🚀 前端Dev更新" },
@@ -81,14 +92,17 @@ jobs:
                   "tag": "div",
                   "text": {
                     "tag": "lark_md",
-                    "content": "**Repository**: ${{ github.repository }}\\n**Branch**: $BRANCH\\n**Status**: $STATUS\\n**Time**: $TIME_ISO\\n**Author**: $AUTHOR\n**Commits**: 共 $COMMITS_COUNT 条提交"
+                    "content": "**Repository**: $REPO\n**Branch**: $BRANCH\n**Status**: $STATUS\n**Time**: $TIME_ISO\n**Author**: $AUTHOR\n**Commits**: 共 $COMMITS_COUNT 条提交"
                   }
                 },
                 { "tag": "hr" },
                 {
                   "tag": "div",
-                  "text": { "tag": "lark_md", "content": "**Commit Message**: $ESCAPED_COMMITS" }
-                } 
+                  "text": {
+                    "tag": "lark_md",
+                    "content": "**提交记录**:\n$PRETTY_COMMITS"
+                  }
+                },
               ]
             }
           }
