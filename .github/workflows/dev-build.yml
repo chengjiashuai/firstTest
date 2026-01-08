@@ -18,7 +18,7 @@ jobs:
         run: |
           COMMITS_LIST=$(git log --pretty="format:%h %s (%an)" -10)
           COMMITS_COUNT=$(echo "$COMMITS_LIST" | wc -l | tr -d ' ')
-          ESCAPED_COMMITS=$(printf "%s\n" "$COMMITS_LIST" | sed 's/"/\\"/g')
+          ESCAPED_COMMITS=$(printf "%s\n" "$COMMITS_LIST" | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
 
           curl -X POST "${{ secrets.FEISHU_WEBHOOK }}" \
             -H "Content-Type: application/json" \
