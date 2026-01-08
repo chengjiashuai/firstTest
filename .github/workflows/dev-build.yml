@@ -33,49 +33,44 @@ jobs:
 
       - name: Notify Feishu (Dev Build)
         if: always()
-        env:
-          FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
         run: |
-          set -e
-
-          # 状态
-          if [ "${{ job.status }}" = "success" ]; then
+          if [ "${{ job.status }}" == "success" ]; then
             STATUS="✅ Succeeded"
             TEMPLATE="green"
           else
             STATUS="❌ Failed"
             TEMPLATE="red"
           fi
-
           # 获取 push 前后 SHA
-          BEFORE_SHA="${{ github.event.before }}"
-          AFTER_SHA="${{ github.event.after }}"
-          BRANCH="${GITHUB_REF##*/}"
+               BEFORE_SHA="${{ github.event.before }}"
+               AFTER_SHA="${{ github.event.after }}"
+               BRANCH="${GITHUB_REF##*/}"
 
           # commit 列表，最多 10 条
-          if [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ] || [ "$BEFORE_SHA" = "$AFTER_SHA" ]; then
-          COMMITS_LIST=$(git log -1 --pretty="format:%h %s (%an)" "$AFTER_SHA")
-          else
-          COMMITS_LIST=$(git log --pretty="format:%h %s (%an)" "$BEFORE_SHA".."$AFTER_SHA")
-          fi
+               if [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ] || [ "$BEFORE_SHA" = "$AFTER_SHA" ]; then
+               COMMITS_LIST=$(git log -1 --pretty="format:%h %s (%an)" "$AFTER_SHA")
+               else
+               COMMITS_LIST=$(git log --pretty="format:%h %s (%an)" "$BEFORE_SHA".."$AFTER_SHA")
+               fi
 
           # commit 数量
-          COMMITS_COUNT=$(echo "$COMMITS_LIST" | grep -c '^')
+               COMMITS_COUNT=$(echo "$COMMITS_LIST" | grep -c '^')
 
           # 转义 commit 信息
-          ESCAPED_COMMITS="$COMMITS_LIST"
-
+               ESCAPED_COMMITS="$COMMITS_LIST"
+          
+          BRANCH="${{ github.ref_name }}"
           AUTHOR="${{ github.actor }}"
-          REPO="${{ github.repository }}"
+          REPO_URL="${{ github.server_url }}/${{ github.repository }}"
+          RUN_URL="$REPO_URL/actions/runs/${{ github.run_id }}"
           TIME_ISO='${{ github.event.head_commit.timestamp }}'
 
-          # 发送飞书消息
-          curl -s -X POST "$FEISHU_WEBHOOK" \
+          curl -X POST "${{ secrets.CI_DONE_FEISHU_WEBHOOK }}" \
             -H "Content-Type: application/json" \
             -d @- <<EOF
           {
             "msg_type": "interactive",
-            "card": {
+            "card": { 
               "config": { "wide_screen_mode": true },
               "header": {
                 "title": { "tag": "plain_text", "content": "🚀 前端Dev更新" },
@@ -86,17 +81,14 @@ jobs:
                   "tag": "div",
                   "text": {
                     "tag": "lark_md",
-                    "content": "**Repository**: $REPO\\n**Branch**: $BRANCH\\n**Status**: $STATUS\\n**Time**: $TIME_ISO\\n**Author**: $AUTHOR\\n**Commits**: 共 $COMMITS_COUNT 条提交"
+                    "content": "**Repository**: ${{ github.repository }}\\n**Branch**: $BRANCH\\n**Status**: $STATUS\\n**Time**: $TIME_ISO\\n**Author**: $AUTHOR\n**Commits**: 共 $COMMITS_COUNT 条提交"
                   }
                 },
                 { "tag": "hr" },
                 {
                   "tag": "div",
-                  "text": {
-                    "tag": "lark_md",
-                    "content": "**提交记录**:$ESCAPED_COMMITS"
-                  }
-                }
+                  "text": { "tag": "lark_md", "content": "**Commit Message**: $ESCAPED_COMMITS" }
+                } 
               ]
             }
           }
