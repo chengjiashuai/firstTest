@@ -57,15 +57,19 @@ jobs:
           git checkout "$BRANCH" || true
 
           # commit 列表，最多 10 条
+          # 确保拉取所有 commit 并 checkout 到分支
+          git fetch --prune --unshallow || true
+          git checkout "$BRANCH" || true
+          
+          # commit 列表，最多 10 条
           if [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ] || [ "$BEFORE_SHA" = "$AFTER_SHA" ]; then
-            COMMITS_LIST=$(git log -1 --pretty="format:%h %s (%an)" "$AFTER_SHA" || echo "")
+          COMMITS_LIST=$(git log -1 --pretty="format:%h %s (%an)" "$AFTER_SHA")
           else
-            COMMITS_LIST=$(git log --pretty="format:%h %s (%an)" "$BEFORE_SHA".."$AFTER_SHA" --max-count=10 || \
-               git log -1 --pretty="format:%h %s (%an)" "$AFTER_SHA" || echo "")
-
+          COMMITS_LIST=$(git log --pretty="format:%h %s (%an)" "$BEFORE_SHA".."$AFTER_SHA" --max-count=10)
           fi
+  
 
-          # commit 数量
+  # commit 数量
           COMMITS_COUNT=$(echo "$COMMITS_LIST" | grep -c '^[a-f0-9]\+')
 
           # 转义 commit 信息
