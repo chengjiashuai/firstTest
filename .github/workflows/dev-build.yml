@@ -60,7 +60,9 @@ jobs:
           if [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ] || [ "$BEFORE_SHA" = "$AFTER_SHA" ]; then
             COMMITS_LIST=$(git log -1 --pretty="format:%h %s (%an)" "$AFTER_SHA" || echo "")
           else
-            COMMITS_LIST=$(git log --pretty="format:%h %s (%an)" "$BEFORE_SHA".."$AFTER_SHA" --max-count=10 || echo "")
+            COMMITS_LIST=$(git log --pretty="format:%h %s (%an)" "$BEFORE_SHA".."$AFTER_SHA" --max-count=10 || \
+               git log -1 --pretty="format:%h %s (%an)" "$AFTER_SHA" || echo "")
+
           fi
 
           # commit 数量
