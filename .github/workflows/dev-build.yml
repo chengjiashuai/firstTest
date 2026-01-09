@@ -59,10 +59,14 @@ jobs:
           AFTER_SHA="${{ github.event.after }}"
           BRANCH="${GITHUB_REF##*/}"
           
-          if [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ] || [ "$BEFORE_SHA" = "$AFTER_SHA" ]; then
-          COMMITS_LIST=$(git log -1 --pretty="format:%s" "$AFTER_SHA" | grep -v '^Merge branch')
-          else
-          COMMITS_LIST=$(git log --pretty="format:%s" "$BEFORE_SHA".."$AFTER_SHA" | grep -v '^Merge branch')
+          # 尝试使用 BEFORE..AFTER，如果失败则 fallback
+          if git cat-file -e "$BEFORE_SHA" 2>/dev/null && git cat-file -e "$AFTER_SHA" 2>/dev/null; then
+          COMMITS_LIST=$(git log --pretty="format:%s" "$BEFORE_SHA".."$AFTER_SHA" 2>/dev/null | grep -v '^Merge branch')
+          fi
+          
+          # fallback：如果 range 失败或为空，取最近提交
+          if [ -z "$COMMITS_LIST" ]; then
+          COMMITS_LIST=$(git log --pretty="format:%s" -10 | grep -v '^Merge branch')
           fi
 
           # commit 数量
