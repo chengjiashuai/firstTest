@@ -57,26 +57,31 @@ jobs:
           # 获取 SHA
           BEFORE_SHA="${{ github.event.before }}"
           AFTER_SHA="${{ github.event.after }}"
-          BRANCH="${GITHUB_REF##*/}"
+          BRANCH="${{ github.ref_name }}"
           
-          # 尝试使用 BEFORE..AFTER，如果失败则 fallback
-          if git cat-file -e "$BEFORE_SHA" 2>/dev/null && git cat-file -e "$AFTER_SHA" 2>/dev/null; then
-          COMMITS_LIST=$(git log --pretty="format:%s" "$BEFORE_SHA".."$AFTER_SHA" 2>/dev/null | grep -v '^Merge branch')
+          # 获取提交记录逻辑优化
+          if [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ]; then
+            # 如果是新分支，取最近 5 条记录
+            COMMITS_LIST=$(git log --pretty="format:%s" -5 | grep -v '^Merge branch' || true)
+          else
+            # 正常推送，取 range。如果 git log 失败（如 force push），回退到最近一条
+            COMMITS_LIST=$(git log --pretty="format:%s" "$BEFORE_SHA".."$AFTER_SHA" 2>/dev/null | grep -v '^Merge branch' || git log -1 --pretty="format:%s")
           fi
           
-          # fallback：如果 range 失败或为空，取最近提交
+          # 如果记录为空（如全是 Merge 提交），确保至少显示最近一条
           if [ -z "$COMMITS_LIST" ]; then
-          COMMITS_LIST=$(git log --pretty="format:%s" -10 | grep -v '^Merge branch')
+            COMMITS_LIST=$(git log -1 --pretty="format:%s")
           fi
 
-          # commit 数量
+          # 统计提交总数并限制显示数量（防止飞书卡片过大）
           COMMITS_COUNT=$(echo "$COMMITS_LIST" | grep -c '^')
-
-          # 转义 commit 信息
-          # ESCAPED_COMMITS="$COMMITS_LIST"
-          # 美化提交记录，每条前加 "- "
-          # ESCAPED_COMMITS=$(echo "$COMMITS_LIST" | sed 's/^/- /')
-          ESCAPED_COMMITS=$(echo "$COMMITS_LIST" | sed 's/^/- /' | awk '{printf "%s\\n",$0}')
+          
+          # 转义处理：添加列表符、转义双引号、换行符转义
+          ESCAPED_COMMITS=$(echo "$COMMITS_LIST" | head -n 15 | sed 's/^/- /' | sed 's/"/\\"/g' | awk '{printf "%s\\n",$0}')
+          
+          if [ "$COMMITS_COUNT" -gt 15 ]; then
+            ESCAPED_COMMITS="${ESCAPED_COMMITS}... (更多 $COMMITS_COUNT 条提交)"
+          fi
 
           AUTHOR="${{ github.actor }}"
           REPO="${{ github.repository }}"
