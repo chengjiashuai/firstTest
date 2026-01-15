@@ -29,6 +29,7 @@ function renderStep() {
   ]
   dom.html('')
   dom.addClass('step-container')
+
   // 已完成步骤
   // var finishList = ['1', '2']
   var str = getParamValue("confirm_node");
