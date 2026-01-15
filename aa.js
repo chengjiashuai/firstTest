@@ -33,6 +33,7 @@ function renderStep() {
 
 
 
+
   // 已完成步骤
   // var finishList = ['1', '2']
   var str = getParamValue("confirm_node");
