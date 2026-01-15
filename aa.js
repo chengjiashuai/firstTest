@@ -28,6 +28,7 @@ function renderStep() {
     },
   ]
   dom.html('')
+
   dom.addClass('step-container')
 
 
