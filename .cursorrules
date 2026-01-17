@@ -1,0 +1,259 @@
+# PlanRightNow Frontend 项目规则
+
+## 项目技术栈
+
+- **框架**: UmiJS Max 4.x + React 19 + TypeScript
+- **UI 库**: Ant Design 5.x + Ant Design Pro Components 2.x
+- **样式方案**: CSS Modules (Less) + Tailwind CSS
+- **状态管理**: Zustand 5.x
+- **包管理器**: pnpm
+- **构建工具**: UmiJS Max (基于 Vite/Webpack)
+- **国际化**: UmiJS i18n (zh-CN, en-US)
+
+## 目录结构规范
+
+### 标准目录组织
+
+```
+src/
+├── components/          # 全局可复用组件
+│   └── [ComponentName]/
+│       ├── index.tsx    # 组件入口文件，导出主组件
+│       ├── index.less   # 组件样式文件（CSS Module）
+│       └── components/  # 组件内部子组件（可选）
+├── pages/              # 页面组件（路由对应）
+│   └── [PageName]/
+│       ├── index.tsx    # 页面主组件
+│       ├── index.less   # 页面样式（可选）
+│       ├── components/  # 页面级组件
+│       └── pages/       # 子页面（如 Detail, Create, Edit）
+├── services/           # API 服务层
+│   └── api/            # API 接口定义
+├── models/             # 数据模型（UmiJS Model）
+├── utils/              # 工具函数
+├── hooks/              # 自定义 Hooks
+├── constants/          # 常量定义
+├── types/              # TypeScript 类型定义
+├── zustand/            # Zustand 状态管理
+├── locales/            # 国际化资源
+└── styles/             # 全局样式
+```
+
+### 命名规范
+
+- **组件目录**: 使用 PascalCase，如 `Assistant/`, `WorkOrderView/`
+- **组件文件**: 使用 PascalCase，如 `HelloMessage.tsx`, `CustomCard.tsx`
+- **页面目录**: 使用 PascalCase，如 `Home/`, `WorkOrder/`
+- **工具文件**: 使用 camelCase，如 `format.ts`, `schedulerConvert.ts`
+- **类型文件**: 使用 camelCase + `.d.ts`，如 `scheduler.d.ts`, `order.d.ts`
+- **常量文件**: 使用 camelCase，如 `api.ts`, `constants.ts`
+
+## 组件开发规范
+
+### 组件结构
+
+1. **组件入口** (`index.tsx`): 必须导出主组件和类型
+```typescript
+export { ComponentName } from './ComponentName';
+export type { ComponentNameProps } from './ComponentName';
+```
+
+2. **组件文件命名**: 
+   - 单个文件组件: 组件名与文件名一致
+   - 多文件组件: 使用目录 + `index.tsx`
+
+3. **样式文件**:
+   - 必须使用 CSS Module (`.less` 文件)
+   - 样式文件名与组件文件名一致（如 `HelloMessage.less`）
+   - 使用 `import styles from './ComponentName.less'` 导入
+
+### 组件编写规范
+
+1. **函数式组件**: 优先使用函数式组件和 Hooks
+2. **TypeScript**: 所有组件必须使用 TypeScript，明确类型定义
+3. **Props 类型**: 必须定义并导出 Props 类型
+```typescript
+export type ComponentProps = {
+  title: string;
+  className?: string;
+  children?: React.ReactNode;
+};
+```
+
+4. **默认导出**: 组件文件默认导出组件，通过 `index.ts` 统一导出
+
+### 组件导出规范
+
+- 在 `src/components/index.ts` 中统一导出所有全局组件
+- 使用 `export * from './ComponentName'` 方式导出
+- 避免循环依赖
+
+## 样式规范
+
+### CSS Modules (Less)
+
+1. **优先使用**: 组件和页面的样式优先使用 CSS Module (Less)
+2. **文件命名**: 样式文件与组件文件同名，如 `HelloMessage.less`
+3. **类名规范**: 
+   - 使用 camelCase 或 kebab-case
+   - 避免使用全局类名，使用 `styles.className` 访问
+```typescript
+import styles from './HelloMessage.less';
+
+<div className={styles.helloMessage}>
+  <div className={styles.content}>...</div>
+</div>
+```
+
+4. **嵌套层级**: 避免过深嵌套（建议不超过 3 层）
+
+### Tailwind CSS
+
+1. **使用场景**: 
+   - 快速布局和常用样式
+   - 工具类样式（如 spacing, flex, grid）
+   - 与 Ant Design 组件配合使用
+
+2. **类名组合**: 使用 `cn()` 工具函数（来自 `@/utils/tailwindcss`）合并类名
+```typescript
+import { cn } from '@/utils';
+
+<div className={cn('rounded-md p-4 bg-white', isActive && 'shadow-lg')}>
+```
+
+3. **自定义配置**: Tailwind 配置在 `tailwind.config.js`，主题色在 `tailwind.css` 中扩展
+
+### 样式优先级
+
+1. **组件级样式**: CSS Module (Less) - 组件特定样式
+2. **全局样式**: `src/global.less` - 全局重置和基础样式
+3. **工具类**: Tailwind CSS - 快速布局和工具类
+4. **内联样式**: 仅用于动态样式（如计算值）
+
+## 代码风格规范
+
+### TypeScript
+
+1. **类型定义**: 
+   - 优先使用 `interface` 定义对象类型
+   - 使用 `type` 定义联合类型、工具类型
+   - 类型文件放在 `src/types/` 目录
+
+2. **导入顺序**:
+```typescript
+// 1. React 相关
+import { useState, useEffect } from 'react';
+
+// 2. 第三方库
+import { Button, message } from 'antd';
+import { useModel } from '@umijs/max';
+
+// 3. 项目内部（使用 @/ 别名）
+import { formatDate } from '@/utils';
+import { ComponentName } from '@/components';
+
+// 4. 样式文件
+import styles from './index.less';
+```
+
+3. **命名规范**:
+   - 变量/函数: camelCase
+   - 组件: PascalCase
+   - 常量: UPPER_SNAKE_CASE
+   - 类型/接口: PascalCase，以 Type/Props 后缀区分
+
+### 函数和 Hook
+
+1. **自定义 Hook**: 以 `use` 开头，放在 `src/hooks/` 目录
+2. **工具函数**: 纯函数，放在 `src/utils/` 目录
+3. **Hook 命名**: `use[Functionality]`，如 `useStyleSheet`, `useEquipmentType`
+
+### 状态管理
+
+1. **本地状态**: 使用 `useState` 或 `useImmer`
+2. **全局状态**: 使用 Zustand，放在 `src/zustand/` 目录
+3. **服务端状态**: 使用 UmiJS Model 或自定义 Hook + Zustand
+
+## 路由规范
+
+1. **路由配置**: 在 `config/routes.tsx` 中统一配置
+2. **页面路径**: 对应 `src/pages/` 目录结构
+3. **路由命名**: 使用 camelCase，与页面目录名一致
+4. **路由访问**: 使用 `access` 字段配置权限控制
+
+## API 服务规范
+
+1. **API 定义**: 放在 `src/services/api/` 目录
+2. **文件命名**: 按业务模块划分，如 `order.ts`, `workOrder.ts`
+3. **导出方式**: 统一使用命名导出
+4. **错误处理**: 在 `src/requestErrorConfig.ts` 中统一配置
+
+## 国际化规范
+
+1. **语言文件**: 放在 `src/locales/` 目录，按模块划分
+2. **使用方式**: 使用 UmiJS `useIntl` Hook 或 `formatMessage` API
+3. **key 命名**: 使用点分隔，如 `menu.dashboard`, `order.list.title`
+
+## 文件组织最佳实践
+
+### 组件目录示例
+
+```
+ComponentName/
+├── index.tsx              # 主组件 + 统一导出
+├── index.less             # 组件样式
+├── components/            # 子组件（可选）
+│   ├── SubComponent.tsx
+│   └── SubComponent.less
+├── utils/                 # 组件工具函数（可选）
+│   └── helper.ts
+└── types.ts               # 组件类型定义（可选）
+```
+
+### 页面目录示例
+
+```
+PageName/
+├── index.tsx              # 页面主组件
+├── index.less             # 页面样式（可选）
+├── components/            # 页面级组件
+│   └── PageComponent.tsx
+├── pages/                 # 子页面
+│   ├── Detail.tsx
+│   ├── Create.tsx
+│   └── Edit.tsx
+└── types.ts               # 页面类型定义（可选）
+```
+
+## Git 提交规范
+
+- 使用清晰的提交信息
+- 提交前运行 `pnpm format` 格式化代码
+- 遵循约定式提交格式（可选但推荐）
+
+## 性能优化建议
+
+1. **组件懒加载**: 路由组件使用动态导入
+2. **图片优化**: 使用合适的图片格式和尺寸
+3. **代码分割**: 合理使用动态导入减少包体积
+4. **状态管理**: 避免不必要的全局状态，使用局部状态
+
+## 注意事项
+
+1. **不要混用**: CSS Module 和 Tailwind 在同一个组件中可混用，但要保持一致性
+2. **避免全局样式污染**: 组件样式必须使用 CSS Module 作用域
+3. **类型安全**: 充分利用 TypeScript，避免使用 `any`
+4. **代码复用**: 提取公共逻辑到 hooks 或 utils，避免重复代码
+5. **组件拆分**: 单个组件文件不超过 300 行，复杂组件拆分子组件
+
+## 开发工具配置
+
+- **包管理器**: 使用 `pnpm`，不要使用 `npm` 或 `yarn`
+- **代码格式化**: 使用 Prettier，配置在项目根目录
+- **TypeScript**: 严格模式，配置继承自 UmiJS
+
+## 测试建议
+
+- 关键业务逻辑编写单元测试
+- 复杂组件编写组件测试
+- API 接口使用 mock 数据（参考 `mock/` 目录）
