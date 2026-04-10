@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>转正述职 - 程家帅</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', sans-serif;
+    background: #0d1117;
+    color: #e6edf3;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .presentation {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  .slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 80px;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: all;
+  }
+
+  .slide.prev {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+
+  /* ===== SLIDE BACKGROUNDS ===== */
+  .slide-cover {
+    background: linear-gradient(135deg, #0d1b2a 0%, #1a2744 40%, #0f2040 70%, #0d1117 100%);
+  }
+
+  .slide-overview {
+    background: linear-gradient(160deg, #111827 0%, #1e293b 100%);
+  }
+
+  .slide-highlight-1,
+  .slide-highlight-2 {
+    background: linear-gradient(160deg, #0f172a 0%, #1e1b4b 100%);
+  }
+
+  .slide-challenge {
+    background: linear-gradient(160deg, #111827 0%, #1a2e1a 100%);
+  }
+
+  .slide-expectation {
+    background: linear-gradient(160deg, #0f172a 0%, #1e2d3d 100%);
+  }
+
+  .slide-thanks {
+    background: linear-gradient(135deg, #0d1b2a 0%, #1a2744 50%, #0d1117 100%);
+  }
+
+  /* ===== COVER SLIDE ===== */
+  .cover-content {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .cover-badge {
+    display: inline-block;
+    background: rgba(59, 130, 246, 0.15);
+    border: 1px solid rgba(59, 130, 246, 0.4);
+    color: #60a5fa;
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  .cover-name {
+    font-size: 72px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #e2e8f0 0%, #93c5fd 50%, #60a5fa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    letter-spacing: 4px;
+  }
+
+  .cover-title {
+    font-size: 28px;
+    color: #94a3b8;
+    font-weight: 300;
+    letter-spacing: 8px;
+    margin-bottom: 48px;
+  }
+
+  .cover-meta {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .cover-meta-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .cover-meta-label {
+    font-size: 11px;
+    color: #475569;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .cover-meta-value {
+    font-size: 15px;
+    color: #cbd5e1;
+    font-weight: 500;
+  }
+
+  .cover-divider {
+    width: 1px;
+    height: 40px;
+    background: #334155;
+  }
+
+  .cover-decoration {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    border: 1px solid rgba(59, 130, 246, 0.08);
+    pointer-events: none;
+  }
+
+  .cover-decoration::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    border: 1px solid rgba(59, 130, 246, 0.12);
+  }
+
+  /* ===== SLIDE HEADER ===== */
+  .slide-header {
+    width: 100%;
+    margin-bottom: 48px;
+  }
+
+  .slide-number {
+    font-size: 11px;
+    color: #475569;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .slide-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: #e2e8f0;
+    position: relative;
+    display: inline-block;
+  }
+
+  .slide-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 48px;
+    height: 3px;
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    border-radius: 2px;
+  }
+
+  .slide-subtitle {
+    font-size: 15px;
+    color: #64748b;
+    margin-top: 16px;
+    font-weight: 400;
+  }
+
+  /* ===== OVERVIEW GRID ===== */
+  .overview-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 100%;
+  }
+
+  .module-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 24px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .module-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--accent);
+    border-radius: 0 2px 2px 0;
+  }
+
+  .module-card:hover {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+  }
+
+  .module-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .module-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #e2e8f0;
+    margin-bottom: 6px;
+  }
+
+  .module-period {
+    font-size: 11px;
+    color: #64748b;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .module-desc {
+    font-size: 12px;
+    color: #94a3b8;
+    line-height: 1.6;
+  }
+
+  /* ===== HIGHLIGHT SLIDES ===== */
+  .highlight-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    width: 100%;
+    align-items: start;
+  }
+
+  .highlight-left {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .highlight-right {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .feature-block {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 24px;
+  }
+
+  .feature-block-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #e2e8f0;
+    margin-bottom: 14px;
+  }
+
+  .feature-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .feature-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .feature-list li {
+    font-size: 13px;
+    color: #94a3b8;
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .feature-list li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: #3b82f6;
+    font-weight: bold;
+  }
+
+  .tag {
+    display: inline-block;
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+    color: #60a5fa;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    margin-right: 6px;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  .tag.green {
+    background: rgba(34, 197, 94, 0.1);
+    border-color: rgba(34, 197, 94, 0.25);
+    color: #4ade80;
+  }
+
+  .tag.purple {
+    background: rgba(168, 85, 247, 0.1);
+    border-color: rgba(168, 85, 247, 0.25);
+    color: #c084fc;
+  }
+
+  .tag.orange {
+    background: rgba(251, 146, 60, 0.1);
+    border-color: rgba(251, 146, 60, 0.25);
+    color: #fb923c;
+  }
+
+  /* ===== PERF METRIC ===== */
+  .metric-row {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  .metric-item {
+    flex: 1;
+    background: rgba(59, 130, 246, 0.05);
+    border: 1px solid rgba(59, 130, 246, 0.15);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .metric-value {
+    font-size: 28px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 4px;
+  }
+
+  .metric-label {
+    font-size: 11px;
+    color: #64748b;
+    letter-spacing: 1px;
+  }
+
+  /* ===== CHALLENGE SLIDE ===== */
+  .challenge-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    width: 100%;
+  }
+
+  .challenge-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 24px;
+    position: relative;
+  }
+
+  .challenge-item.growth {
+    border-color: rgba(34, 197, 94, 0.15);
+    background: rgba(34, 197, 94, 0.03);
+  }
+
+  .challenge-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+
+  .challenge-label.red { color: #f87171; }
+  .challenge-label.green { color: #4ade80; }
+
+  .challenge-text {
+    font-size: 14px;
+    color: #94a3b8;
+    line-height: 1.7;
+  }
+
+  .challenge-text strong {
+    color: #cbd5e1;
+    font-weight: 600;
+  }
+
+  /* ===== EXPECTATION SLIDE ===== */
+  .expectation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+  }
+
+  .exp-item {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 22px 26px;
+    transition: all 0.3s ease;
+  }
+
+  .exp-item:hover {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(255,255,255,0.1);
+  }
+
+  .exp-icon-wrap {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .exp-icon-wrap.blue { background: rgba(59, 130, 246, 0.12); }
+  .exp-icon-wrap.purple { background: rgba(168, 85, 247, 0.12); }
+  .exp-icon-wrap.green { background: rgba(34, 197, 94, 0.12); }
+
+  .exp-content {}
+
+  .exp-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #e2e8f0;
+    margin-bottom: 6px;
+  }
+
+  .exp-desc {
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.6;
+  }
+
+  /* ===== THANKS SLIDE ===== */
+  .thanks-content {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .thanks-main {
+    font-size: 64px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #e2e8f0 0%, #93c5fd 50%, #60a5fa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 20px;
+    letter-spacing: 4px;
+  }
+
+  .thanks-sub {
+    font-size: 18px;
+    color: #64748b;
+    font-weight: 300;
+    letter-spacing: 3px;
+    margin-bottom: 48px;
+  }
+
+  .thanks-divider {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    margin: 0 auto 32px;
+    border-radius: 1px;
+  }
+
+  .thanks-info {
+    font-size: 14px;
+    color: #475569;
+    letter-spacing: 2px;
+  }
+
+  /* ===== PROGRESS BAR ===== */
+  .progress-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #3b82f6, #60a5fa, #a78bfa);
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
+  }
+
+  /* ===== SLIDE COUNTER ===== */
+  .slide-counter {
+    position: fixed;
+    bottom: 24px;
+    right: 32px;
+    font-size: 12px;
+    color: #334155;
+    letter-spacing: 2px;
+    z-index: 100;
+    font-family: 'Courier New', monospace;
+  }
+
+  /* ===== NAV ARROWS ===== */
+  .nav-arrow {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 100;
+    color: #475569;
+    font-size: 18px;
+    user-select: none;
+  }
+
+  .nav-arrow:hover {
+    background: rgba(59, 130, 246, 0.15);
+    border-color: rgba(59, 130, 246, 0.3);
+    color: #60a5fa;
+  }
+
+  .nav-arrow.prev-btn { left: 16px; }
+  .nav-arrow.next-btn { right: 16px; }
+
+  .nav-arrow.disabled {
+    opacity: 0.2;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  /* ===== DOT NAVIGATION ===== */
+  .dot-nav {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 100;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #334155;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .dot.active {
+    background: #3b82f6;
+    width: 20px;
+    border-radius: 3px;
+  }
+
+  .dot:hover:not(.active) {
+    background: #475569;
+  }
+
+  /* ===== GANTT SPECIAL ===== */
+  .gantt-highlight-box {
+    background: rgba(168, 85, 247, 0.05);
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .package-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(168, 85, 247, 0.1);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 13px;
+    color: #c084fc;
+    font-weight: 500;
+  }
+
+  .package-badge .npm-icon {
+    font-size: 16px;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="presentation" id="presentation">
+
+  <!-- SLIDE 1: COVER -->
+  <div class="slide slide-cover active" data-index="0">
+    <div class="cover-decoration"></div>
+    <div class="cover-content">
+<!--      <div class="cover-badge">Probation Review</div>-->
+      <div class="cover-name">程家帅</div>
+      <div class="cover-title">转 正 述 职</div>
+      <div class="cover-meta">
+        <div class="cover-meta-item">
+          <span class="cover-meta-label">入职时间</span>
+          <span class="cover-meta-value">2025年12月31日</span>
+        </div>
+        <div class="cover-divider"></div>
+        <div class="cover-meta-item">
+          <span class="cover-meta-label">述职周期</span>
+          <span class="cover-meta-value">2026.01 — 2026.04</span>
+        </div>
+        <div class="cover-divider"></div>
+        <div class="cover-meta-item">
+          <span class="cover-meta-label">岗位</span>
+          <span class="cover-meta-value">前端工程师</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: OVERVIEW -->
+  <div class="slide slide-overview" data-index="1">
+    <div class="slide-header">
+      <div class="slide-number">02 / OVERVIEW</div>
+      <div class="slide-title">工作概览</div>
+    </div>
+
+    <div class="overview-grid">
+      <div class="module-card" style="--accent: #f59e0b;">
+        <span class="module-icon">🔗</span>
+        <div class="module-name">外协工序管理</div>
+        <div class="module-period">2026.01</div>
+        <div class="module-desc">供应商管理、外协视图、工序配置，支持产品/订单/工单导入外协设置</div>
+      </div>
+      <div class="module-card" style="--accent: #8b5cf6;">
+        <span class="module-icon">📊</span>
+        <div class="module-name">甘特图性能优化</div>
+        <div class="module-period">2026.02 — 03</div>
+        <div class="module-desc">在原有组件基础上深度优化：Event渲染重构、5000+工序压测、设备日历双维度缓冲区</div>
+      </div>
+      <div class="module-card" style="--accent: #06b6d4;">
+        <span class="module-icon">📅</span>
+        <div class="module-name">设备日历</div>
+        <div class="module-period">2026.02 — 03</div>
+        <div class="module-desc">班次设置、策略管理、日历批量操作、gantt上设备日历展示</div>
+      </div>
+      <div class="module-card" style="--accent: #f43f5e;">
+        <span class="module-icon">📦</span>
+        <div class="module-name">全新 Gantt 组件</div>
+        <div class="module-period">2026.03 — 04</div>
+        <div class="module-desc">Bryntum Scheduler存在性能瓶颈，基于 Canvas 从零重写，充分借助 AI 提效，并已进入提测阶段</div>
+      </div>
+      <div class="module-card" style="--accent: #10b981;">
+        <span class="module-icon">🔧</span>
+        <div class="module-name">官网 & 日常迭代维护</div>
+        <div class="module-period">贯穿全程</div>
+        <div class="module-desc">官网从零搭建、需求迭代、bug 修复、设备计划看板、工单进度可视化等持续交付</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: HIGHLIGHT 2 - 其他模块 -->
+  <div class="slide slide-highlight-1" data-index="2">
+    <div class="slide-header">
+      <div class="slide-number">04 / HIGHLIGHTS</div>
+      <div class="slide-title">重点工作 · 系统迭代维护</div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:24px; width:100%; align-items:start;">
+      <div class="feature-block">
+        <div class="feature-block-title">
+          <span class="feature-dot" style="background:#f59e0b;"></span>
+          外协工序管理
+        </div>
+        <div style="margin-bottom:10px;">
+          <span class="tag orange">供应商管理</span><span class="tag orange">外协视图</span><span class="tag orange">工序配置</span>
+        </div>
+        <ul class="feature-list">
+          <li>新增供应商管理模块</li>
+          <li>外协工序管理：工序配置、外协视图全新页面</li>
+          <li>报工流程适配外协工序</li>
+          <li>产品/订单/工单导入均支持外协参数配置</li>
+        </ul>
+      </div>
+
+      <div class="feature-block">
+        <div class="feature-block-title">
+          <span class="feature-dot" style="background:#06b6d4;"></span>
+          设备日历 & 工时管理
+        </div>
+        <div style="margin-bottom:10px;">
+          <span class="tag" style="background:rgba(6,182,212,0.1);border-color:rgba(6,182,212,0.3);color:#22d3ee;">班次设置</span>
+          <span class="tag" style="background:rgba(6,182,212,0.1);border-color:rgba(6,182,212,0.3);color:#22d3ee;">策略管理</span>
+          <span class="tag" style="background:rgba(6,182,212,0.1);border-color:rgba(6,182,212,0.3);color:#22d3ee;">日历批量</span>
+        </div>
+        <ul class="feature-list">
+          <li>班次设置：灵活配置工作班次</li>
+          <li>策略管理：多策略规则配置与状态同步</li>
+          <li>日历批量设置：多设备批量应用工时策略</li>
+          <li>甘特图联动新版设备日历</li>
+        </ul>
+      </div>
+
+      <div class="feature-block">
+        <div class="feature-block-title">
+          <span class="feature-dot" style="background:#10b981;"></span>
+          官网 & 日常迭代
+        </div>
+        <div style="margin-bottom:10px;">
+          <span class="tag green">官网搭建</span><span class="tag green">需求迭代</span><span class="tag green">bug 修复</span>
+        </div>
+        <ul class="feature-list">
+          <li>官网从零搭建，PC/移动端适配</li>
+          <li>设备计划看板开发，支持打印</li>
+          <li>工单进度可视化、工序并行勾选</li>
+          <li>持续跟进迭代需求，保障版本稳定</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: HIGHLIGHT 1 - 性能优化 -->
+  <div class="slide slide-highlight-2" data-index="3">
+    <div class="slide-header">
+      <div class="slide-number">03 / HIGHLIGHTS</div>
+      <div class="slide-title">重点工作 · 性能优化</div>
+    </div>
+
+    <div class="highlight-layout">
+      <div class="highlight-left">
+        <div class="feature-block">
+          <div class="feature-block-title">
+            <span class="feature-dot" style="background:#8b5cf6;"></span>
+            阶段一 · 原组件深度优化
+          </div>
+          <div style="margin-bottom:10px;">
+            <span class="tag purple">Event 渲染重构</span><span class="tag purple">5000+ 压测</span><span class="tag purple">预加载调优</span>
+            <span class="tag purple">设备日历缓冲区</span>
+          </div>
+          <ul class="feature-list">
+            <li>自定义 event 全面重构，改用 domConfig 格式渲染，降低开销</li>
+            <li>移除单个 event 右键绑定，改为全局单一绑定，减少内存占用</li>
+            <li>锁定、选中事件只重渲染相关 event，避免全量刷新</li>
+            <li>调整预加载阈值，5000+ 工序下达成流畅体验</li>
+            <li>设备日历：数据结构重设计，虚拟滚动 + 双维度缓冲区，滚动防抖调优</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="highlight-right">
+        <div class="feature-block">
+          <div class="feature-block-title">
+            <span class="feature-dot" style="background:#a78bfa;"></span>
+            阶段二 · 基于 Canvas 从零重写
+          </div>
+          <div style="margin-bottom:10px;">
+            <span class="tag purple">Canvas 渲染引擎</span><span class="tag purple">AI 提效</span><span class="tag purple">npm 包发布</span>
+          </div>
+          <ul class="feature-list">
+            <li>Bryntum Scheduler 性能瓶颈难以突破，决定基于 Canvas 重新设计渲染架构</li>
+            <li>借助 AI 大幅提升开发效率，聚焦架构设计和性能调优</li>
+            <li>支持 10000+ 工序流畅渲染，拖拽、缩放体验大幅提升</li>
+            <li>丰富配置项：缩放等级、时间范围限制、自定义 event 渲染、右键策略等</li>
+            <li>发布独立 npm 包（GitHub Package），主产品集成进度 95%+</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: CHALLENGE & GROWTH -->
+  <div class="slide slide-challenge" data-index="4">
+    <div class="slide-header">
+      <div class="slide-number">05 / GROWTH</div>
+      <div class="slide-title">挑战与成长</div>
+    </div>
+
+    <div class="challenge-grid">
+      <div class="challenge-item">
+        <div class="challenge-label red">挑战</div>
+        <div class="challenge-text">
+          <strong>甘特图性能瓶颈</strong><br>
+          面对 5000+ 工序的极端场景，原有渲染策略在拖拽、缩放时出现明显卡顿，需要从底层 event 机制入手全面重构。
+        </div>
+      </div>
+
+      <div class="challenge-item growth">
+        <div class="challenge-label green">成长</div>
+        <div class="challenge-text">
+          系统性落地了虚拟化、事件委托、预加载阈值调整、双维度缓冲区等优化手段，建立了「先压测定位，后针对优化」的工作方法。
+        </div>
+      </div>
+
+<!--      <div class="challenge-item">-->
+<!--        <div class="challenge-label red">挑战</div>-->
+<!--        <div class="challenge-text">-->
+<!--          <strong>快速接手复杂存量代码</strong><br>-->
+<!--          入职即承接多个复杂模块，在没有详细文档的情况下，独立定位并修复跨模块 bug，同时推进新功能开发。-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="challenge-item growth">-->
+<!--        <div class="challenge-label green">成长</div>-->
+<!--        <div class="challenge-text">-->
+<!--          锻炼了阅读复杂代码的能力，养成了「通过 debug 还原业务逻辑」的习惯，能更高效评估改动影响范围，减少引入新 bug 的概率。-->
+<!--        </div>-->
+<!--      </div>-->
+
+      <div class="challenge-item">
+        <div class="challenge-label red">挑战</div>
+        <div class="challenge-text">
+          <strong>组件独立化工程实践</strong><br>
+          将甘特图从主产品中抽离为独立 npm 包，需要处理依赖隔离、构建配置、版本管理、兼容性等一系列工程问题。
+        </div>
+      </div>
+
+      <div class="challenge-item growth">
+        <div class="challenge-label green">成长</div>
+        <div class="challenge-text">
+          完成了从「写功能」到「设计组件边界」的思维升级，掌握了 npm package 发布完整流程，建立了版本语义化管理意识。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: VIEWS & EXPECTATION -->
+  <div class="slide slide-expectation" data-index="5">
+    <div class="slide-header">
+      <div class="slide-number">06 / VIEWS & FUTURE</div>
+      <div class="slide-title">想法与期望</div>
+    </div>
+
+    <div class="expectation-list" style="gap: 14px;">
+      <div class="exp-item" style="border-color: rgba(59,130,246,0.2); background: rgba(59,130,246,0.04); padding: 16px 22px;">
+        <div class="exp-icon-wrap blue">🏢</div>
+        <div class="exp-content">
+          <div class="exp-title">对公司的看法</div>
+          <div class="exp-desc">这4个月，我看到的是一家<strong style="color:#93c5fd;">有活力、有氛围、有战斗力</strong>的公司。团队敢于做复杂的事，迭代快、协作顺，能感受到技术上的进取心，觉得加入这里是正确的选择。</div>
+        </div>
+      </div>
+
+      <div class="exp-item" style="border-color: rgba(168,85,247,0.2); background: rgba(168,85,247,0.04); padding: 16px 22px;">
+        <div class="exp-icon-wrap purple">🤖</div>
+        <div class="exp-content">
+          <div class="exp-title">关于 AI</div>
+          <div class="exp-desc"><strong style="color:#c084fc;">不拥抱 AI 的程序员注定会被淘汰。</strong>亲身实践 Claude Code 开发新 Gantt 组件，用更短的时间做出了更好的东西。拥抱 AI 是这个时代的基本素养。</div>
+        </div>
+      </div>
+
+      <div class="exp-item" style="padding: 16px 22px;">
+        <div class="exp-icon-wrap blue">🎯</div>
+        <div class="exp-content">
+          <div class="exp-title">技术方向</div>
+          <div class="exp-desc">从“写代码”转为“架构编排与质量评审”，从“实现”转为“设计与体验”</div>
+        </div>
+      </div>
+
+      <div class="exp-item" style="padding: 16px 22px;">
+        <div class="exp-icon-wrap green">🌱</div>
+        <div class="exp-content">
+          <div class="exp-title">对团队的期望</div>
+          <div class="exp-desc">持续保持开放的技术氛围以及简单坦诚的沟通氛围。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: THANKS -->
+  <div class="slide slide-thanks" data-index="6">
+    <div class="cover-decoration"></div>
+    <div class="thanks-content">
+      <div class="thanks-main">汇报完毕</div>
+      <div class="thanks-sub">Thank You</div>
+      <div class="thanks-divider"></div>
+      <div class="thanks-info">程家帅 · 前端工程师 · 2026.04</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- SLIDE COUNTER -->
+<div class="slide-counter" id="slideCounter">01 / 07</div>
+
+
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  const progressBar = document.getElementById('progressBar');
+  const slideCounter = document.getElementById('slideCounter');
+
+  function update() {
+    slides.forEach((s, i) => {
+      s.classList.remove('active', 'prev');
+      if (i === current) s.classList.add('active');
+      else if (i < current) s.classList.add('prev');
+    });
+
+    const pct = ((current + 1) / total) * 100;
+    progressBar.style.width = pct + '%';
+
+    const num = String(current + 1).padStart(2, '0');
+    const tot = String(total).padStart(2, '0');
+    slideCounter.textContent = num + ' / ' + tot;
+  }
+
+  function navigate(dir) {
+    const next = current + dir;
+    if (next >= 0 && next < total) {
+      current = next;
+      update();
+    }
+  }
+
+  function goTo(index) {
+    current = index;
+    update();
+  }
+
+  document.getElementById('presentation').addEventListener('click', e => {
+    if (e.target.closest('.nav-arrow, .dot-nav, .dot, a, button')) return;
+    const x = e.clientX;
+    const w = window.innerWidth;
+    if (x < w * 0.3) navigate(-1);
+    else if (x > w * 0.7) navigate(1);
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault();
+      navigate(1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      navigate(-1);
+    } else if (e.key === 'Home') {
+      goTo(0);
+    } else if (e.key === 'End') {
+      goTo(total - 1);
+    }
+  });
+
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) navigate(dx < 0 ? 1 : -1);
+  }, { passive: true });
+
+  update();
+</script>
+</body>
+</html>
