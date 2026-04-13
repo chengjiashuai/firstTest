@@ -1,0 +1,2061 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>转正述职 · 程家帅</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET & VARIABLES ===== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0C0C14;
+  --bg-1: #13131E;
+  --bg-2: #1C1C2E;
+  --bg-3: #303051;
+  --blue: #4F8EF7;
+  --blue-dim: rgba(79,142,247,0.12);
+  --blue-mid: rgba(79,142,247,0.25);
+  --amber: #F59E42;
+  --amber-dim: rgba(245,158,66,0.12);
+  --amber-mid: rgba(245,158,66,0.25);
+  --purple: #8B5CF6;
+  --green: #10B981;
+  --text: #E4E4F0;
+  --text-2: #9898B8;
+  --text-3: #5A5A7A;
+  --border: rgba(255,255,255,0.08);
+  --border-2: rgba(255,255,255,0.04);
+  --font-display: 'Space Grotesk', 'Noto Sans SC', sans-serif;
+  --font-body: 'Noto Sans SC', 'Space Grotesk', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ===== GRAIN OVERLAY ===== */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 180px;
+}
+
+
+/* ===== SECTION BASE ===== */
+section {
+  position: relative;
+  overflow: hidden;
+}
+
+/* ===== REVEAL ANIMATION ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-d1 { transition-delay: 0.1s; }
+.reveal-d2 { transition-delay: 0.2s; }
+.reveal-d3 { transition-delay: 0.3s; }
+.reveal-d4 { transition-delay: 0.4s; }
+.reveal-d5 { transition-delay: 0.5s; }
+
+/* ===== SECTION LABEL ===== */
+.section-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 12px;
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 0;
+  border-right: 1.5px solid var(--blue);
+}
+.reveal.visible .section-eyebrow {
+  animation:
+    tw-label 0.9s steps(16, end) 0.3s forwards,
+    tw-cursor 0.8s step-end 0.3s infinite;
+}
+@keyframes tw-label {
+  to { max-width: 24ch; }
+}
+@keyframes tw-cursor {
+  0%, 100% { border-right-color: transparent; }
+  50%       { border-right-color: var(--blue); }
+}
+
+
+/* ===== SLIDE SYSTEM ===== */
+body { overflow: hidden; height: 100vh; }
+
+section, #footer {
+  position: fixed;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.55s cubic-bezier(0.4,0,0.2,1),
+              transform 0.55s cubic-bezier(0.4,0,0.2,1);
+  transform: translateY(30px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 0;
+}
+section.slide-active, #footer.slide-active {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+  z-index: 10;
+}
+section.slide-exit, #footer.slide-exit {
+  opacity: 0;
+  transform: translateY(-30px);
+  z-index: 5;
+}
+
+/* slide controls */
+.slide-controls {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.slide-btn {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-2);
+  color: var(--text-2);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  transition: all 0.2s;
+  user-select: none;
+}
+.slide-btn:hover { background: var(--bg-3); border-color: rgba(255,255,255,0.2); color: var(--text); }
+.slide-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+.slide-counter {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-3);
+  min-width: 48px;
+  text-align: center;
+  letter-spacing: 0.08em;
+}
+.slide-progress {
+  position: fixed;
+  bottom: 0; left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--blue), var(--amber));
+  transition: width 0.4s ease;
+  z-index: 901;
+}
+/* keep slide controls on top */
+.slide-controls, .grain-overlay { z-index: 900; }
+section.slide-active { z-index: 10; }
+
+/* ===== DIFFUSE BACKGROUND ===== */
+.diffuse-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.diffuse-blob {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+  filter: blur(110px);
+}
+/* Blob 1 — 科技蓝，左上 */
+.diffuse-blob:nth-child(1) {
+  width: 65vw; height: 55vw;
+  left: -18vw; top: -12vh;
+  background: radial-gradient(ellipse at center, rgba(56,120,230,0.20), transparent 68%);
+  animation: blob1 37s ease-in-out infinite;
+}
+/* Blob 2 — 深青，右下 */
+.diffuse-blob:nth-child(2) {
+  width: 55vw; height: 48vw;
+  right: -14vw; bottom: -8vh;
+  background: radial-gradient(ellipse at center, rgba(6,182,212,0.15), transparent 68%);
+  animation: blob2 43s ease-in-out infinite;
+}
+/* Blob 3 — 靛蓝偏紫，中央偏右上 */
+.diffuse-blob:nth-child(3) {
+  width: 50vw; height: 45vw;
+  left: 35vw; top: 10vh;
+  background: radial-gradient(ellipse at center, rgba(99,102,241,0.13), transparent 68%);
+  animation: blob3 31s ease-in-out infinite;
+}
+/* Blob 4 — 冷青绿，左下 */
+.diffuse-blob:nth-child(4) {
+  width: 40vw; height: 38vw;
+  left: -8vw; bottom: -5vh;
+  background: radial-gradient(ellipse at center, rgba(20,184,166,0.11), transparent 68%);
+  animation: blob4 53s ease-in-out infinite;
+}
+
+@keyframes blob1 {
+  0%   { transform: translate(0,    0)    scale(1.00); }
+  25%  { transform: translate(12vw, 8vh)  scale(1.06); }
+  55%  { transform: translate(6vw,  18vh) scale(0.96); }
+  80%  { transform: translate(-4vw, 9vh)  scale(1.03); }
+  100% { transform: translate(0,    0)    scale(1.00); }
+}
+@keyframes blob2 {
+  0%   { transform: translate(0,     0)     scale(1.00); }
+  30%  { transform: translate(-10vw, -10vh) scale(1.08); }
+  65%  { transform: translate(-18vw, -4vh)  scale(0.93); }
+  100% { transform: translate(0,     0)     scale(1.00); }
+}
+@keyframes blob3 {
+  0%   { transform: translate(0,     0)    scale(1.00); }
+  20%  { transform: translate(-14vw, -8vh) scale(1.10); }
+  50%  { transform: translate(-18vw, 10vh) scale(0.92); }
+  75%  { transform: translate(-6vw,  14vh) scale(1.05); }
+  100% { transform: translate(0,     0)    scale(1.00); }
+}
+@keyframes blob4 {
+  0%   { transform: translate(0,    0)    scale(1.00); }
+  35%  { transform: translate(14vw, -6vh) scale(1.07); }
+  70%  { transform: translate(8vw,  10vh) scale(0.95); }
+  100% { transform: translate(0,    0)    scale(1.00); }
+}
+</style>
+</head>
+<body>
+
+<!-- DIFFUSE BACKGROUND -->
+<div class="diffuse-bg" aria-hidden="true">
+  <div class="diffuse-blob"></div>
+  <div class="diffuse-blob"></div>
+  <div class="diffuse-blob"></div>
+  <div class="diffuse-blob"></div>
+</div>
+
+<!-- GRAIN OVERLAY -->
+<div class="grain-overlay" aria-hidden="true"></div>
+
+<!-- SLIDE PROGRESS BAR -->
+<div class="slide-progress" id="slide-progress"></div>
+
+
+<!-- SLIDE CONTROLS -->
+<div class="slide-controls">
+  <button class="slide-btn" id="btn-prev" title="上一页" disabled>&#8592;</button>
+  <span class="slide-counter" id="slide-counter">1 / 7</span>
+  <button class="slide-btn" id="btn-next" title="下一页">&#8594;</button>
+</div>
+
+
+<!-- S1: HERO -->
+<section id="hero">
+  <style>
+  #hero {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(32px,6vh,80px) clamp(32px,6vw,80px) clamp(32px,6vh,80px) clamp(48px,8vw,120px);
+    position: relative;
+  }
+  .hero-glow-blue {
+    position: absolute;
+    left: -200px;
+    top: 20%;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(79,142,247,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-glow-amber {
+    position: absolute;
+    right: -150px;
+    bottom: 15%;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(245,158,66,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  /* 主标题：转正述职 */
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(72px, 12vw, 140px);
+    font-weight: 800;
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    margin-bottom: clamp(16px, 2.5vh, 28px);
+    background: linear-gradient(120deg, var(--blue) 0%, #9B7FF7 45%, var(--amber) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  /* 副标题行：姓名 + 角色 */
+  .hero-name-row {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: clamp(12px, 2vh, 20px);
+  }
+  .hero-name {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 3vw, 36px);
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .hero-role {
+    font-family: var(--font-mono);
+    font-size: clamp(12px, 1.4vw, 16px);
+    color: var(--text-3);
+    letter-spacing: 0.1em;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 0;
+  }
+  .reveal.visible .hero-role {
+    animation: tw-role 0.7s steps(10, end) 0.1s forwards;
+  }
+  @keyframes tw-role {
+    to { max-width: 11ch; }
+  }
+  .hero-divider {
+    width: clamp(32px, 5vw, 60px);
+    height: 1px;
+    background: linear-gradient(90deg, var(--blue), var(--amber));
+    margin-bottom: clamp(12px, 2vh, 20px);
+  }
+  .hero-tagline {
+    font-family: var(--font-body);
+    font-size: clamp(14px, 1.6vw, 18px);
+    color: var(--text-3);
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    margin-bottom: clamp(32px, 5vh, 56px);
+  }
+  .hero-stats {
+    display: flex;
+    gap: 48px;
+    align-items: flex-end;
+  }
+  .hero-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .hero-stat-num {
+    font-family: var(--font-display);
+    font-size: clamp(44px, 6vw, 72px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+  .hero-stat-num.blue { color: var(--blue); }
+  .hero-stat-num.amber { color: var(--amber); }
+  .hero-stat-num.purple { color: var(--purple); }
+  .hero-stat-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+  .hero-stat-divider {
+    width: 1px;
+    height: 48px;
+    background: var(--border);
+    align-self: center;
+  }
+  .hero-period {
+    position: absolute;
+    bottom: 72px;
+    left: clamp(48px,8vw,120px);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-3);
+    text-align: left;
+    line-height: 1.8;
+  }
+  .hero-period strong {
+    display: inline-block;
+    color: var(--text-2);
+    font-size: 14px;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 1.5px solid var(--blue);
+    animation:
+      hero-type 1.4s steps(22, end) 0.8s both,
+      hero-cursor 0.75s step-end 0.8s infinite;
+  }
+  @keyframes hero-type {
+    from { max-width: 0; }
+    to   { max-width: 260px; }
+  }
+  @keyframes hero-cursor {
+    0%, 100% { border-right-color: transparent; }
+    50%       { border-right-color: var(--blue); }
+  }
+  .hero-scroll {
+    position: absolute;
+    bottom: 36px;
+    left: 120px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-3);
+    letter-spacing: 0.1em;
+  }
+  .hero-scroll-line {
+    width: 40px;
+    height: 1px;
+    background: var(--text-3);
+    animation: scroll-line 2s ease-in-out infinite;
+  }
+  @keyframes scroll-line {
+    0%, 100% { transform: scaleX(1); opacity: 0.4; }
+    50% { transform: scaleX(1.5); opacity: 1; }
+  }
+  @media (max-width: 768px) {
+    #hero { padding: 60px 24px 80px; }
+    .hero-stats { gap: 24px; flex-wrap: wrap; }
+    .hero-stat-divider { display: none; }
+    .hero-period { position: static; margin-top: 40px; }
+    .hero-scroll { left: 24px; }
+  }
+  </style>
+
+  <div class="hero-glow-blue"></div>
+  <div class="hero-glow-amber"></div>
+
+  <div class="hero-inner">
+    <h1 class="hero-title reveal">转正述职</h1>
+    <div class="hero-name-row reveal reveal-d1">
+      <span class="hero-name">程家帅</span>
+      <span class="hero-role">前端工程师</span>
+    </div>
+    <div class="hero-divider reveal reveal-d2"></div>
+<!--    <p class="hero-tagline reveal reveal-d2">三个月，两条线，一份答卷</p>-->
+    <div class="hero-stats reveal reveal-d3">
+      <div class="hero-stat">
+        <span class="hero-stat-num purple" data-count="60">0</span>
+        <span class="hero-stat-label">天 · 工作日志</span>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <span class="hero-stat-num amber" data-count="381">0</span>
+        <span class="hero-stat-label">项 · 任务记录</span>
+      </div>
+
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <div style="display:flex;align-items:baseline;gap:2px;line-height:1;">
+          <span class="hero-stat-num green" data-count="1000">0</span>
+          <span class="hero-stat-num green" style="font-size:clamp(28px,3.5vw,52px);">+</span>
+        </div>
+        <span class="hero-stat-label">次 · 今天排 Git 提交</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-period reveal reveal-d4">
+    <strong>2025.12.31 — 2026.04.09</strong>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="hero-scroll-line"></div>
+    SCROLL
+  </div>
+</section>
+
+<!-- S2: OVERVIEW BENTO -->
+<section id="overview">
+  <style>
+  #overview {
+    padding: clamp(24px,4vh,60px) clamp(24px,4vw,80px) clamp(24px,4vh,60px) clamp(40px,6vw,120px);
+    background: rgba(19,19,30,0.72);
+    justify-content: center;
+  }
+  .overview-header {
+    margin-bottom: clamp(16px,2.5vh,36px);
+  }
+  .overview-title {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  /* BENTO GRID */
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: auto;
+    gap: 14px;
+  }
+  .bento-cell {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: clamp(14px,2vh,24px) clamp(14px,2vw,24px);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .bento-cell:hover {
+    border-color: rgba(255,255,255,0.14);
+    transform: translateY(-2px);
+  }
+  /* donut - spans col 1-3, row 1-2 */
+  .bento-donut { grid-column: 1 / 4; grid-row: 1 / 3; }
+  /* gantt count */
+  .bento-gantt { grid-column: 4 / 5; grid-row: 1 / 2; }
+  /* biz count */
+  .bento-biz   { grid-column: 5 / 7; grid-row: 1 / 2; }
+  /* bug */
+  .bento-bug   { grid-column: 4 / 5; grid-row: 2 / 3; }
+  /* perf */
+  .bento-perf  { grid-column: 5 / 6; grid-row: 2 / 3; }
+  /* infra */
+  .bento-infra { grid-column: 6 / 7; grid-row: 2 / 3; }
+  /* bar chart - full width */
+  .bento-bars  { grid-column: 1 / 7; grid-row: 3 / 4; }
+
+  .bento-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-bottom: 10px;
+  }
+  .bento-big-num {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4vw, 54px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+  .bento-big-num.blue { color: var(--blue); }
+  .bento-big-num.amber { color: var(--amber); }
+  .bento-big-num.purple { color: var(--purple); }
+  .bento-big-num.green { color: var(--green); }
+  .bento-big-num.muted { color: var(--text-2); }
+  .bento-label {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+  .bento-sublabel {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-3);
+    margin-top: 4px;
+  }
+
+  /* glow accents on big cells */
+  .bento-gantt::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--blue-mid), transparent 70%);
+    pointer-events: none;
+  }
+  .bento-biz::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--amber-mid), transparent 70%);
+    pointer-events: none;
+  }
+
+  /* DONUT */
+  .donut-wrap {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    height: 100%;
+  }
+  .donut-svg-wrap {
+    flex-shrink: 0;
+    position: relative;
+  }
+  .donut-center {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .donut-center-num {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+  }
+  .donut-center-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--text-3);
+    margin-top: 3px;
+  }
+  .donut-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .legend-text { font-size: 12px; color: var(--text-2); }
+  .legend-pct {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-3);
+    margin-left: auto;
+    padding-left: 8px;
+  }
+
+  /* BAR CHART */
+  .bar-chart-wrap {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .bar-chart-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-bottom: 20px;
+  }
+  .bar-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    flex: 1;
+    min-height: 100px;
+  }
+  .bar-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+  }
+  .bar-value {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-2);
+  }
+  .bar {
+    width: 100%;
+    border-radius: 6px 6px 0 0;
+    transition: opacity 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .bar::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 30%;
+    background: rgba(255,255,255,0.12);
+    border-radius: inherit;
+  }
+  .bar:hover { opacity: 0.85; }
+  .bar-month {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-3);
+    letter-spacing: 0.08em;
+  }
+
+  @media (max-width: 768px) {
+    #overview { padding: 60px 24px; }
+    .bento {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto;
+    }
+    .bento-donut { grid-column: 1 / 3; grid-row: auto; }
+    .bento-gantt, .bento-biz, .bento-bug, .bento-perf, .bento-infra { grid-column: auto; grid-row: auto; }
+    .bento-bars { grid-column: 1 / 3; grid-row: auto; }
+    .donut-wrap { flex-direction: column; }
+  }
+  </style>
+
+  <div class="overview-header reveal">
+    <p class="section-eyebrow">WORK OVERVIEW</p>
+    <h2 class="overview-title">工作全景</h2>
+  </div>
+
+  <div class="bento reveal reveal-d1">
+
+    <!-- Donut -->
+    <div class="bento-cell bento-donut">
+      <p class="bento-eyebrow">任务分布</p>
+      <div class="donut-wrap">
+        <div class="donut-svg-wrap">
+          <svg id="donut-svg" width="160" height="160" viewBox="0 0 160 160">
+            <circle cx="80" cy="80" r="58" fill="none" stroke="var(--bg-3)" stroke-width="20"/>
+            <!-- segments drawn by JS -->
+            <circle class="donut-seg" cx="80" cy="80" r="58" fill="none" stroke="#F59E42" stroke-width="20"
+              stroke-dasharray="0 364.4" stroke-linecap="butt"
+              transform="rotate(-90 80 80)"
+              data-val="142" data-total="381"/>
+            <circle class="donut-seg" cx="80" cy="80" r="58" fill="none" stroke="#4F8EF7" stroke-width="20"
+              stroke-dasharray="0 364.4" stroke-linecap="butt"
+              transform="rotate(-90 80 80)"
+              data-val="108" data-total="381" data-offset="142"/>
+            <circle class="donut-seg" cx="80" cy="80" r="58" fill="none" stroke="#8B5CF6" stroke-width="20"
+              stroke-dasharray="0 364.4" stroke-linecap="butt"
+              transform="rotate(-90 80 80)"
+              data-val="95" data-total="381" data-offset="250"/>
+            <circle class="donut-seg" cx="80" cy="80" r="58" fill="none" stroke="#10B981" stroke-width="20"
+              stroke-dasharray="0 364.4" stroke-linecap="butt"
+              transform="rotate(-90 80 80)"
+              data-val="21" data-total="381" data-offset="345"/>
+            <circle class="donut-seg" cx="80" cy="80" r="58" fill="none" stroke="#5A5A7A" stroke-width="20"
+              stroke-dasharray="0 364.4" stroke-linecap="butt"
+              transform="rotate(-90 80 80)"
+              data-val="10" data-total="381" data-offset="366"/>
+          </svg>
+          <div class="donut-center">
+            <div class="donut-center-num">381</div>
+            <div class="donut-center-label">TOTAL</div>
+          </div>
+        </div>
+        <div class="donut-legend">
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#F59E42"></div>
+            <span class="legend-text">业务功能</span>
+            <span class="legend-pct">37.3%</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#4F8EF7"></div>
+            <span class="legend-text">Gantt 组件</span>
+            <span class="legend-pct">28.4%</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#8B5CF6"></div>
+            <span class="legend-text">Bug 修复</span>
+            <span class="legend-pct">24.9%</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#10B981"></div>
+            <span class="legend-text">性能优化</span>
+            <span class="legend-pct">5.5%</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#5A5A7A"></div>
+            <span class="legend-text">基础设施</span>
+            <span class="legend-pct">2.6%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gantt -->
+    <div class="bento-cell bento-gantt">
+      <p class="bento-eyebrow">GANTT</p>
+      <div class="bento-big-num blue" data-count="108">0</div>
+      <p class="bento-label">Gantt 组件<br>自研迭代</p>
+    </div>
+
+    <!-- Biz -->
+    <div class="bento-cell bento-biz">
+      <p class="bento-eyebrow">BUSINESS</p>
+      <div class="bento-big-num amber" data-count="142">0</div>
+      <p class="bento-label">业务功能<br>持续交付</p>
+    </div>
+
+    <!-- Bug -->
+    <div class="bento-cell bento-bug">
+      <p class="bento-eyebrow">BUG FIX</p>
+      <div class="bento-big-num purple" data-count="95">0</div>
+      <p class="bento-label">Bug 修复</p>
+    </div>
+
+    <!-- Perf -->
+    <div class="bento-cell bento-perf">
+      <p class="bento-eyebrow">PERF</p>
+      <div class="bento-big-num green" data-count="21">0</div>
+      <p class="bento-label">性能优化</p>
+    </div>
+
+    <!-- Infra -->
+    <div class="bento-cell bento-infra">
+      <p class="bento-eyebrow">INFRA</p>
+      <div class="bento-big-num muted" data-count="10">0</div>
+      <p class="bento-label">基础设施</p>
+    </div>
+
+    <!-- Bar Chart -->
+    <div class="bento-cell bento-bars">
+      <div class="bar-chart-wrap">
+        <div class="bar-chart-title">月度工作量分布 · Monthly Output</div>
+        <div class="bar-chart">
+          <div class="bar-group">
+            <span class="bar-value">2</span>
+            <div class="bar" style="height:28px; background: linear-gradient(180deg, #4F8EF7, #2563EB);"></div>
+            <span class="bar-month">12月</span>
+          </div>
+          <div class="bar-group">
+            <span class="bar-value">68</span>
+            <div class="bar" style="height:68px; background: linear-gradient(180deg, #F59E42, #D97706);"></div>
+            <span class="bar-month">1月</span>
+          </div>
+          <div class="bar-group">
+            <span class="bar-value">89</span>
+            <div class="bar" style="height:89px; background: linear-gradient(180deg, #8B5CF6, #6D28D9);"></div>
+            <span class="bar-month">2月</span>
+          </div>
+          <div class="bar-group">
+            <span class="bar-value">120</span>
+            <div class="bar" style="height:100px; background: linear-gradient(180deg, #10B981, #059669);"></div>
+            <span class="bar-month">3月</span>
+          </div>
+          <div class="bar-group">
+            <span class="bar-value">96</span>
+            <div class="bar" style="height:80px; background: linear-gradient(180deg, #4F8EF7, #8B5CF6);"></div>
+            <span class="bar-month">4月</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- S3: DUAL TRACK -->
+<section id="dual">
+  <style>
+  #dual {
+    padding: clamp(16px,2.5vh,36px) clamp(24px,4vw,80px) clamp(12px,2vh,24px) clamp(40px,6vw,120px);
+    background: rgba(12,12,20,0.68);
+    justify-content: center;
+  }
+  .dual-header { margin-bottom: clamp(10px,1.5vh,20px); }
+  .dual-title {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 3.2vw, 36px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .dual-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  /* 左列容器：Gantt 卡片 + 性能卡片 左右排列 */
+  .dual-col-left {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items: stretch;
+  }
+  .dual-col-left > * {
+    flex: 1;
+  }
+  .dual-col-right {
+    display: flex;
+    flex-direction: column;
+  }
+  .dual-card {
+    border-radius: 16px;
+    padding: clamp(14px,1.8vh,22px) clamp(16px,2vw,28px);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .dual-card-blue {
+    background: linear-gradient(145deg, rgba(79,142,247,0.07) 0%, var(--bg-1) 60%);
+  }
+  .dual-card-blue::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(79,142,247,0.15), transparent 70%);
+    pointer-events: none;
+  }
+  .dual-card-amber {
+    background: linear-gradient(145deg, rgba(245,158,66,0.07) 0%, var(--bg-1) 60%);
+  }
+  .dual-card-amber::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(245,158,66,0.15), transparent 70%);
+    pointer-events: none;
+  }
+  /* circuit pattern for blue card */
+  .dual-card-blue::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    right: 0; height: 120px;
+    background-image:
+      repeating-linear-gradient(90deg, rgba(79,142,247,0.06) 0px, rgba(79,142,247,0.06) 1px, transparent 1px, transparent 40px),
+      repeating-linear-gradient(0deg, rgba(79,142,247,0.06) 0px, rgba(79,142,247,0.06) 1px, transparent 1px, transparent 40px);
+    pointer-events: none;
+  }
+  .dual-card-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .dual-card-label.blue { color: var(--blue); }
+  .dual-card-label.amber { color: var(--amber); }
+  .dual-card-heading {
+    font-family: var(--font-display);
+    font-size: clamp(17px, 2.2vw, 24px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+  .dual-milestone {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 5px 12px;
+    margin-bottom: 12px;
+    font-size: 12px;
+    color: var(--text-2);
+  }
+  .dual-milestone-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  .dual-milestone-tag.blue { background: var(--blue-dim); color: var(--blue); }
+  .dual-milestone-tag.amber { background: var(--amber-dim); color: var(--amber); }
+  .dual-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .dual-tag {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 6px;
+    border: 1px solid;
+    transition: all 0.2s;
+    cursor: default;
+  }
+  .dual-tag.blue {
+    color: var(--blue);
+    border-color: rgba(79,142,247,0.3);
+    background: var(--blue-dim);
+  }
+  .dual-tag.blue:hover {
+    background: var(--blue-mid);
+    border-color: var(--blue);
+  }
+  .dual-tag.amber {
+    color: var(--amber);
+    border-color: rgba(245,158,66,0.3);
+    background: var(--amber-dim);
+  }
+  .dual-tag.amber:hover {
+    background: var(--amber-mid);
+    border-color: var(--amber);
+  }
+  .dual-stats-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .dual-stat-chip {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 12px;
+    min-width: 72px;
+  }
+  .dual-stat-chip-num {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+  }
+  .dual-stat-chip-num.blue { color: var(--blue); }
+  .dual-stat-chip-num.amber { color: var(--amber); }
+  .dual-stat-chip-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-3);
+  }
+  /* amber card scatter layout for features */
+  .dual-scatter {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+    margin-bottom: 0;
+  }
+  .dual-scatter-item {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: var(--text-2);
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .dual-scatter-item:hover {
+    border-color: rgba(245,158,66,0.3);
+    background: var(--amber-dim);
+    color: var(--text);
+  }
+  .dual-scatter-item-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-3);
+    letter-spacing: 0.05em;
+    display: block;
+    margin-top: 4px;
+  }
+  .dual-scatter-item.full { grid-column: 1 / 3; }
+
+  /* ── 性能攻关横幅 ── */
+  /* 性能攻关 — 左列第二张卡片 */
+  .perf-card {
+    padding: clamp(14px,1.8vh,22px) clamp(16px,2vw,28px);
+    background: linear-gradient(145deg, rgba(16,185,129,0.07) 0%, var(--bg-1) 70%);
+    border: 1px solid rgba(16,185,129,0.2);
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .perf-card::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(16,185,129,0.12), transparent 70%);
+    pointer-events: none;
+  }
+  .perf-card-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 8px;
+  }
+  .perf-card-heading {
+    font-family: var(--font-display);
+    font-size: clamp(15px, 1.8vw, 20px);
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: clamp(10px,1.4vh,16px);
+  }
+  .perf-items {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .perf-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+  }
+  .perf-num {
+    font-family: var(--font-display);
+    font-size: clamp(14px, 1.6vw, 18px);
+    font-weight: 700;
+    color: var(--green);
+    line-height: 1;
+  }
+  .perf-num sup { font-size: 0.6em; vertical-align: super; }
+  .perf-desc {
+    font-size: 12px;
+    color: var(--text-3);
+  }
+
+  /* ── Marquee ── */
+  .dual-marquee-wrap {
+    margin-top: clamp(8px,1.2vh,16px);
+    overflow: hidden;
+  }
+  .marquee-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 6px;
+    user-select: none;
+    overflow: hidden;
+  }
+  .marquee-track {
+    display: flex;
+    gap: 10px;
+    animation: marquee-left 26s linear infinite;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .marquee-track.reverse { animation: marquee-right 30s linear infinite; }
+  .marquee-row:hover .marquee-track { animation-play-state: paused; }
+  @keyframes marquee-left {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes marquee-right {
+    0%   { transform: translateX(-50%); }
+    100% { transform: translateX(0); }
+  }
+  .m-tag {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 100px;
+    border: 1px solid;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .m-tag.blue  { color: #7AB5FF; border-color: rgba(79,142,247,0.22); background: rgba(79,142,247,0.06); }
+  .m-tag.amber { color: #FFBA6B; border-color: rgba(245,158,66,0.22); background: rgba(245,158,66,0.06); }
+
+  @media (max-width: 768px) {
+    #dual { padding: 60px 24px; }
+
+    .dual-stats-row { flex-wrap: wrap; }
+  }
+  </style>
+
+  <div class="dual-header reveal">
+    <p class="section-eyebrow">PARALLEL TRACKS</p>
+    <h2 class="dual-title">双线并进</h2>
+  </div>
+
+  <div class="dual-grid">
+
+    <!-- RIGHT: 排程系统 -->
+    <div class="dual-col-right reveal reveal-d2">
+      <div class="dual-card dual-card-amber">
+        <p class="dual-card-label amber">SCHEDULING SYSTEM · 排程业务</p>
+        <h3 class="dual-card-heading">全链路业务，持续交付落地</h3>
+        <div class="dual-scatter">
+          <div class="dual-scatter-item">
+            外协工序管理
+            <span class="dual-scatter-item-label">完整供应商链路</span>
+          </div>
+          <div class="dual-scatter-item">
+            设备日历重构
+            <span class="dual-scatter-item-label">更加灵活的班次设置</span>
+          </div>
+          <div class="dual-scatter-item">
+            产品 UI 改造
+            <span class="dual-scatter-item-label">交互优化</span>
+          </div>
+          <div class="dual-scatter-item">
+            排产小助手
+            <span class="dual-scatter-item-label">页面改造 · 加载提示优化</span>
+          </div>
+          <div class="dual-scatter-item">
+            设备计划看板
+            <span class="dual-scatter-item-label">支持打印设备生产任务单</span>
+          </div>
+          <div class="dual-scatter-item">
+            今天排 · 产品官网落地页
+            <span class="dual-scatter-item-label">PC + 移动端全适配 · SEO 优化 · 美洽客服接入</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEFT: Gantt 自研 + 性能攻关 -->
+    <div class="dual-col-left reveal reveal-d1">
+      <div class="perf-card">
+        <p class="perf-card-label">PERFORMANCE · 性能攻关</p>
+        <p class="perf-card-heading">甘特图性能优化</p>
+        <div class="perf-items">
+          <div class="perf-item">
+            <span class="perf-num">5000<sup>+</sup></span>
+            <span class="perf-desc">工序下流畅滚动</span>
+          </div>
+          <div class="perf-item">
+            <span class="perf-num">设备日历渲染优化</span>
+            <span class="perf-desc">动态缓冲区，按需渲染，缩小渲染量</span>
+          </div>
+          <div class="perf-item">
+            <span class="perf-num">工序瘦身</span>
+            <span class="perf-desc">深度优化单个工序渲染量</span>
+          </div>
+          <div class="perf-item">
+            <span class="perf-num">事件委托</span>
+            <span class="perf-desc">处理器上浮至容器，减少渲染依赖项</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dual-card dual-card-blue">
+        <p class="dual-card-label blue">GANTT COMPONENT · 自研组件库</p>
+        <h3 class="dual-card-heading">从 0 到 1，自研 Gantt 组件</h3>
+        <div class="dual-milestone">
+          <span class="dual-milestone-tag blue">2026-03-31</span>
+          发布为 GitHub npm 包
+        </div>
+        <div class="dual-tags">
+          <span class="dual-tag blue">Canvas 渲染引擎</span>
+          <span class="dual-tag blue">拖拽系统</span>
+          <span class="dual-tag blue">树形/折叠结构</span>
+          <span class="dual-tag blue">多行合并</span>
+          <span class="dual-tag blue">虚拟滚动</span>
+          <span class="dual-tag blue">缩放控制</span>
+          <span class="dual-tag blue">右键菜单</span>
+          <span class="dual-tag blue">事件系统</span>
+        </div>
+        <div class="dual-stats-row">
+          <div class="dual-stat-chip">
+            <span class="dual-stat-chip-num blue">40+</span>
+            <span class="dual-stat-chip-label">配置项</span>
+          </div>
+          <div class="dual-stat-chip">
+            <span class="dual-stat-chip-num blue">10000+</span>
+            <span class="dual-stat-chip-label">工序流畅承载</span>
+          </div>
+          <div class="dual-stat-chip">
+            <span class="dual-stat-chip-num blue">GPU</span>
+            <span class="dual-stat-chip-label">硬件加速渲染</span>
+          </div>
+          <div class="dual-stat-chip">
+            <span class="dual-stat-chip-num blue">CI/CD</span>
+            <span class="dual-stat-chip-label">自动化发布</span>
+          </div>
+          <div class="dual-stat-chip">
+            <span class="dual-stat-chip-num blue">npm</span>
+            <span class="dual-stat-chip-label">包已发布</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Marquee 技术关键词 -->
+  <div class="dual-marquee-wrap">
+    <div class="marquee-row">
+      <div class="marquee-track">
+        <span class="m-tag blue">Canvas 渲染</span><span class="m-tag blue">虚拟滚动</span><span class="m-tag blue">拖拽算法</span><span class="m-tag blue">事件系统</span><span class="m-tag blue">树形数据</span><span class="m-tag blue">行列合并</span><span class="m-tag blue">缩放控制</span><span class="m-tag blue">npm 发布</span><span class="m-tag blue">CI/CD</span><span class="m-tag blue">API 设计</span><span class="m-tag blue">性能分析</span><span class="m-tag blue">requestAnimationFrame</span><span class="m-tag blue">IntersectionObserver</span><span class="m-tag blue">Canvas 渲染</span><span class="m-tag blue">虚拟滚动</span><span class="m-tag blue">拖拽算法</span><span class="m-tag blue">事件系统</span><span class="m-tag blue">树形数据</span><span class="m-tag blue">行列合并</span><span class="m-tag blue">缩放控制</span><span class="m-tag blue">npm 发布</span><span class="m-tag blue">CI/CD</span><span class="m-tag blue">API 设计</span><span class="m-tag blue">性能分析</span><span class="m-tag blue">requestAnimationFrame</span><span class="m-tag blue">IntersectionObserver</span>
+      </div>
+    </div>
+    <div class="marquee-row">
+      <div class="marquee-track reverse">
+        <span class="m-tag amber">复杂表单</span><span class="m-tag amber">甘特集成</span><span class="m-tag amber">打印方案</span><span class="m-tag amber">AI 对话流</span><span class="m-tag amber">接口联调</span><span class="m-tag amber">多设备并行</span><span class="m-tag amber">工时管理</span><span class="m-tag amber">外协链路</span><span class="m-tag amber">设备日历</span><span class="m-tag amber">插单策略</span><span class="m-tag amber">进度可视化</span><span class="m-tag amber">官网开发</span><span class="m-tag amber">SEO 优化</span><span class="m-tag amber">移动端适配</span><span class="m-tag amber">复杂表单</span><span class="m-tag amber">甘特集成</span><span class="m-tag amber">打印方案</span><span class="m-tag amber">AI 对话流</span><span class="m-tag amber">接口联调</span><span class="m-tag amber">多设备并行</span><span class="m-tag amber">工时管理</span><span class="m-tag amber">外协链路</span><span class="m-tag amber">设备日历</span><span class="m-tag amber">插单策略</span><span class="m-tag amber">进度可视化</span><span class="m-tag amber">官网开发</span><span class="m-tag amber">SEO 优化</span><span class="m-tag amber">移动端适配</span>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- S4: TIMELINE -->
+<section id="timeline">
+  <style>
+  #timeline {
+    padding: clamp(24px,4vh,56px) clamp(32px,5vw,80px) clamp(40px,6vh,80px) clamp(32px,5vw,80px);
+    background: rgba(19,19,30,0.72);
+    justify-content: center;
+  }
+  .tl-header { margin-bottom: clamp(16px,2.5vh,32px); }
+  .tl-title {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  /* ── 核心：三行七列网格 ── */
+  .tl-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: 1fr auto 1fr;
+    gap: 0 clamp(6px, 1.2vw, 20px);
+    position: relative;
+    height: min(52vh, 340px);
+  }
+
+  /* 水平连接线 */
+  .tl-grid::before {
+    content: '';
+    position: absolute;
+    left: 6.5%;  /* 从第一列中心起 */
+    right: 6.5%; /* 到最后一列中心止 */
+    top: 50%;
+    height: 1px;
+    transform: translateY(-50%);
+    background: linear-gradient(90deg,
+      rgba(79,142,247,0.15),
+      rgba(79,142,247,0.7) 20%,
+      rgba(139,92,246,0.7) 50%,
+      rgba(245,158,66,0.7) 80%,
+      rgba(245,158,66,0.15));
+    z-index: 0;
+  }
+
+  /* 上方内容区（card-above + connector，奇数节点） */
+  .tl-above {
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;  /* 内容贴底，靠近中线 */
+    align-items: center;
+    gap: 0;
+  }
+  /* 下方内容区（connector + card-below，偶数节点） */
+  .tl-below {
+    grid-row: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* 内容贴顶，靠近中线 */
+    align-items: center;
+    gap: 0;
+  }
+  /* 中间 dot 行 */
+  .tl-dot-cell {
+    grid-row: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+    padding: 6px 0;
+  }
+
+  .tl-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid;
+    background: var(--bg-1);
+    position: relative;
+    flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+  .tl-dot:hover { transform: scale(1.4); }
+  .tl-dot::after {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    opacity: 0;
+    animation: tl-pulse 2.8s ease-in-out infinite;
+  }
+  @keyframes tl-pulse {
+    0%   { transform: scale(1);   opacity: 0.4; }
+    60%  { transform: scale(1.8); opacity: 0; }
+    100% { transform: scale(1);   opacity: 0; }
+  }
+
+  .tl-connector {
+    width: 1px;
+    flex: 1;
+    max-height: 36px;
+    min-height: 12px;
+    opacity: 0.35;
+  }
+
+  .tl-card {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: clamp(8px,1.2vh,13px) clamp(10px,1.2vw,16px);
+    text-align: center;
+    transition: border-color 0.2s, background 0.2s;
+    cursor: default;
+  }
+  .tl-card:hover {
+    border-color: rgba(255,255,255,0.2);
+    background: var(--bg-3);
+  }
+  .tl-month {
+    font-family: var(--font-mono);
+    font-size: clamp(12px, 1vw, 13px);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+  .tl-text {
+    font-size: clamp(12px, 1.2vw, 14px);
+    color: var(--text-2);
+    line-height: 1.4;
+  }
+  </style>
+
+  <div class="tl-header reveal">
+    <p class="section-eyebrow">KEY MILESTONES</p>
+    <h2 class="tl-title">关键里程碑</h2>
+  </div>
+
+  <div class="tl-grid reveal reveal-d1">
+
+    <!-- ① 今天排官网上线 · 上方 · col 1 · 橙 -->
+    <div class="tl-above" style="grid-column:1;">
+      <div class="tl-card">
+        <div class="tl-month" style="color:#F59E42;">2026-01</div>
+        <div class="tl-text">今天排官网上线</div>
+      </div>
+      <div class="tl-connector" style="background:linear-gradient(to bottom,#F59E42,transparent);"></div>
+    </div>
+    <div class="tl-dot-cell" style="grid-column:1;">
+      <div class="tl-dot" style="border-color:#F59E42; color:#F59E42;"></div>
+    </div>
+
+    <!-- ② 设备计划看板 · 下方 · col 2 · 蓝 -->
+    <div class="tl-dot-cell" style="grid-column:2;">
+      <div class="tl-dot" style="border-color:#4F8EF7; color:#4F8EF7;"></div>
+    </div>
+    <div class="tl-below" style="grid-column:2;">
+      <div class="tl-connector" style="background:linear-gradient(to top,#4F8EF7,transparent);"></div>
+      <div class="tl-card">
+        <div class="tl-month" style="color:#4F8EF7;">2026-01</div>
+        <div class="tl-text">设备计划看板上线</div>
+      </div>
+    </div>
+
+    <!-- ③ 外协功能 · 上方 · col 3 · 橙 -->
+    <div class="tl-above" style="grid-column:3;">
+      <div class="tl-card">
+        <div class="tl-month" style="color:#F59E42;">2026-01</div>
+        <div class="tl-text">外协功能完整上线</div>
+      </div>
+      <div class="tl-connector" style="background:linear-gradient(to bottom,#F59E42,transparent);"></div>
+    </div>
+    <div class="tl-dot-cell" style="grid-column:3;">
+      <div class="tl-dot" style="border-color:#F59E42; color:#F59E42;"></div>
+    </div>
+
+    <!-- ④ 设备日历性能 · 下方 · col 4 · 紫 -->
+    <div class="tl-dot-cell" style="grid-column:4;">
+      <div class="tl-dot" style="border-color:#8B5CF6; color:#8B5CF6;"></div>
+    </div>
+    <div class="tl-below" style="grid-column:4;">
+      <div class="tl-connector" style="background:linear-gradient(to top,#8B5CF6,transparent);"></div>
+      <div class="tl-card">
+        <div class="tl-month" style="color:#8B5CF6;">2026-02</div>
+        <div class="tl-text">设备日历性能优化<br>5000+ 工序流畅</div>
+      </div>
+    </div>
+
+    <!-- ⑤ 工作时间管理 · 上方 · col 5 · 绿 -->
+    <div class="tl-above" style="grid-column:5;">
+      <div class="tl-card">
+        <div class="tl-month" style="color:#10B981;">2026-02</div>
+        <div class="tl-text">工作时间管理</div>
+      </div>
+      <div class="tl-connector" style="background:linear-gradient(to bottom,#10B981,transparent);"></div>
+    </div>
+    <div class="tl-dot-cell" style="grid-column:5;">
+      <div class="tl-dot" style="border-color:#10B981; color:#10B981;"></div>
+    </div>
+
+    <!-- ⑥ Gantt npm 发布 · 下方 · col 6 · 蓝 -->
+    <div class="tl-dot-cell" style="grid-column:6;">
+      <div class="tl-dot" style="border-color:#4F8EF7; color:#4F8EF7;"></div>
+    </div>
+    <div class="tl-below" style="grid-column:6;">
+      <div class="tl-connector" style="background:linear-gradient(to top,#4F8EF7,transparent);"></div>
+      <div class="tl-card">
+        <div class="tl-month" style="color:#4F8EF7;">2026-03</div>
+        <div class="tl-text">Gantt 组件<br>npm 发布</div>
+      </div>
+    </div>
+
+    <!-- ⑦ 新版 Gantt 集成 · 上方 · col 7 · 蓝 -->
+    <div class="tl-above" style="grid-column:7;">
+      <div class="tl-card">
+        <div class="tl-month" style="color:#4F8EF7;">2026-04</div>
+        <div class="tl-text">新版 Gantt<br>深度集成上线</div>
+      </div>
+      <div class="tl-connector" style="background:linear-gradient(to bottom,#4F8EF7,transparent);"></div>
+    </div>
+    <div class="tl-dot-cell" style="grid-column:7;">
+      <div class="tl-dot" style="border-color:#4F8EF7; color:#4F8EF7;"></div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- S6: GROWTH -->
+<section id="growth">
+  <style>
+  #growth {
+    padding: clamp(24px,4vh,60px) clamp(24px,4vw,80px) clamp(24px,4vh,60px) clamp(40px,6vw,120px);
+    background: rgba(19,19,30,0.72);
+    justify-content: center;
+  }
+  .growth-header { margin-bottom: clamp(16px,2.5vh,36px); }
+  .growth-title {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 4vw, 42px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .growth-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: stretch;
+  }
+  .growth-grid > div {
+    display: flex;
+    flex-direction: column;
+  }
+  /* 最后一个子项撑满剩余高度 */
+  .growth-grid > div > :last-child {
+    flex: 1;
+  }
+  .growth-paragraph,
+  .growth-quote,
+  .growth-item {
+    display: flex;
+  }
+  .growth-paragraph { flex-direction: column; }
+  .growth-item { align-items: flex-start; }
+  .growth-col-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-bottom: 16px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .growth-col-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .growth-paragraph {
+    margin-bottom: clamp(10px,1.5vh,20px);
+    padding: clamp(12px,1.8vh,20px) clamp(14px,2vw,22px);
+    background: var(--bg-2);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    position: relative;
+    transition: border-color 0.25s;
+  }
+  .growth-paragraph:hover { border-color: rgba(255,255,255,0.14); }
+  .growth-paragraph-accent {
+    position: absolute;
+    top: 24px;
+    left: 0;
+    width: 3px;
+    height: 24px;
+    border-radius: 0 2px 2px 0;
+  }
+  .growth-paragraph p {
+    font-size: 14px;
+    color: var(--text-2);
+    line-height: 1.8;
+  }
+  .growth-paragraph strong {
+    display: block;
+    font-size: 15px;
+    color: var(--text);
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  /* 引用块 */
+  .growth-quote {
+    display: flex;
+    gap: 12px;
+    padding: clamp(12px,1.8vh,18px) clamp(14px,2vw,20px);
+    background: linear-gradient(135deg, rgba(245,158,66,0.06), rgba(139,92,246,0.06));
+    border: 1px solid rgba(245,158,66,0.2);
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .growth-quote::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, var(--amber), var(--purple));
+    border-radius: 3px 0 0 3px;
+  }
+  .growth-quote-text {
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 500;
+    line-height: 1.6;
+    margin-bottom: 6px;
+  }
+  .growth-quote-sub {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--amber);
+    letter-spacing: 0.04em;
+  }
+
+  /* right column: numbered cards */
+  .growth-item {
+    display: flex;
+    gap: 16px;
+    margin-bottom: clamp(10px,1.5vh,20px);
+    padding: clamp(12px,1.8vh,20px) clamp(14px,2vw,22px);
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: border-color 0.25s, transform 0.25s;
+  }
+  .growth-item:hover {
+    border-color: rgba(245,158,66,0.25);
+    transform: translateX(4px);
+  }
+  .growth-item-num {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--bg-3);
+    line-height: 1;
+    flex-shrink: 0;
+    width: 36px;
+    text-align: right;
+  }
+  .growth-item-body {}
+  .growth-item-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .growth-item-desc {
+    font-size: 14px;
+    color: var(--text-2);
+    line-height: 1.7;
+  }
+  @media (max-width: 768px) {
+    #growth { padding: 60px 24px; }
+    .growth-grid { grid-template-columns: 1fr; gap: 32px; }
+  }
+  </style>
+
+  <div class="growth-header reveal">
+    <p class="section-eyebrow">GROWTH & FUTURE</p>
+    <h2 class="growth-title">成长与展望</h2>
+  </div>
+
+  <div class="growth-grid">
+    <!-- Left: 收获 -->
+    <div class="reveal reveal-d1">
+      <p class="growth-col-label">这段时间，我沉淀了</p>
+
+      <div class="growth-paragraph">
+        <div class="growth-paragraph-accent" style="background: var(--blue);"></div>
+        <strong>用 Claude Code 从0-1 开发高性能Gantt 组件，更短时间、更好结果。</strong>
+        <p>不拥抱 AI 的程序员将被淘汰。</p>
+      </div>
+
+      <div class="growth-paragraph">
+        <div class="growth-paragraph-accent" style="background: var(--green);"></div>
+        <strong>在真实压力场景下沉淀性能优化方法论</strong>
+        <p>利用性能分析工具定位页面瓶颈，梳理渲染流程并针对性优化，形成可复用的性能优化思路。</p>
+      </div>
+    </div>
+
+    <!-- Right: 展望 -->
+    <div class="reveal reveal-d2">
+      <p class="growth-col-label">接下来，我要做的</p>
+
+      <div class="growth-item">
+        <div class="growth-item-num">01</div>
+        <div class="growth-item-body">
+          <div class="growth-item-title">从「写代码」转为「架构编排与质量评审」</div>
+          <div class="growth-item-desc">从「实现」转为「设计与体验」，让 AI 承担更多执行，自己聚焦更高价值的判断。</div>
+        </div>
+      </div>
+
+      <div class="growth-item">
+        <div class="growth-item-num">02</div>
+        <div class="growth-item-body">
+          <div class="growth-item-title">持续打磨业务交互，提升用户体验</div>
+          <div class="growth-item-desc">深入真实排程场景，梳理操作中的痛点问题，把每一次优化沉淀为可复用的交互规范与组件。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="footer">
+  <style>
+  footer {
+    background: rgba(12,12,20,0.68);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    padding: clamp(32px,6vh,80px) clamp(24px,8vw,120px);
+  }
+  /* 背景光晕，呼应 Hero */
+  .fin-glow-l {
+    position: absolute;
+    left: -160px; top: 20%;
+    width: 480px; height: 480px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(79,142,247,0.12), transparent 70%);
+    pointer-events: none;
+  }
+  .fin-glow-r {
+    position: absolute;
+    right: -160px; bottom: 15%;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(245,158,66,0.10), transparent 70%);
+    pointer-events: none;
+  }
+  /* 装饰横线 */
+  .fin-line {
+    width: clamp(40px, 6vw, 80px);
+    height: 1px;
+    background: linear-gradient(90deg, var(--blue), var(--amber));
+    margin: 0 auto clamp(20px,3vh,36px);
+  }
+  /* 小标签 */
+  .fin-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-bottom: clamp(16px,2.5vh,28px);
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 0;
+    border-right: 1.5px solid var(--blue);
+  }
+  .fin-eyebrow.visible {
+    animation:
+      tw-fin 0.35s steps(3, end) 0.15s forwards,
+      tw-cursor 0.8s step-end 0.15s infinite;
+  }
+  @keyframes tw-fin {
+    to { max-width: 5ch; }
+  }
+  /* 主标题 */
+  .fin-heading {
+    font-family: var(--font-display);
+    font-size: clamp(48px, 8vw, 100px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    background: linear-gradient(120deg, var(--blue) 0%, #a78bfa 45%, var(--amber) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: clamp(20px,3vh,36px);
+  }
+  /* 副文本组 */
+  .fin-sub {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(8px,1.5vh,14px);
+    margin-bottom: clamp(24px,4vh,48px);
+  }
+  .fin-sub-main {
+    font-size: clamp(15px, 2vw, 20px);
+    font-weight: 400;
+    color: var(--text-2);
+    letter-spacing: 0.04em;
+  }
+  .fin-sub-tag {
+    font-size: clamp(13px, 1.5vw, 16px);
+    color: var(--text-3);
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    font-style: italic;
+  }
+  /* 署名 */
+  .fin-sig {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 8px 20px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-3);
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+  .fin-sig strong { color: var(--text-2); font-weight: 500; }
+  .fin-sig::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 6px var(--green);
+  }
+  </style>
+
+  <div class="fin-glow-l"></div>
+  <div class="fin-glow-r"></div>
+
+  <p class="fin-eyebrow reveal">FIN</p>
+  <h2 class="fin-heading reveal reveal-d1">感谢聆听</h2>
+  <div class="fin-line reveal reveal-d2"></div>
+  <div class="fin-sub reveal reveal-d3">
+    <span class="fin-sub-main">感谢团队的支持与信任</span>
+    <span class="fin-sub-tag">期待一起做更有价值的事。</span>
+  </div>
+  <div class="fin-sig reveal reveal-d4">
+    <strong>程家帅</strong> 前端工程师 · 2025.12 — 2026.04
+  </div>
+</footer>
+
+<script>
+/* ===== SLIDE ENGINE ===== */
+const slides = Array.from(document.querySelectorAll('section, footer#footer'));
+const totalSlides = slides.length;
+let current = 0;
+let animating = false;
+const ANIM_MS = 580;
+
+const progressBar = document.getElementById('slide-progress');
+const counter = document.getElementById('slide-counter');
+const btnPrev = document.getElementById('btn-prev');
+const btnNext = document.getElementById('btn-next');
+const navDots = [];
+
+/* ---- per-slide entry hooks ---- */
+function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+
+function animateCount(el) {
+  if (el.dataset.counted) return;
+  el.dataset.counted = '1';
+  const target = parseInt(el.getAttribute('data-count'), 10);
+  const duration = 1100;
+  const start = performance.now();
+  function tick(now) {
+    const p = Math.min((now - start) / duration, 1);
+    el.textContent = Math.round(easeOut(p) * target);
+    if (p < 1) requestAnimationFrame(tick);
+    else el.textContent = target;
+  }
+  requestAnimationFrame(tick);
+}
+
+function animateDonut() {
+  const circumference = 2 * Math.PI * 58;
+  document.querySelectorAll('.donut-seg').forEach((seg, i) => {
+    const val   = parseFloat(seg.getAttribute('data-val'));
+    const total = parseFloat(seg.getAttribute('data-total'));
+    const off   = parseFloat(seg.getAttribute('data-offset') || 0);
+    const dash  = (val / total) * circumference;
+    const gap   = circumference - dash;
+    seg.setAttribute('transform', `rotate(${(off / total) * 360 - 90} 80 80)`);
+    seg.style.strokeDasharray = `0 ${circumference}`;
+    seg.style.transition = `stroke-dasharray 0.75s ease ${i * 0.1}s`;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        seg.style.strokeDasharray = `${dash} ${gap}`;
+      });
+    });
+  });
+}
+
+function onEnterSlide(idx) {
+  const slide = slides[idx];
+  // reveal all .reveal elements in this slide
+  slide.querySelectorAll('.reveal').forEach((el, i) => {
+    setTimeout(() => el.classList.add('visible'), i * 60);
+  });
+  // counters
+  slide.querySelectorAll('[data-count]').forEach(el => {
+    setTimeout(() => animateCount(el), 200);
+  });
+  // donut
+  if (slide.querySelector('#donut-svg')) {
+    setTimeout(animateDonut, 200);
+  }
+  // restart hero-period typewriter (direct animation, needs reflow trick)
+  const periodStrong = slide.querySelector('.hero-period strong');
+  if (periodStrong) {
+    periodStrong.style.animation = 'none';
+    void periodStrong.offsetWidth;
+    periodStrong.style.animation = '';
+  }
+}
+
+function onLeaveSlide(idx) {
+  const slide = slides[idx];
+  // remove .visible so CSS transitions & typewriter animations reset
+  slide.querySelectorAll('.reveal').forEach(el => el.classList.remove('visible'));
+  // reset counter guards and display values
+  slide.querySelectorAll('[data-count]').forEach(el => {
+    delete el.dataset.counted;
+    el.textContent = '0';
+  });
+  // reset donut segments back to zero
+  const circumference = 2 * Math.PI * 58;
+  slide.querySelectorAll('.donut-seg').forEach(seg => {
+    seg.style.transition = 'none';
+    seg.style.strokeDasharray = `0 ${circumference}`;
+  });
+}
+
+function goTo(idx, dir) {
+  if (animating || idx === current || idx < 0 || idx >= totalSlides) return;
+  animating = true;
+
+  const prevIdx = current;
+  const prev = slides[prevIdx];
+  const next = slides[idx];
+
+  prev.classList.add('slide-exit');
+  prev.classList.remove('slide-active');
+
+  next.classList.add('slide-active');
+
+  current = idx;
+  updateUI();
+  onEnterSlide(current);
+
+  setTimeout(() => {
+    prev.classList.remove('slide-exit');
+    onLeaveSlide(prevIdx); // reset after exit animation completes, won't affect visuals
+    animating = false;
+  }, ANIM_MS);
+}
+
+function updateUI() {
+  // progress bar
+  progressBar.style.width = `${((current + 1) / totalSlides) * 100}%`;
+  // counter
+  counter.textContent = `${current + 1} / ${totalSlides}`;
+  // buttons
+  btnPrev.disabled = current === 0;
+  btnNext.disabled = current === totalSlides - 1;
+  // nav dots
+  navDots.forEach((d, i) => {
+    d.classList.toggle('active', i === current);
+  });
+}
+
+function next() { goTo(current + 1, 1); }
+function prev() { goTo(current - 1, -1); }
+
+/* ---- controls ---- */
+btnNext.addEventListener('click', e => { e.stopPropagation(); next(); });
+btnPrev.addEventListener('click', e => { e.stopPropagation(); prev(); });
+
+// 点击左半屏 → 上一页，右半屏 → 下一页
+// 跳过按钮、链接、卡片等交互元素上的点击
+document.addEventListener('click', (e) => {
+  if (e.target.closest('button, a, .tl-card, .bento-cell, .dual-card, .growth-paragraph, .growth-item, .m-tag, .fin-sig')) return;
+  if (e.clientX < window.innerWidth / 2) prev();
+  else next();
+});
+
+// keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); next(); }
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp') { e.preventDefault(); prev(); }
+  if (e.key === 'Home') goTo(0);
+  if (e.key === 'End')  goTo(totalSlides - 1);
+});
+
+// nav dots click
+navDots.forEach((dot, i) => {
+  dot.addEventListener('click', e => { e.stopPropagation(); goTo(i); });
+});
+
+/* ---- init first slide ---- */
+slides[0].classList.add('slide-active');
+updateUI();
+onEnterSlide(0);
+</script>
+</body>
+</html>
