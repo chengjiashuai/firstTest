@@ -11,23 +11,37 @@
 
   :root {
     --orange: #F97316;
-    --orange-light: #FED7AA;
+    --orange-400: #FB923C;
     --orange-dark: #C2410C;
+    --grad-orange: linear-gradient(135deg, #F97316 0%, #FB923C 55%, #FBBF24 100%);
+    --grad-orange-glow: linear-gradient(135deg, rgba(249,115,22,0.18) 0%, rgba(251,146,60,0.04) 100%);
+
+    --bg-deep: #0F172A;
+    --bg-surface: #1A2744;
+    --bg-surface-alt: #1E2D50;
+
+    --text-primary: #F1F5F9;
+    --text-secondary: #CBD5E1;
+    --text-muted: #64748B;
+
+    --border-dark: rgba(255,255,255,0.07);
+    --border-glow: rgba(249,115,22,0.25);
+
+    --accent-blue: #60A5FA;
+    --accent-green: #34D399;
+    --accent-purple: #A78BFA;
+    --accent-cyan: #22D3EE;
+    --accent-rose: #FB7185;
+    --accent-amber: #FBBF24;
+
+    /* keep for cover/thanks compat */
     --slate: #1E293B;
-    --slate-mid: #475569;
-    --slate-light: #94A3B8;
-    --cream: #FFFBF7;
     --white: #FFFFFF;
-    --border: #E2E8F0;
-    --accent-blue: #3B82F6;
-    --accent-green: #10B981;
-    --accent-purple: #8B5CF6;
-    --accent-cyan: #06B6D4;
   }
 
   body {
     font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    background: #F8FAFC;
+    background: var(--bg-deep);
     overflow: hidden;
     height: 100vh;
     width: 100vw;
@@ -69,7 +83,7 @@
   .slide-cover {
     background: var(--slate);
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 42% 58%;
   }
 
   .cover-left {
@@ -77,7 +91,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 64px 56px;
+    padding: 56px 48px;
     position: relative;
     overflow: hidden;
   }
@@ -159,7 +173,7 @@
   }
 
   .cover-stat-text {
-    font-size: 15px;
+    font-size: 17px;
     color: rgba(255,255,255,0.8);
     font-weight: 500;
   }
@@ -168,49 +182,17 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 64px 56px;
+    padding: 56px 52px;
     position: relative;
-  }
-
-  .cover-agenda-title {
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--slate-light);
-    margin-bottom: 32px;
-  }
-
-  .cover-agenda-list {
-    display: flex;
-    flex-direction: column;
     gap: 20px;
   }
 
-  .cover-agenda-item {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .agenda-num {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    background: rgba(249, 115, 22, 0.1);
-    color: var(--orange);
-    font-size: 14px;
+  .cover-agenda-title {
+    font-size: 11px;
     font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .agenda-text {
-    font-size: 17px;
-    font-weight: 500;
-    color: #CBD5E1;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-muted);
   }
 
   .cover-bottom {
@@ -222,433 +204,321 @@
     letter-spacing: 2px;
   }
 
-  /* --- CONTENT SLIDES --- */
-  .slide-content {
-    background: var(--cream);
+  /* --- CONTENT SLIDES (dark theme) --- */
+  .slide-dark {
+    background: var(--bg-deep);
     display: flex;
     flex-direction: column;
   }
 
-  .slide-topbar {
-    height: 6px;
-    background: var(--orange);
+  /* dot-grid texture */
+  .slide-dark::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.025) 1px, transparent 0);
+    background-size: 36px 36px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* per-slide background glow */
+  .slide-dark::after {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.07;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .slide-overview::after  { background: var(--orange);       top: -220px; right: -220px; }
+  .slide-iteration::after { background: var(--accent-cyan);  bottom: -220px; left: -220px; }
+  .slide-perf::after      { background: var(--accent-purple);top: 50%; right: -280px; transform: translateY(-50%); }
+  .slide-challenge::after { background: var(--accent-rose);  top: -220px; left: 40%; }
+  .slide-views::after     { background: var(--accent-blue);  bottom: -220px; left: 20%; }
+
+  /* slide header: number badge + title + subtitle */
+  .slide-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 28px 52px 0;
+    position: relative;
+    z-index: 1;
     flex-shrink: 0;
   }
 
-  .slide-body {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 48px 64px 40px;
-    min-height: 0;
-  }
-
-  .slide-label {
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--orange);
-    margin-bottom: 8px;
-  }
-
-  .slide-heading {
-    font-size: 44px;
+  .slide-num {
+    font-size: 13px;
     font-weight: 800;
-    color: var(--slate);
-    letter-spacing: -1px;
-    line-height: 1.1;
-    margin-bottom: 32px;
-    position: relative;
-    display: inline-block;
-  }
-
-  /* ===== TIMELINE LAYOUT (overview & iteration slides) ===== */
-  .timeline-wrap {
-    display: grid;
-    grid-template-columns: 160px 1fr;
-    gap: 0;
-    flex: 1;
-    min-height: 0;
-  }
-
-  /* Left axis */
-  .tl-axis {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    padding-right: 0;
-  }
-
-  .tl-axis::after {
-    content: '';
-    position: absolute;
-    top: 20px;
-    bottom: 20px;
-    right: 0;
-    width: 2px;
-    background: linear-gradient(to bottom, var(--orange) 0%, rgba(249,115,22,0.15) 100%);
-    border-radius: 1px;
-  }
-
-  .tl-axis-item {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+    background: var(--grad-orange);
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    width: 30px; height: 30px;
+    border: 2px solid var(--orange);
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
-    align-items: flex-end;
-    padding-right: 24px;
+    flex-shrink: 0;
+    color: var(--orange);
+  }
+
+  .slide-title {
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+
+  .slide-subtitle {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-left: 4px;
+  }
+
+  .slide-main {
+    flex: 1;
+    padding: 20px 52px 28px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
     position: relative;
     z-index: 1;
   }
 
-  .tl-axis-item::after {
-    content: '';
-    position: absolute;
-    right: -6px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: var(--orange);
-    border: 3px solid var(--cream);
-    box-shadow: 0 0 0 2px var(--orange);
-    z-index: 2;
+  /* glass card (dark theme base card) */
+  .glass-card {
+    background: rgba(26,39,68,0.85);
+    border: 1px solid var(--border-dark);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.04);
+    transition: border-color 0.25s, box-shadow 0.25s;
+  }
+  .glass-card:hover {
+    border-color: var(--border-glow);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.35), 0 0 0 1px rgba(249,115,22,0.08), inset 0 1px 0 rgba(255,255,255,0.06);
   }
 
-  .tl-month {
-    font-size: 22px;
-    font-weight: 800;
-    color: var(--slate);
-    line-height: 1;
-    letter-spacing: -0.5px;
-  }
-
-  .tl-year {
-    font-size: 12px;
-    color: var(--slate-light);
-    font-weight: 500;
-    letter-spacing: 1px;
-    margin-top: 2px;
-  }
-
-  .tl-span-label {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--orange);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-top: 2px;
-  }
-
-  /* Right cards column */
-  .tl-cards {
+  /* data callout */
+  .data-callout {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    padding-left: 28px;
-    justify-content: space-between;
+    gap: 2px;
   }
-
-  .tl-card {
-    background: var(--white);
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    padding: 16px 20px;
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-    flex: 1;
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
-    position: relative;
-    overflow: hidden;
+  .data-num {
+    font-size: 52px;
+    font-weight: 900;
+    background: var(--grad-orange);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: -2px;
+    line-height: 1;
   }
-
-  .tl-card::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 4px;
-    border-radius: 12px 0 0 12px;
-    background: var(--tl-color, var(--orange));
-  }
-
-  .tl-card:hover {
-    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-    transform: translateX(3px);
-  }
-
-  .tl-card-body {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .tl-card-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--slate);
-    margin-bottom: 5px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .tl-card-desc {
-    font-size: 15px;
-    color: var(--slate-mid);
-    line-height: 1.65;
-  }
-
-  /* ===== TWO-COLUMN CONTENT ===== */
-  .two-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    flex: 1;
-    align-content: start;
-  }
-
-  .content-card {
-    background: var(--white);
-    border-radius: 12px;
-    padding: 24px;
-    border: 1px solid var(--border);
-  }
-
-  .content-card-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-
-  .card-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 3px;
-    flex-shrink: 0;
-  }
-
-  .card-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--slate);
-  }
-
-  .tag-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 12px;
-  }
-
-  .chip {
+  .data-label {
     font-size: 12px;
     font-weight: 600;
-    padding: 3px 9px;
-    border-radius: 4px;
-    letter-spacing: 0.3px;
-  }
-
-  .chip-orange { background: #FEF3C7; color: #92400E; }
-  .chip-blue { background: #DBEAFE; color: #1E40AF; }
-  .chip-purple { background: #EDE9FE; color: #5B21B6; }
-  .chip-green { background: #D1FAE5; color: #065F46; }
-  .chip-cyan { background: #CFFAFE; color: #164E63; }
-
-  .bullet-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-  }
-
-  .bullet-list li {
-    font-size: 15px;
-    color: var(--slate-mid);
-    line-height: 1.6;
-    padding-left: 16px;
-    position: relative;
-  }
-
-  .bullet-list li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 7px;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--orange);
-    flex-shrink: 0;
-  }
-
-  /* ===== PERF HIGHLIGHTS ===== */
-  .perf-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    flex: 1;
-  }
-
-  .perf-card {
-    background: var(--white);
-    border-radius: 12px;
-    padding: 24px;
-    border: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .perf-phase {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 2px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
     text-transform: uppercase;
-    padding: 4px 10px;
-    border-radius: 20px;
-    align-self: flex-start;
   }
 
-  .phase-1 { background: #EDE9FE; color: #5B21B6; }
-  .phase-2 { background: #F3E8FF; color: #7C3AED; }
+  /* dark tags */
+  .tag-d {
+    font-size: 11px; font-weight: 700;
+    padding: 3px 9px; border-radius: 6px;
+    letter-spacing: 0.4px;
+  }
+  .td-orange { background: rgba(249,115,22,0.12); color: #FB923C; border: 1px solid rgba(249,115,22,0.2); }
+  .td-purple { background: rgba(167,139,250,0.12); color: #A78BFA; border: 1px solid rgba(167,139,250,0.2); }
+  .td-cyan   { background: rgba(34,211,238,0.12);  color: #22D3EE; border: 1px solid rgba(34,211,238,0.2); }
+  .td-green  { background: rgba(52,211,153,0.12);  color: #34D399; border: 1px solid rgba(52,211,153,0.2); }
+  .td-rose   { background: rgba(251,113,133,0.12); color: #FB7185; border: 1px solid rgba(251,113,133,0.2); }
+  .td-amber  { background: rgba(251,191,36,0.12);  color: #FBBF24; border: 1px solid rgba(251,191,36,0.2); }
 
-  .perf-card-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--slate);
+  /* dark bullet list */
+  .blist { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .blist li {
+    font-size: 14px; color: var(--text-secondary);
+    line-height: 1.55; padding-left: 18px; position: relative;
+  }
+  .blist li::before {
+    content: ''; position: absolute; left: 0; top: 7px;
+    width: 5px; height: 5px; border-radius: 2px;
+    background: var(--orange); opacity: 0.7;
   }
 
-  /* ===== CHALLENGE SLIDE ===== */
-  .challenge-grid {
+  /* ===== SLIDE 2: 工作概览 ===== */
+  .h-timeline {
+    display: flex; gap: 6px; margin-bottom: 16px; flex-shrink: 0;
+  }
+  .h-seg {
+    flex: 1; height: 28px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border-dark);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: var(--text-muted);
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+  .h-seg.hs-active {
+    background: rgba(249,115,22,0.1);
+    border-color: var(--border-glow);
+    color: var(--orange-400);
+  }
+
+  .ov-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
-    gap: 16px;
+    gap: 14px;
     flex: 1;
   }
-
-  .ch-card {
-    border-radius: 12px;
-    padding: 24px;
-    border: 1px solid transparent;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  .ov-card {
+    padding: 20px 22px;
+    display: flex; flex-direction: column; gap: 8px;
+    position: relative; overflow: hidden;
   }
-
-  .ch-card.problem {
-    background: #FFF7F5;
-    border-color: #FED7AA;
+  .ov-card::after {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--card-accent, var(--orange));
+    border-radius: 16px 16px 0 0;
   }
-
-  .ch-card.growth {
-    background: #F0FDF9;
-    border-color: #A7F3D0;
+  .ov-card-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .ov-period {
+    font-size: 11px; font-weight: 800; letter-spacing: 2px;
+    color: var(--text-muted); text-transform: uppercase;
   }
-
-  .ch-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    align-self: flex-start;
+  .ov-card-title {
+    font-size: 18px; font-weight: 700; color: var(--text-primary); line-height: 1.2;
   }
-
-  .ch-badge.p { color: var(--orange-dark); }
-  .ch-badge.g { color: #065F46; }
-
-  .ch-badge-icon {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 9px;
+  .ov-card-desc {
+    font-size: 13px; color: var(--text-secondary); line-height: 1.55;
   }
+  /* 最后一张卡片跨2列 */
+  .ov-card:last-child { grid-column: 1 / -1; }
 
-  .ch-badge-icon.p { background: var(--orange); color: white; }
-  .ch-badge-icon.g { background: var(--accent-green); color: white; }
-
-  .ch-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--slate);
-  }
-
-  .ch-desc {
-    font-size: 15px;
-    color: var(--slate-mid);
-    line-height: 1.65;
-  }
-
-  /* ===== VIEWS SLIDE ===== */
-  .views-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    flex: 1;
-  }
-
-  .view-item {
-    display: flex;
+  /* ===== SLIDE 3: 系统迭代维护 ===== */
+  .iter-cols {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 18px;
-    align-items: flex-start;
-    background: var(--white);
-    border-radius: 12px;
-    padding: 18px 22px;
-    border: 1px solid var(--border);
-    transition: box-shadow 0.2s;
+    flex: 1;
+  }
+  .iter-col {
+    padding: 24px 22px;
+    display: flex; flex-direction: column; gap: 14px;
+    position: relative; overflow: hidden;
+  }
+  .iter-col::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--col-accent, var(--orange));
+    border-radius: 16px 16px 0 0;
+  }
+  .iter-period-block { display: flex; align-items: baseline; gap: 6px; }
+  .iter-month {
+    font-size: 32px; font-weight: 900;
+    background: var(--grad-orange);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    line-height: 1; letter-spacing: -1px;
+  }
+  .iter-year { font-size: 12px; color: var(--text-muted); font-weight: 600; letter-spacing: 1px; }
+  .iter-title { font-size: 17px; font-weight: 700; color: var(--text-primary); line-height: 1.3; }
+  .iter-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  /* ===== SLIDE 4: 性能优化 ===== */
+  .perf-duo {
+    display: grid;
+    grid-template-columns: 1fr 48px 1fr;
+    gap: 0;
+    flex: 1;
+  }
+  .perf-panel {
+    padding: 28px 28px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .perf-phase-label {
+    font-size: 11px; font-weight: 800; letter-spacing: 2.5px;
+    text-transform: uppercase; color: var(--text-muted);
+  }
+  .perf-panel-title { font-size: 22px; font-weight: 800; color: var(--text-primary); line-height: 1.2; }
+  .data-row { display: flex; gap: 28px; }
+  .perf-num-wrap { display: flex; flex-direction: column; gap: 2px; }
+  .perf-tech-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+  .perf-tech-item { display: flex; gap: 10px; align-items: flex-start; }
+  .tech-num {
+    font-size: 11px; font-weight: 800; color: var(--orange);
+    min-width: 20px; padding-top: 2px; flex-shrink: 0;
+  }
+  .tech-text { font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
+
+  .perf-vs {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  }
+  .vs-line { flex: 1; width: 1px; background: var(--border-dark); }
+  .vs-badge {
+    font-size: 10px; font-weight: 800; letter-spacing: 1.5px;
+    color: var(--text-muted); writing-mode: vertical-rl; text-orientation: mixed;
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border-dark);
+    padding: 8px 5px; border-radius: 6px;
   }
 
-  .view-item:hover {
-    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  /* ===== SLIDE 5: 挑战与成长 ===== */
+  .ch-flow { display: flex; flex-direction: column; gap: 20px; flex: 1; }
+  .ch-pair {
+    display: grid; grid-template-columns: 1fr 44px 1fr;
+    align-items: stretch; flex: 1;
+  }
+  .ch-card-new {
+    padding: 22px 24px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .ch-card-new.problem { border-left: 3px solid var(--accent-rose); }
+  .ch-card-new.growth  { border-left: 3px solid var(--accent-green); }
+  .ch-badge-new {
+    font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+  }
+  .ch-badge-new.p { color: var(--accent-rose); }
+  .ch-badge-new.g { color: var(--accent-green); }
+  .ch-card-title { font-size: 18px; font-weight: 700; color: var(--text-primary); line-height: 1.3; }
+  .ch-card-desc  { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+  .ch-arrow-col {
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted); font-size: 18px;
   }
 
-  .view-icon-box {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    flex-shrink: 0;
+  /* ===== SLIDE 6: 想法与期望 ===== */
+  .views-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 18px;
+    flex: 1;
   }
-
-  .vi-orange { background: #FEF3C7; }
-  .vi-purple { background: #EDE9FE; }
-  .vi-blue { background: #DBEAFE; }
-  .vi-green { background: #D1FAE5; }
-
-  .view-body {}
-
-  .view-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--slate);
-    margin-bottom: 4px;
+  .view-card {
+    padding: 24px 26px;
+    display: flex; flex-direction: column; gap: 10px;
   }
-
-  .view-desc {
-    font-size: 15px;
-    color: var(--slate-mid);
-    line-height: 1.6;
+  .view-card-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: rgba(249,115,22,0.1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
   }
-
-  .view-desc strong {
-    color: var(--slate);
-    font-weight: 600;
-  }
+  .view-card-title { font-size: 18px; font-weight: 700; color: var(--text-primary); }
+  .view-card-desc  { font-size: 14px; color: var(--text-secondary); line-height: 1.6; flex: 1; }
+  .view-card-desc strong { color: var(--orange-400); font-weight: 600; }
 
   /* ===== THANKS SLIDE ===== */
   .slide-thanks {
@@ -718,7 +588,7 @@
   }
 
   .thanks-quote {
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 700;
     color: #CBD5E1;
     line-height: 1.5;
@@ -734,7 +604,7 @@
   }
 
   .thanks-info-line {
-    font-size: 12px;
+    font-size: 16px;
     color: var(--slate-mid);
     letter-spacing: 1px;
     display: flex;
@@ -753,115 +623,75 @@
 
   /* ===== NAVIGATION ===== */
   .progress-track {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: rgba(0,0,0,0.06);
-    z-index: 200;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: 3px; background: rgba(255,255,255,0.06); z-index: 200;
   }
-
   .progress-fill {
-    height: 100%;
-    background: var(--orange);
-    transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 100%; background: var(--orange);
+    transition: width 0.45s cubic-bezier(0.4,0,0.2,1);
   }
-
   .counter {
-    position: fixed;
-    bottom: 20px;
-    right: 28px;
-    font-size: 11px;
-    color: var(--slate-light);
-    letter-spacing: 2px;
-    z-index: 200;
-    font-weight: 500;
+    position: fixed; bottom: 16px; right: 24px;
+    font-size: 11px; color: var(--text-muted);
+    letter-spacing: 2px; z-index: 200; font-weight: 600;
   }
-
   .nav-btn {
-    position: fixed;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.9);
-    border: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 200;
-    transition: all 0.2s;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    color: var(--slate-mid);
-    font-size: 16px;
-    user-select: none;
+    position: fixed; top: 50%; transform: translateY(-50%);
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; z-index: 200; transition: all 0.2s;
+    color: var(--text-muted); font-size: 15px; user-select: none;
   }
-
   .nav-btn:hover {
-    background: var(--orange);
-    border-color: var(--orange);
-    color: white;
-    box-shadow: 0 4px 16px rgba(249,115,22,0.3);
+    background: var(--orange); border-color: var(--orange);
+    color: white; box-shadow: 0 4px 20px rgba(249,115,22,0.4);
   }
-
-  .nav-btn.left { left: 16px; }
-  .nav-btn.right { right: 16px; }
-
-  .nav-btn.disabled {
-    opacity: 0.25;
-    pointer-events: none;
-  }
-
+  .nav-btn.left { left: 14px; }
+  .nav-btn.right { right: 14px; }
+  .nav-btn.disabled { opacity: 0.2; pointer-events: none; }
   .dot-nav {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 7px;
-    z-index: 200;
+    position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 7px; z-index: 200;
   }
-
   .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--border);
-    cursor: pointer;
-    transition: all 0.25s;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(255,255,255,0.2); cursor: pointer; transition: all 0.25s;
   }
+  .dot.active { background: var(--orange); width: 20px; border-radius: 3px; }
+  .dot:hover:not(.active) { background: rgba(255,255,255,0.4); }
 
-  .dot.active {
-    background: var(--orange);
-    width: 20px;
-    border-radius: 3px;
+  /* cover hero stats */
+  .cover-hero-stats { display: flex; gap: 28px; margin-top: 36px; position: relative; z-index: 1; }
+  .hero-stat { display: flex; flex-direction: column; gap: 2px; }
+  .hero-num {
+    font-size: 44px; font-weight: 900; line-height: 1; letter-spacing: -2px;
+    background: rgba(255,255,255,0.95); -webkit-background-clip: text;
+    background-clip: text; color: transparent;
   }
-
-  .dot:hover:not(.active) {
-    background: var(--slate-light);
+  .hero-unit { font-size: 16px; color: rgba(255,255,255,0.65); font-weight: 600; margin-top: -4px; }
+  .hero-label { font-size: 11px; color: rgba(255,255,255,0.4); letter-spacing: 1px; margin-top: 2px; text-transform: uppercase; }
+  .cover-date-bar {
+    margin-top: 36px; font-size: 12px; color: rgba(255,255,255,0.45);
+    letter-spacing: 1px; position: relative; z-index: 1;
   }
-
-  /* section header on dark slides */
-  .dark-label {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--orange);
-    margin-bottom: 8px;
+  /* cover agenda as 2-col cards */
+  .cover-agenda-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    width: 100%;
   }
-
-  .dark-heading {
-    font-size: 38px;
-    font-weight: 800;
-    color: var(--white);
-    letter-spacing: -1px;
-    line-height: 1.1;
-    margin-bottom: 32px;
+  .agenda-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px; padding: 16px 18px;
+    transition: border-color 0.2s;
+    cursor: default;
   }
+  .agenda-card:hover { border-color: rgba(249,115,22,0.4); }
+  .agenda-card-num { font-size: 11px; font-weight: 800; color: var(--orange); letter-spacing: 1px; margin-bottom: 6px; }
+  .agenda-card-title { font-size: 17px; font-weight: 700; color: #CBD5E1; margin-bottom: 4px; }
+  .agenda-card-sub { font-size: 12px; color: var(--text-muted); }
 </style>
 </head>
 <body>
@@ -871,46 +701,55 @@
   <!-- ========== SLIDE 1: COVER ========== -->
   <div class="slide slide-cover active" data-index="0">
     <div class="cover-left">
-      <div class="cover-eyebrow">转正述职 · 2026</div>
+      <div class="cover-eyebrow">试用期述职 · PROBATION REVIEW</div>
       <div class="cover-name">程家帅</div>
       <div class="cover-role">前端工程师</div>
-      <div class="cover-stats">
-        <div class="cover-stat">
-          <div class="cover-stat-dot"></div>
-          <div class="cover-stat-text">入职日期：2025年12月31日</div>
+      <div class="cover-hero-stats">
+        <div class="hero-stat">
+          <span class="hero-num">4</span>
+          <span class="hero-unit">个月</span>
+          <span class="hero-label">试用期</span>
         </div>
-        <div class="cover-stat">
-          <div class="cover-stat-dot"></div>
-          <div class="cover-stat-text">述职周期：2026.01 — 2026.04</div>
+        <div class="hero-stat">
+          <span class="hero-num">3</span>
+          <span class="hero-unit">个</span>
+          <span class="hero-label">核心模块</span>
         </div>
-        <div class="cover-stat">
-          <div class="cover-stat-dot"></div>
-          <div class="cover-stat-text">团队：前端工程</div>
+        <div class="hero-stat">
+          <span class="hero-num">1</span>
+          <span class="hero-unit">个</span>
+          <span class="hero-label">npm 包</span>
         </div>
       </div>
+      <div class="cover-date-bar">2025.12.31 入职 &nbsp;|&nbsp; 2026.01 — 2026.04 述职周期 &nbsp;|&nbsp; 前端工程团队</div>
     </div>
     <div class="cover-right">
       <div class="cover-agenda-title">目录</div>
-      <div class="cover-agenda-list">
-        <div class="cover-agenda-item">
-          <div class="agenda-num">01</div>
-          <div class="agenda-text">工作概览</div>
+      <div class="cover-agenda-grid">
+        <div class="agenda-card">
+          <div class="agenda-card-num">01</div>
+          <div class="agenda-card-title">工作概览</div>
+          <div class="agenda-card-sub">时间线总览</div>
         </div>
-        <div class="cover-agenda-item">
-          <div class="agenda-num">02</div>
-          <div class="agenda-text">系统迭代维护</div>
+        <div class="agenda-card">
+          <div class="agenda-card-num">02</div>
+          <div class="agenda-card-title">系统迭代维护</div>
+          <div class="agenda-card-sub">重点功能交付</div>
         </div>
-        <div class="cover-agenda-item">
-          <div class="agenda-num">03</div>
-          <div class="agenda-text">性能优化专项</div>
+        <div class="agenda-card">
+          <div class="agenda-card-num">03</div>
+          <div class="agenda-card-title">性能优化专项</div>
+          <div class="agenda-card-sub">两阶段深度调优</div>
         </div>
-        <div class="cover-agenda-item">
-          <div class="agenda-num">04</div>
-          <div class="agenda-text">挑战与成长</div>
+        <div class="agenda-card">
+          <div class="agenda-card-num">04</div>
+          <div class="agenda-card-title">挑战与成长</div>
+          <div class="agenda-card-sub">问题与方法论</div>
         </div>
-        <div class="cover-agenda-item">
-          <div class="agenda-num">05</div>
-          <div class="agenda-text">想法与期望</div>
+        <div class="agenda-card">
+          <div class="agenda-card-num">05</div>
+          <div class="agenda-card-title">想法与期望</div>
+          <div class="agenda-card-sub">观点与展望</div>
         </div>
       </div>
       <div class="cover-bottom">转正述职 · 程家帅 · 2026.04</div>
@@ -918,220 +757,193 @@
   </div>
 
   <!-- ========== SLIDE 2: 工作概览 ========== -->
-  <div class="slide slide-content" data-index="1">
-    <div class="slide-topbar"></div>
-    <div class="slide-body">
-      <div class="slide-label">01 / 工作概览</div>
-      <div class="slide-heading">工作概览</div>
-      <div class="timeline-wrap">
-        <!-- 左侧时间轴 -->
-        <div class="tl-axis">
-          <div class="tl-axis-item">
-            <div class="tl-month">一月</div>
-            <div class="tl-year">2026</div>
+  <div class="slide slide-dark slide-overview" data-index="1">
+    <div class="slide-header">
+      <span class="slide-num">01</span>
+      <h2 class="slide-title">工作概览</h2>
+      <span class="slide-subtitle">Work Overview · 2026.01–04</span>
+    </div>
+    <div class="slide-main">
+      <div class="h-timeline">
+        <div class="h-seg" style="flex:1">1月</div>
+        <div class="h-seg hs-active" style="flex:2">2月 — 3月</div>
+        <div class="h-seg hs-active" style="flex:1.5">3月 — 4月</div>
+        <div class="h-seg" style="flex:2.5">全程持续</div>
+      </div>
+      <div class="ov-grid">
+        <div class="ov-card glass-card" style="--card-accent:var(--accent-amber)">
+          <div class="ov-card-top">
+            <span class="ov-period">1月</span>
+            <span class="tag-d td-amber">新模块</span>
           </div>
-          <div class="tl-axis-item">
-            <div class="tl-month">二月</div>
-            <div class="tl-year">2026</div>
-            <div class="tl-span-label">至三月</div>
-          </div>
-          <div class="tl-axis-item">
-            <div class="tl-month">三月</div>
-            <div class="tl-year">2026</div>
-            <div class="tl-span-label">至四月</div>
-          </div>
-          <div class="tl-axis-item">
-            <div class="tl-month">全程</div>
-            <div class="tl-year">持续交付</div>
-          </div>
+          <div class="ov-card-title">外协工序管理</div>
+          <div class="ov-card-desc">供应商管理 / 外协视图 / 工序配置全新上线，全面适配报工流程</div>
         </div>
-        <!-- 右侧卡片 -->
-        <div class="tl-cards">
-          <!-- Jan -->
-          <div class="tl-card" style="--tl-color:#F59E0B;">
-            <div class="tl-card-body">
-              <div class="tl-card-title">
-                外协工序管理
-                <span class="chip chip-orange" style="font-size:9px;">新模块</span>
-              </div>
-              <div class="tl-card-desc">供应商管理、外协视图、工序配置全新上线，产品 / 订单 / 工单导入均支持外协参数配置，报工流程完整适配</div>
-            </div>
+        <div class="ov-card glass-card" style="--card-accent:var(--accent-purple)">
+          <div class="ov-card-top">
+            <span class="ov-period">2月 — 3月</span>
+            <span class="tag-d td-purple">深度调优</span>
           </div>
-          <!-- Feb–Mar：两个并排 -->
-          <div style="display:flex;gap:12px;flex:1;">
-            <div class="tl-card" style="--tl-color:#8B5CF6;flex:1;">
-              <div class="tl-card-body">
-                <div class="tl-card-title">
-                  甘特图性能优化
-                  <span class="chip chip-purple" style="font-size:9px;">深度调优</span>
-                </div>
-                <div class="tl-card-desc">Event 渲染重构、全局事件委托、5000+ 工序压测通过，设备日历虚拟滚动 + 双维度缓冲区</div>
-              </div>
-            </div>
-            <div class="tl-card" style="--tl-color:#06B6D4;flex:1;">
-              <div class="tl-card-body">
-                <div class="tl-card-title">
-                  设备日历
-                  <span class="chip chip-cyan" style="font-size:9px;">新功能</span>
-                </div>
-                <div class="tl-card-desc">班次设置、策略管理、批量操作，与甘特图双向联动展示</div>
-              </div>
-            </div>
+          <div class="ov-card-title">甘特图性能优化</div>
+          <div class="ov-card-desc">Event 渲染重构 + 全局事件委托，5000+ 工序流畅运行</div>
+        </div>
+        <div class="ov-card glass-card" style="--card-accent:var(--accent-cyan)">
+          <div class="ov-card-top">
+            <span class="ov-period">2月 — 3月</span>
+            <span class="tag-d td-cyan">新功能</span>
           </div>
-          <!-- Mar–Apr -->
-          <div class="tl-card" style="--tl-color:#F43F5E;">
-            <div class="tl-card-body">
-              <div class="tl-card-title">
-                全新 Gantt 组件
-                <span class="chip" style="background:#FEE2E2;color:#991B1B;font-size:9px;">Canvas 重写</span>
-              </div>
-              <div class="tl-card-desc">Bryntum 瓶颈难以突破，基于 Canvas 从零重写渲染引擎，借助 AI 提效，已发布独立 npm 包，集成进度 95%+</div>
-            </div>
+          <div class="ov-card-title">设备日历</div>
+          <div class="ov-card-desc">班次设置 / 策略管理 / 批量操作，与甘特图双向联动</div>
+        </div>
+        <div class="ov-card glass-card" style="--card-accent:var(--accent-rose)">
+          <div class="ov-card-top">
+            <span class="ov-period">3月 — 4月</span>
+            <span class="tag-d td-rose">Canvas 重写</span>
           </div>
-          <!-- 全程 -->
-          <div class="tl-card" style="--tl-color:#10B981;">
-            <div class="tl-card-body">
-              <div class="tl-card-title">
-                官网 & 日常迭代维护
-                <span class="chip chip-green" style="font-size:9px;">持续交付</span>
-              </div>
-              <div class="tl-card-desc">官网从零搭建（PC/移动适配）、设备计划看板、工单进度可视化、工序并行勾选、需求迭代与 bug 修复贯穿全程</div>
-            </div>
+          <div class="ov-card-title">全新 Gantt 组件</div>
+          <div class="ov-card-desc">Canvas 渲染引擎从零构建，发布独立 npm 包，集成进度 95%+</div>
+        </div>
+        <div class="ov-card glass-card" style="--card-accent:var(--accent-green)">
+          <div class="ov-card-top">
+            <span class="ov-period">全程</span>
+            <span class="tag-d td-green">持续交付</span>
           </div>
+          <div class="ov-card-title">官网 &amp; 日常迭代维护</div>
+          <div class="ov-card-desc">官网搭建 / 计划看板 / 工单可视化，持续迭代保障版本上线</div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- ========== SLIDE 3: 系统迭代维护 ========== -->
-  <div class="slide slide-content" data-index="2">
-    <div class="slide-topbar"></div>
-    <div class="slide-body">
-      <div class="slide-label">02 / 系统迭代</div>
-      <div class="slide-heading">重点工作 · 系统迭代维护</div>
-      <div class="timeline-wrap">
-        <!-- 左侧时间轴 -->
-        <div class="tl-axis">
-          <div class="tl-axis-item">
-            <div class="tl-month">一月</div>
-            <div class="tl-year">2026</div>
+  <div class="slide slide-dark slide-iteration" data-index="2">
+    <div class="slide-header">
+      <span class="slide-num">02</span>
+      <h2 class="slide-title">系统迭代维护</h2>
+      <span class="slide-subtitle">System Iterations</span>
+    </div>
+    <div class="slide-main">
+      <div class="iter-cols">
+        <div class="iter-col glass-card" style="--col-accent:var(--accent-amber)">
+          <div class="iter-period-block">
+            <span class="iter-month">1月</span>
+            <span class="iter-year">2026</span>
           </div>
-          <div class="tl-axis-item">
-            <div class="tl-month">二月</div>
-            <div class="tl-year">2026</div>
-            <div class="tl-span-label">至三月</div>
+          <div class="iter-title">外协工序管理</div>
+          <div class="iter-tags">
+            <span class="tag-d td-amber">供应商管理</span>
+            <span class="tag-d td-amber">外协视图</span>
+            <span class="tag-d td-amber">工序配置</span>
+            <span class="tag-d td-amber">报工适配</span>
           </div>
-          <div class="tl-axis-item">
-            <div class="tl-month">全程</div>
-            <div class="tl-year">持续交付</div>
-          </div>
+          <ul class="blist">
+            <li>供应商信息统一维护模块</li>
+            <li>外协工序配置与视图页面</li>
+            <li>报工流程适配外协场景</li>
+            <li>全链路导入支持外协参数</li>
+          </ul>
         </div>
-        <!-- 右侧卡片 -->
-        <div class="tl-cards">
-          <!-- Jan：外协工序 -->
-          <div class="tl-card" style="--tl-color:#F59E0B;">
-            <div class="tl-card-body">
-              <div class="tl-card-title">
-                外协工序管理
-              </div>
-              <div class="tag-row" style="margin-top:6px;">
-                <span class="chip chip-orange">供应商管理</span>
-                <span class="chip chip-orange">外协视图</span>
-                <span class="chip chip-orange">工序配置</span>
-                <span class="chip chip-orange">报工适配</span>
-              </div>
-              <ul class="bullet-list">
-                <li>新增供应商管理模块，支持供应商信息统一维护</li>
-                <li>外协工序管理：工序配置、外协视图全新页面</li>
-                <li>报工流程全面适配外协工序场景</li>
-                <li>产品 / 订单 / 工单导入均支持外协参数配置</li>
-              </ul>
-            </div>
+        <div class="iter-col glass-card" style="--col-accent:var(--accent-cyan)">
+          <div class="iter-period-block">
+            <span class="iter-month">2月</span>
+            <span class="iter-year">— 3月</span>
           </div>
-          <!-- Feb–Mar：设备日历 -->
-          <div class="tl-card" style="--tl-color:#06B6D4;">
-            <div class="tl-card-body">
-              <div class="tl-card-title">
-                设备日历 & 工时管理
-              </div>
-              <div class="tag-row" style="margin-top:6px;">
-                <span class="chip chip-cyan">班次设置</span>
-                <span class="chip chip-cyan">策略管理</span>
-                <span class="chip chip-cyan">日历批量</span>
-                <span class="chip chip-cyan">甘特联动</span>
-              </div>
-              <ul class="bullet-list">
-                <li>班次设置：灵活配置工作班次，支持多班制</li>
-                <li>策略管理：多策略规则配置与状态同步</li>
-                <li>日历批量设置：多设备批量应用工时策略</li>
-                <li>甘特图完整联动新版设备日历数据</li>
-              </ul>
-            </div>
+          <div class="iter-title">设备日历 &amp; 工时管理</div>
+          <div class="iter-tags">
+            <span class="tag-d td-cyan">班次设置</span>
+            <span class="tag-d td-cyan">策略管理</span>
+            <span class="tag-d td-cyan">日历批量</span>
+            <span class="tag-d td-cyan">甘特联动</span>
           </div>
-          <!-- 全程：官网迭代 -->
-          <div class="tl-card" style="--tl-color:#10B981;">
-            <div class="tl-card-body">
-              <div class="tl-card-title">
-                官网 & 日常迭代维护
-              </div>
-              <div class="tag-row" style="margin-top:6px;">
-                <span class="chip chip-green">官网搭建</span>
-                <span class="chip chip-green">需求迭代</span>
-                <span class="chip chip-green">bug 修复</span>
-                <span class="chip chip-green">可视化</span>
-              </div>
-              <ul class="bullet-list">
-                <li>官网从零搭建，PC / 移动端全适配</li>
-                <li>设备计划看板开发，支持打印导出</li>
-                <li>工单进度可视化、工序并行勾选功能</li>
-                <li>持续跟进迭代需求，保障版本稳定上线</li>
-              </ul>
-            </div>
+          <ul class="blist">
+            <li>灵活配置工作班次，支持多班制</li>
+            <li>多策略规则配置与状态同步</li>
+            <li>多设备批量应用工时策略</li>
+            <li>甘特图完整联动设备日历数据</li>
+          </ul>
+        </div>
+        <div class="iter-col glass-card" style="--col-accent:var(--accent-green)">
+          <div class="iter-period-block">
+            <span class="iter-month">全程</span>
+            <span class="iter-year">持续</span>
           </div>
+          <div class="iter-title">官网 &amp; 日常迭代维护</div>
+          <div class="iter-tags">
+            <span class="tag-d td-green">官网搭建</span>
+            <span class="tag-d td-green">需求迭代</span>
+            <span class="tag-d td-green">Bug 修复</span>
+            <span class="tag-d td-green">可视化</span>
+          </div>
+          <ul class="blist">
+            <li>官网从零搭建，PC / 移动端全适配</li>
+            <li>设备计划看板，支持打印导出</li>
+            <li>工单进度可视化 / 工序并行勾选</li>
+            <li>持续迭代交付，保障版本稳定上线</li>
+          </ul>
         </div>
       </div>
     </div>
   </div>
 
   <!-- ========== SLIDE 4: 性能优化 ========== -->
-  <div class="slide slide-content" data-index="3">
-    <div class="slide-topbar"></div>
-    <div class="slide-body">
-      <div class="slide-label">03 / 性能优化</div>
-      <div class="slide-heading">重点工作 · 性能优化</div>
-      <div class="perf-layout">
-        <div class="perf-card">
-          <div class="perf-phase phase-1">阶段一 · 原组件深度优化</div>
-          <div class="perf-card-title">Bryntum Scheduler 深度调优</div>
-          <div class="tag-row">
-            <span class="chip chip-purple">Event 渲染重构</span>
-            <span class="chip chip-purple">5000+ 压测</span>
-            <span class="chip chip-purple">预加载调优</span>
-            <span class="chip chip-purple">设备日历缓冲区</span>
+  <div class="slide slide-dark slide-perf" data-index="3">
+    <div class="slide-header">
+      <span class="slide-num">03</span>
+      <h2 class="slide-title">性能优化专项</h2>
+      <span class="slide-subtitle">Performance Optimization</span>
+    </div>
+    <div class="slide-main">
+      <div class="perf-duo">
+        <div class="perf-panel glass-card">
+          <div class="perf-phase-label">阶段一 · OPTIMIZE</div>
+          <div class="perf-panel-title">Bryntum 深度调优</div>
+          <div class="data-callout">
+            <span class="data-num">5,000+</span>
+            <span class="data-label">工序流畅渲染</span>
           </div>
-          <ul class="bullet-list">
-            <li>自定义 event 全面重构，改用 domConfig 格式渲染，降低开销</li>
-            <li>移除单个 event 右键绑定，改为全局单一绑定，减少内存占用</li>
-            <li>锁定、选中事件只重渲染相关 event，避免全量刷新</li>
-            <li>调整预加载阈值，5000+ 工序下达成流畅体验</li>
-            <li>设备日历：数据结构重设计，虚拟滚动 + 双维度缓冲区，滚动防抖调优</li>
+          <div class="iter-tags" style="margin-top:2px">
+            <span class="tag-d td-purple">Event 重构</span>
+            <span class="tag-d td-purple">全局事件委托</span>
+            <span class="tag-d td-purple">虚拟滚动</span>
+            <span class="tag-d td-purple">双维缓冲区</span>
+          </div>
+          <ul class="perf-tech-list">
+            <li class="perf-tech-item"><span class="tech-num">01</span><span class="tech-text">Event domConfig 重构，降低渲染开销</span></li>
+            <li class="perf-tech-item"><span class="tech-num">02</span><span class="tech-text">全局事件委托替代逐 Event 绑定</span></li>
+            <li class="perf-tech-item"><span class="tech-num">03</span><span class="tech-text">局部重渲染：仅刷新关联 Event</span></li>
+            <li class="perf-tech-item"><span class="tech-num">04</span><span class="tech-text">设备日历虚拟滚动 + 双维度缓冲区</span></li>
           </ul>
         </div>
 
-        <div class="perf-card">
-          <div class="perf-phase phase-2">阶段二 · Canvas 重写</div>
-          <div class="perf-card-title">基于 Canvas 从零设计渲染架构</div>
-          <div class="tag-row">
-            <span class="chip chip-purple">Canvas 渲染引擎</span>
-            <span class="chip chip-purple">AI 提效</span>
-            <span class="chip chip-purple">npm 包发布</span>
+        <div class="perf-vs">
+          <div class="vs-line"></div>
+          <div class="vs-badge">THEN</div>
+          <div class="vs-line"></div>
+        </div>
+
+        <div class="perf-panel glass-card">
+          <div class="perf-phase-label">阶段二 · REWRITE</div>
+          <div class="perf-panel-title">Canvas 渲染引擎</div>
+          <div class="data-row">
+            <div class="perf-num-wrap">
+              <span class="data-num">10,000+</span>
+              <span class="data-label">工序流畅渲染</span>
+            </div>
+            <div class="perf-num-wrap">
+              <span class="data-num">95%</span>
+              <span class="data-label">主产品集成</span>
+            </div>
           </div>
-          <ul class="bullet-list">
-            <li>Bryntum Scheduler 性能瓶颈难以突破，基于 Canvas 重新设计渲染架构</li>
-            <li>借助 AI 大幅提升开发效率，聚焦架构设计和性能调优</li>
-            <li>支持 10000+ 工序流畅渲染，拖拽、缩放体验大幅提升</li>
-            <li>丰富配置项：缩放等级、时间范围限制、自定义 event 渲染、右键策略等</li>
-            <li>发布独立 npm 包（GitHub Package），主产品集成进度 95%+</li>
+          <div class="iter-tags" style="margin-top:2px">
+            <span class="tag-d td-rose">Canvas 架构</span>
+            <span class="tag-d td-rose">AI 提效</span>
+            <span class="tag-d td-rose">npm 包</span>
+          </div>
+          <ul class="perf-tech-list">
+            <li class="perf-tech-item"><span class="tech-num">01</span><span class="tech-text">Bryntum 瓶颈难突破，Canvas 重新设计渲染架构</span></li>
+            <li class="perf-tech-item"><span class="tech-num">02</span><span class="tech-text">借助 AI 提效，聚焦架构设计与性能调优</span></li>
+            <li class="perf-tech-item"><span class="tech-num">03</span><span class="tech-text">丰富配置：缩放等级、时间限制、右键策略等</span></li>
+            <li class="perf-tech-item"><span class="tech-num">04</span><span class="tech-text">发布独立 npm 包（GitHub Package）</span></li>
           </ul>
         </div>
       </div>
@@ -1139,85 +951,72 @@
   </div>
 
   <!-- ========== SLIDE 5: 挑战与成长 ========== -->
-  <div class="slide slide-content" data-index="4">
-    <div class="slide-topbar"></div>
-    <div class="slide-body">
-      <div class="slide-label">04 / 挑战成长</div>
-      <div class="slide-heading">挑战与成长</div>
-      <div class="challenge-grid">
-        <div class="ch-card problem">
-          <div class="ch-badge p">
-            <div class="ch-badge-icon p">!</div>
-            挑战一
+  <div class="slide slide-dark slide-challenge" data-index="4">
+    <div class="slide-header">
+      <span class="slide-num">04</span>
+      <h2 class="slide-title">挑战与成长</h2>
+      <span class="slide-subtitle">Challenges &amp; Growth</span>
+    </div>
+    <div class="slide-main">
+      <div class="ch-flow">
+        <div class="ch-pair">
+          <div class="ch-card-new problem glass-card">
+            <div class="ch-badge-new p">！挑战一</div>
+            <div class="ch-card-title">甘特图性能瓶颈</div>
+            <div class="ch-card-desc">5000+ 工序下拖拽/缩放明显卡顿，需从底层 Event 机制全面重构。</div>
           </div>
-          <div class="ch-title">甘特图性能瓶颈</div>
-          <div class="ch-desc">面对 5000+ 工序的极端场景，原有渲染策略在拖拽、缩放时出现明显卡顿，需要从底层 event 机制入手全面重构。</div>
+          <div class="ch-arrow-col">→</div>
+          <div class="ch-card-new growth glass-card">
+            <div class="ch-badge-new g">↑ 成长</div>
+            <div class="ch-card-title">建立系统性优化方法论</div>
+            <div class="ch-card-desc">落地虚拟化、事件委托、双维度缓冲区，建立「先压测定位，后针对优化」方法论。</div>
+          </div>
         </div>
-
-        <div class="ch-card growth">
-          <div class="ch-badge g">
-            <div class="ch-badge-icon g">↑</div>
-            成长
+        <div class="ch-pair">
+          <div class="ch-card-new problem glass-card">
+            <div class="ch-badge-new p">！挑战二</div>
+            <div class="ch-card-title">组件独立化工程实践</div>
+            <div class="ch-card-desc">甘特图抽离为独立 npm 包，需处理依赖隔离、构建配置、版本管理等工程问题。</div>
           </div>
-          <div class="ch-title">建立系统性优化方法论</div>
-          <div class="ch-desc">系统性落地了虚拟化、事件委托、预加载阈值调整、双维度缓冲区等优化手段，建立了「先压测定位，后针对优化」的工作方法。</div>
-        </div>
-
-        <div class="ch-card problem">
-          <div class="ch-badge p">
-            <div class="ch-badge-icon p">!</div>
-            挑战二
+          <div class="ch-arrow-col">→</div>
+          <div class="ch-card-new growth glass-card">
+            <div class="ch-badge-new g">↑ 成长</div>
+            <div class="ch-card-title">从「写功能」到「设计边界」</div>
+            <div class="ch-card-desc">掌握 npm package 发布完整流程，建立版本语义化管理意识，完成思维升级。</div>
           </div>
-          <div class="ch-title">组件独立化工程实践</div>
-          <div class="ch-desc">将甘特图从主产品中抽离为独立 npm 包，需要处理依赖隔离、构建配置、版本管理、兼容性等一系列工程问题。</div>
-        </div>
-
-        <div class="ch-card growth">
-          <div class="ch-badge g">
-            <div class="ch-badge-icon g">↑</div>
-            成长
-          </div>
-          <div class="ch-title">从「写功能」到「设计边界」</div>
-          <div class="ch-desc">完成了思维升级，掌握了 npm package 发布完整流程，建立了版本语义化管理意识。</div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- ========== SLIDE 6: 想法与期望 ========== -->
-  <div class="slide slide-content" data-index="5">
-    <div class="slide-topbar"></div>
-    <div class="slide-body">
-      <div class="slide-label">05 / 想法期望</div>
-      <div class="slide-heading">想法与期望</div>
-      <div class="views-list">
-        <div class="view-item">
-          <div class="view-icon-box vi-orange">🏢</div>
-          <div class="view-body">
-            <div class="view-title">对公司的看法</div>
-            <div class="view-desc">这4个月，我看到的是一家<strong>有活力、有氛围、有战斗力</strong>的公司。团队敢于做复杂的事，迭代快、协作顺，能感受到技术上的进取心，觉得加入这里是正确的选择。</div>
-          </div>
+  <div class="slide slide-dark slide-views" data-index="5">
+    <div class="slide-header">
+      <span class="slide-num">05</span>
+      <h2 class="slide-title">想法与期望</h2>
+      <span class="slide-subtitle">Views &amp; Expectations</span>
+    </div>
+    <div class="slide-main">
+      <div class="views-grid">
+        <div class="view-card glass-card">
+          <div class="view-card-icon">🏢</div>
+          <div class="view-card-title">对公司的看法</div>
+          <div class="view-card-desc">团队敢做复杂的事，迭代快、协作顺、技术有进取心。<strong>加入这里是正确的选择。</strong></div>
         </div>
-        <div class="view-item">
-          <div class="view-icon-box vi-purple">🤖</div>
-          <div class="view-body">
-            <div class="view-title">关于 AI</div>
-            <div class="view-desc"><strong>不拥抱 AI 的程序员注定会被淘汰。</strong>亲身实践 Claude Code 开发新 Gantt 组件，用更短的时间做出了更好的东西。拥抱 AI 是这个时代的基本素养。</div>
-          </div>
+        <div class="view-card glass-card">
+          <div class="view-card-icon">🤖</div>
+          <div class="view-card-title">关于 AI</div>
+          <div class="view-card-desc">亲身用 Claude Code 重写 Gantt 组件，更短时间、更好结果。<strong>不拥抱 AI 的程序员将被淘汰。</strong></div>
         </div>
-        <div class="view-item">
-          <div class="view-icon-box vi-blue">🎯</div>
-          <div class="view-body">
-            <div class="view-title">技术方向</div>
-            <div class="view-desc">从「写代码」转为「架构编排与质量评审」，从「实现」转为「设计与体验」。</div>
-          </div>
+        <div class="view-card glass-card">
+          <div class="view-card-icon">🎯</div>
+          <div class="view-card-title">技术方向</div>
+          <div class="view-card-desc">从「写代码」转为「架构编排与质量评审」，从「实现」转为「设计与体验」。</div>
         </div>
-        <div class="view-item">
-          <div class="view-icon-box vi-green">🌱</div>
-          <div class="view-body">
-            <div class="view-title">对团队的期望</div>
-            <div class="view-desc">持续保持开放的技术氛围以及简单坦诚的沟通氛围。</div>
-          </div>
+        <div class="view-card glass-card">
+          <div class="view-card-icon">🌱</div>
+          <div class="view-card-title">对团队的期望</div>
+          <div class="view-card-desc">持续保持开放的技术氛围，以及简单坦诚的沟通方式。</div>
         </div>
       </div>
     </div>
