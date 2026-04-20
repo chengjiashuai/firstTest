@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>滚动一次的文本</title>
+    <style>
+        #container {
+            width: 300px;
+            height: 50px;
+            overflow: hidden;
+            white-space: nowrap;
+            border: 1px solid #000;
+            position: relative;
+        }
+
+        .text {
+            display: inline-block;
+            white-space: normal;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <div class="text" id="text1">
+        这是一个会滚动一次的文本。你可以根据需要改变文本内容。
+        这是一个会滚动一次的文本。你可以根据需要改变文本内容。
+        这是一个会滚动一次的文本。你可以根据需要改变文本内容。
+    </div>
+    <div class="text" id="text2">
+        这是一个会滚动一次的文本。你可以根据需要改变文本内容。
+        这是一个会滚动一次的文本。你可以根据需要改变文本内容。
+        这是一个会滚动一次的文本。你可以根据需要改变文本内容。
+    </div>
+</div>
+<button>ssss</button>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var container = document.getElementById('container');
+    var text1 = document.getElementById('text1');
+    var text2 = document.getElementById('text2');
+    var textHeight = text1.offsetHeight;
+    var containerHeight = container.offsetHeight;
+
+    // 判断文本内容高度是否超过容器高度
+    if (textHeight <= containerHeight) {
+      return; // 如果未超过容器高度，则不执行滚动逻辑
+    }
+
+    // 初始化位置
+    text1.style.transform = 'translateY(0px)';
+    text2.style.transform = 'translateY(' + textHeight + 'px)';
+
+    var position1 = 0;
+    var position2 = textHeight;
+
+    var speed = 50;  // 设置滚动速度 5px/s
+    var frameRate = 60;  // 假定每秒 60 帧
+    var distancePerFrame = speed / frameRate;
+
+    function scrollText() {
+      position1 -= distancePerFrame;
+      position2 -= distancePerFrame;
+
+      text1.style.transform = 'translateY(' + position1 + 'px)';
+      text2.style.transform = 'translateY(' + position2 + 'px)';
+
+      // if (position1 > -textHeight) {
+      //   requestAnimationFrame(scrollText);
+      // }
+      requestAnimationFrame(scrollText);
+    }
+
+    scrollText();
+  });
+</script>
+</body>
+</html>

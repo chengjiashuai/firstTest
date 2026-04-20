@@ -1,0 +1,20 @@
+.scroll-container {
+    width: 50%;
+    height: 150px; /* Adjust the height as needed */
+    overflow: hidden;
+    position: relative;
+    border: 1px solid #000;
+}
+
+.scroll-content {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    width: 100%;
+}
+
+.scroll-text {
+    width: 100%;
+    box-sizing: border-box;
+    text-decoration: line-through;
+}

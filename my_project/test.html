@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Export HTML to PDF</title>
+  <script src="plugin/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+<div id="content">
+  <h1>My HTML Content</h1>
+  <p>This is a sample content that will be exported to PDF.</p>
+</div>
+<button id="download">Download PDF</button>
+<script>
+  document.getElementById('download').addEventListener('click', function () {
+    var element = document.getElementById('content');
+    html2pdf().from(element).save();
+  });
+</script>
+</body>
+</html>

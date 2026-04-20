@@ -1,0 +1,11 @@
+{
+  "name": "your - project",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "ts-node --esm ./ts/01.ts"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.5"
+  }
+}

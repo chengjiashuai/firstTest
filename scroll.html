@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>无限滚动文本</title>
+    <style>
+        #container {
+            width: 300px;
+            height: 50px;
+            overflow: hidden;
+            white-space: nowrap;
+            border: 1px solid #000;
+            position: relative;
+        }
+
+        .text {
+            display: inline-block;
+            white-space: nowrap;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <div class="text" id="text1">这是一个会无限滚动的文本。你可以根据需要改变文本内容。</div>
+    <div class="text" id="text2">这是一个会无限滚动的文本。你可以根据需要改变文本内容。</div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var container = document.getElementById('container');
+    var text1 = document.getElementById('text1');
+    var text2 = document.getElementById('text2');
+    var textWidth = text1.offsetWidth;
+    var containerWidth = container.offsetWidth;
+
+    // 初始化位置
+    text1.style.transform = 'translateX(0px)';
+    text2.style.transform = 'translateX(' + textWidth + 'px)';
+
+    var position1 = 0;
+    var position2 = textWidth;
+
+    var speed = 40;  // 设置滚动速度 5px/s
+    var frameRate = 60;  // 假定每秒 60 帧
+    var distancePerFrame = speed / frameRate;
+
+    function scrollText() {
+      position1 -= distancePerFrame;
+      position2 -= distancePerFrame;
+
+      if (position1 <= -textWidth) {
+        position1 = position2 + textWidth;
+      }
+      if (position2 <= -textWidth) {
+        position2 = position1 + textWidth;
+      }
+
+      text1.style.transform = 'translateX(' + position1 + 'px)';
+      text2.style.transform = 'translateX(' + position2 + 'px)';
+
+      requestAnimationFrame(scrollText);
+    }
+
+    scrollText();
+  });
+</script>
+</body>
+</html>

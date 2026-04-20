@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片文字提取和高亮</title>
+    <style>
+        .container {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .left {
+            width: 30%;
+            overflow-y: auto;
+            max-height: 80vh;
+        }
+
+        .right {
+            position: relative;
+            width: 70%;
+        }
+
+        .right img {
+            width: 100%;
+        }
+
+        .highlight {
+            position: absolute;
+            border: 2px solid red;
+            pointer-events: none;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            cursor: pointer;
+            padding: 5px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        li:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div isHasChildren="1">
+        <p>ddd</p>
+    </div>
+    <div isHasChildren="0">
+        <p>ddd</p>
+    </div>
+    <div isHasChildren="0">
+        <p>ddd</p>
+    </div>
+
+    <div class="left">
+        <ul id="text-list"></ul>
+    </div>
+    <div class="right">
+        <img id="image" src="/imgs/chi_sim.png" alt="Image">
+        <div id="highlight-area"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.1/dist/tesseract.min.js"></script>
+<script>
+  const imageSrc = '/imgs/chi_sim.png';  // 请替换为您自己的图片路径
+  const textList = document.getElementById('text-list');
+  const highlightArea = document.getElementById('highlight-area');
+  const imgElement = document.getElementById('image');
+
+  // 从图片提取文字
+  function extractTextFromImage() {
+    Tesseract.recognize(
+      imageSrc,
+      'chi_sim', // 可以替换为其他语言，如 'chi_sim' 中文
+      {
+        logger: (m) => console.log(m),
+      }
+    ).then(({ data: { words } }) => {
+      // 提取的文字信息
+      const wordsData = words.map(word => ({
+        text: word.text,
+        bbox: word.bbox // { x0, x1, y0, y1 }
+      }));
+      displayTextList(wordsData);
+    });
+  }
+
+  // 显示文字列表
+  function displayTextList(wordsData) {
+    textList.innerHTML = '';
+    wordsData.forEach((word, index) => {
+      const li = document.createElement('li');
+      li.textContent = word.text;
+      li.onclick = () => highlightText(word);
+      textList.appendChild(li);
+    });
+  }
+
+  // 高亮文字区域
+  function highlightText(word) {
+    console.log(word,'chi_sim');
+    const { x0, y0, x1, y1 } = word.bbox;
+    highlightArea.innerHTML = ''; // 清除之前的高亮
+    const highlightDiv = document.createElement('div');
+    highlightDiv.classList.add('highlight');
+    highlightDiv.style.left = `${x0}px`;
+    highlightDiv.style.top = `${y0}px`;
+    highlightDiv.style.width = `${x1 - x0}px`; // 宽度 = x1 - x0
+    highlightDiv.style.height = `${y1 - y0}px`; // 高度 = y1 - y0
+    highlightArea.appendChild(highlightDiv);
+  }
+
+  // 图片加载完成后提取文字
+  imgElement.onload = function () {
+    extractTextFromImage();
+  }
+
+  // 页面加载完成时初始化
+  window.onload = function() {
+    extractTextFromImage();
+  }
+</script>
+
+</body>
+</html>
